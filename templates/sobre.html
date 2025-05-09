@@ -1,0 +1,166 @@
+{% extends "base.html" %} {% block title %}Sobre{% endblock %} {% block content
+%}
+<div class="container">
+  <div class="row mb-5">
+    <div class="col-md-12 text-center">
+      <h1 class="display-4">Sobre o {{ config.SITE_NAME }}</h1>
+      <p class="lead">{{ config.SITE_DESCRIPTION }}</p>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Nossa Missão</h2>
+          <p class="card-text">
+            O {{ config.SITE_NAME }} foi criado com o objetivo de fornecer
+            ferramentas úteis e precisas para estudantes e profissionais das
+            áreas de Física, Química e Matemática. Nossa missão é facilitar o
+            aprendizado e a resolução de problemas através de calculadoras
+            científicas online, gratuitas e de fácil acesso.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-12">
+      <h2 class="text-center mb-4">Recursos Disponíveis</h2>
+      <div class="row">
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h3 class="card-title">Física</h3>
+              <ul class="list-unstyled">
+                <li>✓ Velocidade Média</li>
+                <li>✓ Movimento Uniforme</li>
+                <li>✓ Movimento Uniformemente Variado</li>
+                <li>✓ Equação de Torricelli</li>
+                <li>✓ Princípio Fundamental da Dinâmica</li>
+                <li>✓ Força Peso</li>
+                <li>✓ Força de Atrito</li>
+                <li>✓ Trabalho de Força Constante</li>
+                <li>✓ Energia Cinética</li>
+                <li>✓ Energia Potencial</li>
+                <li>✓ Potência Média</li>
+                <li>✓ Pressão</li>
+                <li>✓ Pressão Hidroestática</li>
+                <li>✓ Empuxo</li>
+                <li>✓ Dilatação Linear</li>
+                <li>✓ Equação Fundamental da Calorimetria</li>
+                <li>✓ Primeira Lei da Termodinâmica</li>
+                <li>✓Equação dos Espelhos e Lentes</li>
+                <li>✓Fórmula do Aumento da Imagem</li>
+                <li>✓Velocidade de uma Onda</li>
+                <li>✓Lei de Ohm</li>
+                <li>✓Potência Elétrica ou Energia Elétrica</li>
+                <li>✓Força entre Cargas Elétricas (Lei de Coulomb)</li>
+                <li>✓Energia Potencial Elástica</li>
+                <li>✓Energia Mecânica</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h3 class="card-title">Química</h3>
+              <ul class="list-unstyled">
+                <li>✓ Tabela Periódica</li>
+                <li>✓ Balanceamento de Equações</li>
+                <li>✓ Molaridade</li>
+                <li>✓ pH e pOH</li>
+                <li>✓ Entalpia</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+          <div class="card h-100">
+            <div class="card-body">
+              <h3 class="card-title">Matemática</h3>
+              <ul class="list-unstyled">
+                <li>✓ Funções</li>
+                <li>✓ Trigonometria</li>
+                <li>✓ Geometria</li>
+                <li>✓ Matrizes</li>
+                <li>✓ Estatística</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mb-5">
+    <div class="col-md-8 offset-md-2">
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title">Contato</h2>
+          <p class="card-text">
+            Tem alguma dúvida ou sugestão? Entre em contato conosco:
+          </p>
+          <ul class="list-unstyled">
+            <li><strong>E-mail:</strong> {{ config.CONTACT.email }}</li>
+            <li><strong>Telefone:</strong> {{ config.CONTACT.phone }}</li>
+            <li><strong>Endereço:</strong> {{ config.CONTACT.address }}</li>
+            <li>
+              <strong>Horário de Atendimento:</strong> {{ config.CONTACT.hours
+              }}
+            </li>
+          </ul>
+          <a href="{{ url_for('contato') }}" class="btn btn-primary"
+            >Enviar Mensagem</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12 text-center">
+      <h2 class="mb-4">Redes Sociais</h2>
+      <div class="social-links">
+        {% if config.SOCIAL_MEDIA.facebook %}
+        <a
+          href="{{ config.SOCIAL_MEDIA.facebook }}"
+          class="btn btn-outline-primary me-2"
+          target="_blank"
+        >
+          <i class="bi bi-facebook"></i> Facebook
+        </a>
+        {% endif %} {% if config.SOCIAL_MEDIA.twitter %}
+        <a
+          href="{{ config.SOCIAL_MEDIA.twitter }}"
+          class="btn btn-outline-info me-2"
+          target="_blank"
+        >
+          <i class="bi bi-twitter"></i> Twitter
+        </a>
+        {% endif %} {% if config.SOCIAL_MEDIA.instagram %}
+        <a
+          href="{{ config.SOCIAL_MEDIA.instagram }}"
+          class="btn btn-outline-danger me-2"
+          target="_blank"
+        >
+          <i class="bi bi-instagram"></i> Instagram
+        </a>
+        {% endif %} {% if config.SOCIAL_MEDIA.linkedin %}
+        <a
+          href="{{ config.SOCIAL_MEDIA.linkedin }}"
+          class="btn btn-outline-primary"
+          target="_blank"
+        >
+          <i class="bi bi-linkedin"></i> LinkedIn
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

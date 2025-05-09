@@ -1,0 +1,251 @@
+/* Variáveis de cores */
+:root {
+    --primary-color: #ff2a00;
+    --secondary-color: #c9b837;
+    --success-color: #3b8e83;
+    --background-light: #000000;
+    --background-dark: #1a1b1e;
+    --text-light: #495057;
+    --text-dark: #e9ecef;
+}
+
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    background-color: #f8f9fa;
+    color: var(--text-light);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Estilos do cabeçalho */
+.navbar {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #fff !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    color: rgba(255,255,255,.9) !important;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #fff !important;
+    transform: translateY(-2px);
+}
+
+/* Estilos dos cards */
+.card {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: none;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 12px 20px rgba(0,0,0,.15);
+}
+
+.card-title {
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.card-header {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+}
+
+/* Estilos dos botões */
+.btn-primary {
+    background-color: #ff1e00;
+    border-color: #0ee02e;
+    border: none;
+    border-radius: 8px;
+    padding: 0.8rem 1.5rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #d9008d;
+    border-color: #2d9856;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(67,97,238,.3);
+}
+
+/* Estilos da lista de cálculos */
+.list-group-item {
+    cursor: pointer;
+    transition: background-color 0.2s;
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(0,0,0,.1);
+    padding: 1rem;
+}
+
+.list-group-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(10px);
+}
+
+/* Estilos do formulário */
+.form-control {
+    border-radius: 8px;
+    padding: 0.8rem;
+    border: 2px solid rgba(0,0,0,.1);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    border-color: #845f09;
+    box-shadow: 0 0 0 0.2rem rgba(0,123,255,0.25);
+}
+
+.form-label {
+    font-weight: 500;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+/* Estilos dos alertas */
+.alert {
+    border-radius: 4px;
+    border: none;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Estilos do footer */
+.footer {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    color: #fff;
+    padding: 2rem 0;
+    margin-top: auto;
+}
+
+.footer span {
+    color: rgba(255,255,255,.9);
+}
+
+/* Modo escuro */
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--background-dark);
+        color: var(--text-dark);
+    }
+    
+    .card {
+        background-color: #2a2b2e;
+        color: var(--text-dark);
+    }
+    
+    .list-group-item {
+        background-color: #2a2b2e;
+        color: var(--text-dark);
+        border-color: rgba(255,255,255,.1);
+    }
+    
+    .form-control {
+        background-color: #2a2b2e;
+        border-color: rgba(255,255,255,.1);
+        color: var(--text-dark);
+    }
+    
+    .form-control:focus {
+        background-color: #2a2b2e;
+        color: var(--text-dark);
+    }
+    
+    .modal-content {
+        background-color: var(--background-dark);
+        color: var(--text-dark);
+    }
+    
+    .modal-header {
+        border-bottom-color: rgba(255,255,255,.1);
+    }
+    
+    .table {
+        color: var(--text-dark);
+    }
+    
+    .table th {
+        background-color: #2a2b2e;
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+    
+    .card {
+        margin-bottom: 1.5rem;
+    }
+    
+    .list-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-primary {
+        width: 100%;
+    }
+}
+
+/* Estilos da tabela periódica */
+.table-responsive {
+    max-height: 70vh;
+}
+
+.table th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1;
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert {
+    animation: fadeIn 0.3s ease-out;
+} 

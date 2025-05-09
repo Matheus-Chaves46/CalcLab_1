@@ -1,0 +1,186 @@
+{% extends "base.html" %} {% block title %}Início - {{ config.SITE_NAME }}{%
+endblock %} {% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary mb-4">
+      <i class="fas fa-calculator me-3"></i>
+      {{ config.SITE_NAME }}
+    </h1>
+    <p class="lead text-muted mb-4">{{ config.SITE_DESCRIPTION }}</p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="/matematica" class="btn btn-primary btn-lg">
+        <i class="fas fa-square-root-alt me-2"></i>
+        Matemática
+      </a>
+      <a href="/fisica" class="btn btn-success btn-lg">
+        <i class="fas fa-atom me-2"></i>
+        Física
+      </a>
+      <a href="/quimica" class="btn btn-info btn-lg">
+        <i class="fas fa-flask me-2"></i>
+        Química
+      </a>
+    </div>
+  </div>
+
+  <!-- Features Section -->
+  <div class="row mb-5">
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <i class="fas fa-square-root-alt fa-3x text-primary mb-3"></i>
+          <h5 class="card-title">Matemática</h5>
+          <p class="card-text">
+            Realize cálculos matemáticos complexos, incluindo equações, áreas,
+            volumes e muito mais.
+          </p>
+          <a href="/matematica" class="btn btn-outline-primary">Começar</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <i class="fas fa-atom fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Física</h5>
+          <p class="card-text">
+            Calcule grandezas físicas, movimentos, forças, energia e outros
+            conceitos fundamentais.
+          </p>
+          <a href="/fisica" class="btn btn-outline-success">Começar</a>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card h-100">
+        <div class="card-body text-center">
+          <i class="fas fa-flask fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Química</h5>
+          <p class="card-text">
+            Realize cálculos químicos, incluindo concentrações, pH, reações e
+            estequiometria.
+          </p>
+          <a href="/quimica" class="btn btn-outline-info">Começar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- About Section -->
+  <div class="row mb-5">
+    <div class="col-md-6">
+      <h2 class="mb-4">Sobre o {{ config.SITE_NAME }}</h2>
+      <p class="lead mb-4">
+        Uma ferramenta completa para cálculos científicos, desenvolvida para
+        estudantes e profissionais.
+      </p>
+      <p>
+        O {{ config.SITE_NAME }} oferece uma interface intuitiva e moderna para
+        realizar cálculos complexos nas áreas de Matemática, Física e Química.
+        Com recursos avançados e resultados precisos, você pode:
+      </p>
+      <ul class="list-unstyled">
+        <li class="mb-2">
+          <i class="fas fa-check-circle text-success me-2"></i>
+          Realizar cálculos complexos com facilidade
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check-circle text-success me-2"></i>
+          Obter resultados precisos e confiáveis
+        </li>
+        <li class="mb-2">
+          <i class="fas fa-check-circle text-success me-2"></i>
+          Acessar uma interface moderna e responsiva
+        </li>
+        <li>
+          <i class="fas fa-check-circle text-success me-2"></i>
+          Usar em qualquer dispositivo com navegador
+        </li>
+      </ul>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Como Usar</h5>
+          <div class="d-flex align-items-center mb-3">
+            <div class="flex-shrink-0">
+              <i class="fas fa-1-circle text-primary fa-2x"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="mb-1">Selecione a Área</h6>
+              <p class="mb-0">Escolha entre Matemática, Física ou Química</p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center mb-3">
+            <div class="flex-shrink-0">
+              <i class="fas fa-2-circle text-primary fa-2x"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="mb-1">Escolha o Cálculo</h6>
+              <p class="mb-0">
+                Selecione o tipo específico de cálculo desejado
+              </p>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+            <div class="flex-shrink-0">
+              <i class="fas fa-3-circle text-primary fa-2x"></i>
+            </div>
+            <div class="flex-grow-1 ms-3">
+              <h6 class="mb-1">Insira os Dados</h6>
+              <p class="mb-0">
+                Preencha os campos necessários e obtenha o resultado
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contact Section -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Contato</h5>
+          <p class="card-text">
+            Tem alguma dúvida ou sugestão? Entre em contato conosco!
+          </p>
+          <div class="d-flex align-items-center mb-3">
+            <i class="fas fa-envelope text-primary me-3"></i>
+            <a
+              href="mailto:{{ config.CONTACT_EMAIL }}"
+              class="text-decoration-none"
+            >
+              {{ config.CONTACT_EMAIL }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title mb-4">Redes Sociais</h5>
+          <p class="card-text">
+            Siga-nos nas redes sociais para ficar por dentro das novidades!
+          </p>
+          <div class="d-flex gap-3">
+            <a href="#" class="text-primary">
+              <i class="fab fa-facebook fa-2x"></i>
+            </a>
+            <a href="#" class="text-info">
+              <i class="fab fa-twitter fa-2x"></i>
+            </a>
+            <a href="#" class="text-danger">
+              <i class="fab fa-instagram fa-2x"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

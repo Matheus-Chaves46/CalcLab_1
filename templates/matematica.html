@@ -1,0 +1,254 @@
+{% extends "base.html" %} {% block title %}Calculadora de Matemática{% endblock
+%} {% block content %}
+<div class="container py-5">
+  <!-- Hero Section -->
+  <div class="text-center mb-5">
+    <h1 class="display-4 fw-bold text-primary">Calculadora de Matemática</h1>
+    <p class="lead text-muted">
+      Realize cálculos matemáticos complexos com facilidade
+    </p>
+  </div>
+
+  <div class="row">
+    <!-- Lista de Cálculos -->
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white">
+          <h5 class="card-title mb-0">Cálculos Disponíveis</h5>
+        </div>
+        <div class="card-body">
+          <div class="list-group">
+            {% for categoria, info in
+            config.CALCULATORS.matematica.categories.items() %}
+            <div class="mb-3">
+              <h6 class="text-primary">{{ info.title }}</h6>
+              {% for calc_id, calc_info in info.calculations.items() %}
+              <a
+                href="#"
+                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                onclick="selecionarCalculo('{{ calc_id }}')"
+              >
+                {{ calc_info.title }}
+                <span class="badge bg-primary rounded-pill">→</span>
+              </a>
+              {% endfor %}
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Dicas -->
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h5 class="card-title mb-0">Dicas</h5>
+        </div>
+        <div class="card-body">
+          <ul class="list-unstyled mb-0">
+            <li class="mb-2">• Selecione o tipo de cálculo desejado</li>
+            <li class="mb-2">• Preencha todos os campos necessários</li>
+            <li class="mb-2">• Clique em "Calcular" para obter o resultado</li>
+            <li>• Use o botão "Limpar" para resetar o formulário</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulário de Cálculo -->
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-success text-white">
+          <h5 class="card-title mb-0" id="titulo-calculadora">
+            Selecione um cálculo
+          </h5>
+        </div>
+        <div class="card-body">
+          <form id="form-calculadora" onsubmit="return calcular(event)">
+            <input type="hidden" id="tipo-calculo" name="tipo_calculo" />
+
+            <!-- Campos dinâmicos serão inseridos aqui -->
+            <div id="campos-variaveis"></div>
+
+            <div class="mt-4">
+              <button type="submit" class="btn btn-success me-2">
+                <i class="fas fa-calculator"></i> Calcular
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                onclick="limparFormulario()"
+              >
+                <i class="fas fa-undo"></i> Limpar
+              </button>
+            </div>
+          </form>
+
+          <!-- Resultado -->
+          <div id="resultado" class="mt-4" style="display: none">
+            <h6 class="text-success">Resultado:</h6>
+            <div class="alert alert-success" id="resultado-valor"></div>
+          </div>
+
+          <!-- Erro -->
+          <div id="erro" class="mt-4" style="display: none">
+            <h6 class="text-danger">Erro:</h6>
+            <div class="alert alert-danger" id="erro-mensagem"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block scripts %}
+<script>
+  // Configurações dos cálculos
+  const calculatorConfig = JSON.parse('{{ config.CALCULATORS.matematica|tojson|safe }}');
+
+  // Função para formatar variáveis
+  function formatarVariavel(nome) {
+      return nome
+          .split('_')
+          .map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1))
+          .join(' ');
+  }
+
+  // Função para atualizar os campos de variáveis
+  function atualizarVariaveis(tipo) {
+      const camposDiv = document.getElementById('campos-variaveis');
+      camposDiv.innerHTML = '';
+
+      // Encontra o cálculo nas categorias
+      let calcInfo = null;
+      for (const categoria of Object.values(calculatorConfig.categories)) {
+          if (tipo in categoria.calculations) {
+              calcInfo = categoria.calculations[tipo];
+              break;
+          }
+      }
+
+      if (!calcInfo) return;
+
+      // Atualiza o título
+      document.getElementById('titulo-calculadora').textContent = calcInfo.title;
+      document.getElementById('tipo-calculo').value = tipo;
+
+      // Cria a seção de seleção de variáveis
+      const selecaoDiv = document.createElement('div');
+      selecaoDiv.className = 'card mb-4';
+      selecaoDiv.innerHTML = `
+          <div class="card-header bg-primary text-white">
+              <h6 class="mb-0">Selecione as Variáveis</h6>
+          </div>
+          <div class="card-body" id="selecao-variaveis">
+              <div class="row">
+                  ${calcInfo.variables.map(variavel => `
+                      <div class="col-md-6 mb-2">
+                          <div class="form-check">
+                              <input class="form-check-input" type="checkbox" value="${variavel}" 
+                                     id="check_${variavel}" onchange="toggleVariavel('${variavel}')">
+                              <label class="form-check-label" for="check_${variavel}">
+                                  ${formatarVariavel(variavel)}
+                              </label>
+                          </div>
+                      </div>
+                  `).join('')}
+              </div>
+          </div>
+      `;
+      camposDiv.appendChild(selecaoDiv);
+
+      // Cria a div para os campos de input
+      const inputsDiv = document.createElement('div');
+      inputsDiv.id = 'campos-input';
+      camposDiv.appendChild(inputsDiv);
+  }
+
+  // Função para alternar a visibilidade do campo de input
+  function toggleVariavel(variavel) {
+      const checkbox = document.getElementById(`check_${variavel}`);
+      const inputsDiv = document.getElementById('campos-input');
+      const existingInput = document.getElementById(`input_${variavel}`);
+
+      if (checkbox.checked && !existingInput) {
+          // Criar novo campo de input
+          const div = document.createElement('div');
+          div.className = 'mb-3';
+          div.id = `input_${variavel}`;
+
+          const label = document.createElement('label');
+          label.className = 'form-label';
+          label.textContent = formatarVariavel(variavel);
+
+          const input = document.createElement('input');
+          input.type = 'number';
+          input.className = 'form-control';
+          input.name = variavel;
+          input.step = 'any';
+          input.required = true;
+
+          div.appendChild(label);
+          div.appendChild(input);
+          inputsDiv.appendChild(div);
+      } else if (!checkbox.checked && existingInput) {
+          // Remover campo de input
+          existingInput.remove();
+      }
+  }
+
+  // Função para selecionar um cálculo
+  function selecionarCalculo(tipo) {
+      atualizarVariaveis(tipo);
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('erro').style.display = 'none';
+  }
+
+  // Função para calcular
+  async function calcular(event) {
+      event.preventDefault();
+
+      const form = event.target;
+      const formData = new FormData(form);
+      const data = Object.fromEntries(formData.entries());
+
+      try {
+          const response = await fetch('/matematica', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(data)
+          });
+
+          const result = await response.json();
+
+          if (response.ok) {
+              document.getElementById('resultado').style.display = 'block';
+              document.getElementById('erro').style.display = 'none';
+
+              // Formata o resultado
+              let resultadoHtml = '';
+              for (const [chave, valor] of Object.entries(result.resultado)) {
+                  resultadoHtml += `<strong>${formatarVariavel(chave)}:</strong> ${valor}<br>`;
+              }
+              document.getElementById('resultado-valor').innerHTML = resultadoHtml;
+          } else {
+              throw new Error(result.erro);
+          }
+      } catch (error) {
+          document.getElementById('resultado').style.display = 'none';
+          document.getElementById('erro').style.display = 'block';
+          document.getElementById('erro-mensagem').textContent = error.message;
+      }
+
+      return false;
+  }
+
+  // Função para limpar o formulário
+  function limparFormulario() {
+      document.getElementById('form-calculadora').reset();
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('erro').style.display = 'none';
+  }
+</script>
+{% endblock %}

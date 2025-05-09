@@ -1,0 +1,377 @@
+{% extends "base.html" %} {% block title %}Contato - {{ config.SITE_NAME }}{%
+endblock %} {% block content %}
+<!-- Hero Section -->
+<div class="container-fluid bg-primary text-white py-5 mb-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-6">
+        <h1 class="display-3 fw-bold mb-4">Contato</h1>
+        <p class="lead fs-4">
+          Entre em contato conosco para tirar suas dúvidas ou fazer sugestões.
+          Estamos aqui para ajudar!
+        </p>
+      </div>
+      <div class="col-lg-6 d-none d-lg-block text-center">
+        <img
+          src="{{ url_for('static', filename='img/contact.svg') }}"
+          alt="Ilustração"
+          class="img-fluid"
+          style="max-height: 400px"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Informações de Contato -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body p-4">
+          <h2 class="h4 mb-4">
+            <i class="fas fa-address-card me-2 text-primary"></i>
+            Informações de Contato
+          </h2>
+          <div class="row g-4">
+            <div class="col-md-6">
+              <div
+                class="contact-info d-flex align-items-center p-3 rounded bg-light"
+              >
+                <div class="icon-box bg-primary text-white me-3">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">E-mail</h6>
+                  <a
+                    href="mailto:{{ config.CONTACT.email }}"
+                    class="text-decoration-none"
+                  >
+                    {{ config.CONTACT.email }}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="contact-info d-flex align-items-center p-3 rounded bg-light"
+              >
+                <div class="icon-box bg-primary text-white me-3">
+                  <i class="fas fa-phone"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">Telefone</h6>
+                  <a
+                    href="tel:{{ config.CONTACT.phone }}"
+                    class="text-decoration-none"
+                  >
+                    {{ config.CONTACT.phone }}
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="contact-info d-flex align-items-center p-3 rounded bg-light"
+              >
+                <div class="icon-box bg-primary text-white me-3">
+                  <i class="fab fa-whatsapp"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">WhatsApp</h6>
+                  <a
+                    href="https://wa.me/{{ config.CONTACT.whatsapp }}"
+                    class="text-decoration-none"
+                    target="_blank"
+                  >
+                    Enviar mensagem
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div
+                class="contact-info d-flex align-items-center p-3 rounded bg-light"
+              >
+                <div class="icon-box bg-primary text-white me-3">
+                  <i class="fab fa-telegram"></i>
+                </div>
+                <div>
+                  <h6 class="mb-1">Telegram</h6>
+                  <a
+                    href="https://t.me/{{ config.CONTACT.telegram }}"
+                    class="text-decoration-none"
+                    target="_blank"
+                  >
+                    Enviar mensagem
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulário de Contato -->
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h2 class="h4 mb-4">
+            <i class="fas fa-paper-plane me-2 text-primary"></i>
+            Envie sua Mensagem
+          </h2>
+          <form
+            id="contactForm"
+            method="POST"
+            action="{{ url_for('contato') }}"
+            class="needs-validation"
+            novalidate
+          >
+            <div class="row g-3">
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="name"
+                    name="name"
+                    placeholder="Seu nome"
+                    required
+                  />
+                  <label for="name">Nome</label>
+                  <div class="invalid-feedback">
+                    Por favor, digite seu nome.
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-floating">
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="email"
+                    name="email"
+                    placeholder="seu@email.com"
+                    required
+                  />
+                  <label for="email">E-mail</label>
+                  <div class="invalid-feedback">
+                    Por favor, digite um e-mail válido.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="subject"
+                    name="subject"
+                    placeholder="Assunto"
+                    required
+                  />
+                  <label for="subject">Assunto</label>
+                  <div class="invalid-feedback">
+                    Por favor, digite o assunto da mensagem.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-floating">
+                  <textarea
+                    class="form-control"
+                    id="message"
+                    name="message"
+                    placeholder="Sua mensagem"
+                    style="height: 150px"
+                    required
+                  ></textarea>
+                  <label for="message">Mensagem</label>
+                  <div class="invalid-feedback">
+                    Por favor, digite sua mensagem.
+                  </div>
+                </div>
+              </div>
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary btn-lg">
+                  <i class="fas fa-paper-plane me-2"></i>
+                  Enviar Mensagem
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <!-- Redes Sociais -->
+      <div class="text-center mt-5">
+        <h2 class="h4 mb-4">
+          <i class="fas fa-share-alt me-2 text-primary"></i>
+          Siga-nos nas Redes Sociais
+        </h2>
+        <div class="social-links d-flex justify-content-center gap-3">
+          {% if config.SOCIAL_MEDIA.facebook %}
+          <a
+            href="{{ config.SOCIAL_MEDIA.facebook }}"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          {% endif %} {% if config.SOCIAL_MEDIA.twitter %}
+          <a
+            href="{{ config.SOCIAL_MEDIA.twitter }}"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-twitter"></i>
+          </a>
+          {% endif %} {% if config.SOCIAL_MEDIA.instagram %}
+          <a
+            href="{{ config.SOCIAL_MEDIA.instagram }}"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-instagram"></i>
+          </a>
+          {% endif %} {% if config.SOCIAL_MEDIA.linkedin %}
+          <a
+            href="{{ config.SOCIAL_MEDIA.linkedin }}"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-linkedin-in"></i>
+          </a>
+          {% endif %} {% if config.SOCIAL_MEDIA.github %}
+          <a
+            href="{{ config.SOCIAL_MEDIA.github }}"
+            class="social-link"
+            target="_blank"
+            rel="noopener"
+          >
+            <i class="fab fa-github"></i>
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+  }
+
+  .contact-info {
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .contact-info:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .social-links {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background-color: var(--bs-primary);
+    color: white !important;
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+    text-decoration: none;
+  }
+
+  .social-link:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: var(--bs-primary-dark,rgb(179, 0, 0));
+  }
+
+  .form-floating > .form-control,
+  .form-floating > .form-control-plaintext {
+    padding: 1rem 0.75rem;
+  }
+
+  .form-floating > .form-control:focus,
+  .form-floating > .form-control:not(:placeholder-shown) {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .form-floating > .form-control:-webkit-autofill {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+  }
+
+  .form-floating > .form-select {
+    padding-top: 1.625rem;
+    padding-bottom: 0.625rem;
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Validação do formulário
+    const form = document.getElementById("contactForm");
+
+    form.addEventListener("submit", function (e) {
+      if (!form.checkValidity()) {
+        e.preventDefault();
+        e.stopPropagation();
+      } else {
+        e.preventDefault();
+
+        // Desabilita o botão e mostra loading
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                Enviando...
+            `;
+
+        // Simula envio (substitua por sua lógica de envio real)
+        setTimeout(() => {
+          // Mostra mensagem de sucesso
+          const alert = document.createElement("div");
+          alert.className =
+            "alert alert-success alert-dismissible fade show mt-3";
+          alert.innerHTML = `
+                    <i class="fas fa-check-circle me-2"></i>
+                    Mensagem enviada com sucesso! Entraremos em contato em breve.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                `;
+          form.appendChild(alert);
+
+          // Reseta o formulário e o botão
+          form.reset();
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalText;
+        }, 1500);
+      }
+
+      form.classList.add("was-validated");
+    });
+  });
+</script>
+{% endblock %}
