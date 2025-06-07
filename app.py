@@ -56,13 +56,17 @@ def init_db():
     try:
         db = get_db()
         
-        # Criar tabela de usuários
+        # Criar tabela de usuários com todos os campos
         db.execute('''
             CREATE TABLE IF NOT EXISTS usuarios (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 nome_usuario TEXT UNIQUE NOT NULL,
                 senha TEXT NOT NULL,
                 email TEXT NOT NULL,
+                nome_completo TEXT,
+                data_nascimento TEXT,
+                serie TEXT,
+                materia_dificuldade TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
@@ -476,25 +480,27 @@ def contato() -> str:
 def criar_conta():
     if request.method == 'POST':
         db = get_db()
-        
-        # Verifica se o nome de usuário já existe
         nome_usuario = request.form.get('nome_usuario')
         if db.execute('SELECT id FROM usuarios WHERE nome_usuario = ?', (nome_usuario,)).fetchone():
             db.close()
             flash('Este nome de usuário já está em uso.', 'error')
             return redirect(url_for('criar_conta'))
-        
-        # Cria novo usuário
+        # Coletar todos os campos do formulário
+        nome_completo = request.form.get('nome_completo')
+        email = request.form.get('email')
+        senha = generate_password_hash(request.form.get('senha'))
+        data_nascimento = request.form.get('data_nascimento')
+        serie = request.form.get('serie')
+        materia_dificuldade = request.form.get('materia_dificuldade')
+        # Inserir no banco
         db.execute(
-            'INSERT INTO usuarios (nome_usuario, senha, email) VALUES (?, ?, ?)',
-            (nome_usuario, generate_password_hash(request.form.get('senha')), request.form.get('email'))
+            'INSERT INTO usuarios (nome_usuario, senha, email, nome_completo, data_nascimento, serie, materia_dificuldade) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            (nome_usuario, senha, email, nome_completo, data_nascimento, serie, materia_dificuldade)
         )
         db.commit()
         db.close()
-        
         flash('Conta criada com sucesso! Faça login para continuar.', 'success')
         return redirect(url_for('login'))
-    
     return render_template('criar_conta.html')
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -665,7 +671,7 @@ def secret_admin_dashboard():
     
     try:
         db = get_db()
-        usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
+        usuarios = db.execute('SELECT id, nome_usuario, email, nome_completo, data_nascimento, serie, materia_dificuldade, created_at FROM usuarios').fetchall()
         db.close()
         
         # Converte os timestamps para o formato brasileiro
@@ -674,14 +680,10 @@ def secret_admin_dashboard():
             usuario_dict = dict(usuario)
             if usuario_dict['created_at']:
                 try:
-                    # Converte o timestamp do SQLite para datetime
                     dt = datetime.strptime(usuario_dict['created_at'], '%Y-%m-%d %H:%M:%S')
-                    # Ajusta para o fuso horário do Brasil (UTC-3)
                     dt = dt - timedelta(hours=3)
-                    # Formata a data
                     usuario_dict['created_at'] = dt.strftime('%d/%m/%Y %H:%M:%S')
                 except:
-                    # Se houver erro na conversão, mantém o valor original
                     pass
             usuarios_formatados.append(usuario_dict)
         
