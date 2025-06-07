@@ -1,0 +1,217 @@
+<!-- Chatbot Interface -->
+<div id="chatbot-container" class="chatbot-container">
+  <!-- Chat Button -->
+  <button id="chat-button" class="chat-button">
+    <i class="fas fa-robot"></i>
+  </button>
+
+  <!-- Chat Window -->
+  <div id="chat-window" class="chat-window">
+    <div class="chat-header">
+      <h5>CalcLab Assistant</h5>
+      <button id="close-chat" class="close-button">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div id="chat-messages" class="chat-messages">
+      {% if session.get('user_id') %}
+      <div class="message bot">
+        Olá {{ session.get('nome_usuario') }}! Como posso ajudar você hoje?
+      </div>
+      {% else %}
+      <div class="message bot">
+        Para usar o assistente, você precisa estar logado.
+        <a href="{{ url_for('login') }}" class="btn btn-primary mt-2"
+          >Fazer Login</a
+        >
+      </div>
+      {% endif %}
+    </div>
+    {% if session.get('user_id') %}
+    <div class="chat-input">
+      <input type="text" id="user-input" placeholder="Digite sua dúvida..." />
+      <button id="send-message">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<style>
+  .chatbot-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+
+  .chat-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease;
+  }
+
+  .chat-button:hover {
+    transform: scale(1.1);
+  }
+
+  .chat-window {
+    display: none;
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 350px;
+    height: 500px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .chat-header {
+    padding: 15px;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 10px 10px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .close-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .chat-messages {
+    flex-grow: 1;
+    padding: 15px;
+    overflow-y: auto;
+  }
+
+  .message {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 10px;
+    max-width: 80%;
+  }
+
+  .message.bot {
+    background: #f0f0f0;
+    margin-right: auto;
+  }
+
+  .message.user {
+    background: var(--primary-color);
+    color: white;
+    margin-left: auto;
+  }
+
+  .chat-input {
+    padding: 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px;
+  }
+
+  .chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    outline: none;
+  }
+
+  .chat-input button {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+  }
+
+  .chat-input button:hover {
+    transform: scale(1.1);
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const chatButton = document.getElementById("chat-button");
+    const chatWindow = document.getElementById("chat-window");
+    const closeChat = document.getElementById("close-chat");
+    const sendButton = document.getElementById("send-message");
+    const userInput = document.getElementById("user-input");
+    const chatMessages = document.getElementById("chat-messages");
+
+    // Toggle chat window
+    chatButton.addEventListener("click", () => {
+      chatWindow.style.display =
+        chatWindow.style.display === "none" ? "flex" : "none";
+    });
+
+    closeChat.addEventListener("click", () => {
+      chatWindow.style.display = "none";
+    });
+
+    // Send message
+    function sendMessage() {
+      const message = userInput.value.trim();
+      if (message) {
+        // Add user message
+        addMessage(message, "user");
+        userInput.value = "";
+
+        // Send to backend
+        fetch("/chatbot", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ message: message }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            // Add bot response
+            addMessage(data.response, "bot");
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+            addMessage("Desculpe, ocorreu um erro. Tente novamente.", "bot");
+          });
+      }
+    }
+
+    // Add message to chat
+    function addMessage(text, sender) {
+      const messageDiv = document.createElement("div");
+      messageDiv.className = `message ${sender}`;
+      messageDiv.textContent = text;
+      chatMessages.appendChild(messageDiv);
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // Event listeners
+    if (sendButton && userInput) {
+      sendButton.addEventListener("click", sendMessage);
+      userInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+          sendMessage();
+        }
+      });
+    }
+  });
+</script>

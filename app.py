@@ -20,6 +20,8 @@ from functools import wraps
 from bson.objectid import ObjectId
 import sqlite3
 import pytz
+import shutil
+from chatbot_logic import chatbot
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -693,6 +695,63 @@ def secret_admin_dashboard():
 def secret_admin_logout():
     session.pop('is_admin', None)
     return redirect(url_for('secret_admin'))
+
+@app.route('/chatbot', methods=['POST'])
+def chatbot_endpoint():
+    """Endpoint para o chatbot"""
+    # Verifica se o usuário está logado
+    if not session.get('user_id'):
+        return jsonify({'response': 'Por favor, faça login para usar o assistente.'}), 401
+    
+    try:
+        data = request.get_json()
+        message = data.get('message', '')
+        user_id = session.get('user_id')
+        user_name = session.get('nome_usuario')
+        
+        # Gera resposta
+        response = chatbot.generate_response(message, user_name)
+        
+        # Salva conversa
+        chatbot.save_conversation(user_id, message, response)
+        
+        return jsonify({'response': response})
+    except Exception as e:
+        logger.error(f"Erro no chatbot: {str(e)}")
+        return jsonify({'response': 'Desculpe, ocorreu um erro. Tente novamente.'}), 500
+
+def backup_database():
+    """Faz backup do banco de dados"""
+    try:
+        if os.path.exists(DATABASE):
+            backup_dir = 'backups'
+            if not os.path.exists(backup_dir):
+                os.makedirs(backup_dir)
+            
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            backup_file = os.path.join(backup_dir, f'calclab_{timestamp}.db')
+            
+            shutil.copy2(DATABASE, backup_file)
+            logger.info(f"Backup criado: {backup_file}")
+            
+            # Mantém apenas os últimos 5 backups
+            backups = sorted([f for f in os.listdir(backup_dir) if f.startswith('calclab_')])
+            if len(backups) > 5:
+                for old_backup in backups[:-5]:
+                    os.remove(os.path.join(backup_dir, old_backup))
+    except Exception as e:
+        logger.error(f"Erro ao fazer backup: {str(e)}")
+
+@app.before_request
+def before_request():
+    """Executado antes de cada requisição"""
+    # Faz backup do banco de dados a cada 24 horas
+    if not hasattr(app, 'last_backup'):
+        app.last_backup = datetime.now()
+    
+    if (datetime.now() - app.last_backup) > timedelta(hours=24):
+        backup_database()
+        app.last_backup = datetime.now()
 
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()

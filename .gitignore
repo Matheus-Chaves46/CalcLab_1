@@ -79,4 +79,9 @@ docs/build/
 *.bak
 *.swp
 *~.nib
-local.properties 
+local.properties
+
+# Arquivos do chatbot
+chat_history.json
+backups/
+*.db.bak 
