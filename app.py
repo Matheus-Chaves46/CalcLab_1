@@ -14,6 +14,11 @@ import json
 import os
 from werkzeug.security import generate_password_hash
 import logging
+from pymongo import MongoClient
+from dotenv import load_dotenv
+
+# Carrega variáveis de ambiente
+load_dotenv()
 
 # Configuração de logging
 logging.basicConfig(level=logging.INFO)
@@ -23,34 +28,37 @@ app = Flask(__name__)
 app.config.from_object(config)
 app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
 
-# Garante que o diretório data existe
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-os.makedirs(DATA_DIR, exist_ok=True)
-USERS_FILE = os.path.join(DATA_DIR, 'usuarios.json')
+# Configuração do MongoDB
+try:
+    # Tenta obter a URL do MongoDB das variáveis de ambiente
+    mongo_url = os.environ.get('MONGODB_URI')
+    if not mongo_url:
+        # Se não estiver definida, usa uma URL local para desenvolvimento
+        mongo_url = "mongodb://localhost:27017/"
+    
+    client = MongoClient(mongo_url)
+    db = client.calclab  # Nome do banco de dados
+    usuarios_collection = db.usuarios  # Nome da coleção
+    logger.info("Conexão com MongoDB estabelecida com sucesso")
+except Exception as e:
+    logger.error(f"Erro ao conectar com MongoDB: {str(e)}")
+    raise
 
-# Função para carregar usuários do JSON
+# Função para carregar usuários do MongoDB
 def carregar_usuarios():
     try:
-        if os.path.exists(USERS_FILE):
-            with open(USERS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        else:
-            # Se o arquivo não existe, cria um novo com estrutura vazia
-            data = {"usuarios": []}
-            with open(USERS_FILE, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=4)
-            return data
+        usuarios = list(usuarios_collection.find({}, {'_id': 0}))
+        return {"usuarios": usuarios}
     except Exception as e:
         logger.error(f"Erro ao carregar usuários: {str(e)}")
         return {"usuarios": []}
 
-# Função para salvar usuários no JSON
-def salvar_usuarios(usuarios):
+# Função para salvar usuário no MongoDB
+def salvar_usuario(usuario):
     try:
-        with open(USERS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(usuarios, f, ensure_ascii=False, indent=4)
+        usuarios_collection.insert_one(usuario)
     except Exception as e:
-        logger.error(f"Erro ao salvar usuários: {str(e)}")
+        logger.error(f"Erro ao salvar usuário: {str(e)}")
         raise
 
 @app.context_processor
@@ -421,14 +429,11 @@ def contato() -> str:
 def criar_conta():
     try:
         if request.method == 'POST':
-            usuarios = carregar_usuarios()
-            
             # Verifica se o nome de usuário já existe
             nome_usuario = request.form.get('nome_usuario')
-            for usuario in usuarios['usuarios']:
-                if usuario['nome_usuario'] == nome_usuario:
-                    flash('Este nome de usuário já está em uso.', 'error')
-                    return redirect(url_for('criar_conta'))
+            if usuarios_collection.find_one({'nome_usuario': nome_usuario}):
+                flash('Este nome de usuário já está em uso.', 'error')
+                return redirect(url_for('criar_conta'))
             
             # Cria novo usuário
             novo_usuario = {
@@ -441,9 +446,7 @@ def criar_conta():
                 'materia_dificuldade': request.form.get('materia_dificuldade')
             }
             
-            usuarios['usuarios'].append(novo_usuario)
-            salvar_usuarios(usuarios)
-            
+            salvar_usuario(novo_usuario)
             flash('Conta criada com sucesso! Faça login para continuar.', 'success')
             return redirect(url_for('index'))
         
@@ -459,10 +462,8 @@ def verificar_usuario():
         data = request.get_json()
         nome_usuario = data.get('username')
         
-        usuarios = carregar_usuarios()
-        for usuario in usuarios['usuarios']:
-            if usuario['nome_usuario'] == nome_usuario:
-                return jsonify({'exists': True})
+        if usuarios_collection.find_one({'nome_usuario': nome_usuario}):
+            return jsonify({'exists': True})
         
         return jsonify({'exists': False})
     except Exception as e:
