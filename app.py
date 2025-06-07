@@ -19,6 +19,7 @@ from dotenv import load_dotenv
 from functools import wraps
 from bson.objectid import ObjectId
 import sqlite3
+import pytz
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -43,6 +44,11 @@ def get_db():
     db = sqlite3.connect(DATABASE)
     db.row_factory = sqlite3.Row
     return db
+
+def get_brazil_time():
+    """Retorna o horário atual do Brasil"""
+    tz = pytz.timezone('America/Sao_Paulo')
+    return datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')
 
 def init_db():
     """Inicializa o banco de dados criando a tabela de usuários se não existir"""
@@ -660,7 +666,26 @@ def secret_admin_dashboard():
         db = get_db()
         usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
         db.close()
-        return render_template('secret_admin_dashboard.html', usuarios=usuarios)
+        
+        # Converte os timestamps para o formato brasileiro
+        usuarios_formatados = []
+        for usuario in usuarios:
+            usuario_dict = dict(usuario)
+            if usuario_dict['created_at']:
+                try:
+                    # Converte o timestamp do SQLite para datetime
+                    dt = datetime.strptime(usuario_dict['created_at'], '%Y-%m-%d %H:%M:%S')
+                    # Converte para o fuso horário do Brasil
+                    tz = pytz.timezone('America/Sao_Paulo')
+                    dt = pytz.utc.localize(dt).astimezone(tz)
+                    # Formata a data
+                    usuario_dict['created_at'] = dt.strftime('%d/%m/%Y %H:%M:%S')
+                except:
+                    # Se houver erro na conversão, mantém o valor original
+                    pass
+            usuarios_formatados.append(usuario_dict)
+        
+        return render_template('secret_admin_dashboard.html', usuarios=usuarios_formatados)
     except Exception as e:
         logger.error(f"Erro ao listar usuários: {str(e)}")
         flash('Erro ao carregar lista de usuários.', 'error')
