@@ -6,9 +6,9 @@
   </button>
 
   <!-- Chat Window -->
-  <div id="chat-window" class="chat-window">
+  <div id="chat-window" class="chat-window" style="display: none">
     <div class="chat-header">
-      <h5>CalcLab Assistant</h5>
+      <h5>Calc AI</h5>
       <button id="close-chat" class="close-button">
         <i class="fas fa-times"></i>
       </button>
@@ -50,7 +50,7 @@
     width: 60px;
     height: 60px;
     border-radius: 50%;
-    background-color: var(--primary-color);
+    background-color: #0d6efd;
     color: white;
     border: none;
     cursor: pointer;
@@ -60,10 +60,10 @@
 
   .chat-button:hover {
     transform: scale(1.1);
+    background-color: #0b5ed7;
   }
 
   .chat-window {
-    display: none;
     position: fixed;
     bottom: 90px;
     right: 20px;
@@ -78,7 +78,7 @@
 
   .chat-header {
     padding: 15px;
-    background: var(--primary-color);
+    background: #0d6efd;
     color: white;
     border-radius: 10px 10px 0 0;
     display: flex;
@@ -112,7 +112,7 @@
   }
 
   .message.user {
-    background: var(--primary-color);
+    background: #0d6efd;
     color: white;
     margin-left: auto;
   }
@@ -133,7 +133,7 @@
   }
 
   .chat-input button {
-    background: var(--primary-color);
+    background: #0d6efd;
     color: white;
     border: none;
     border-radius: 50%;
@@ -145,6 +145,7 @@
 
   .chat-input button:hover {
     transform: scale(1.1);
+    background-color: #0b5ed7;
   }
 </style>
 
