@@ -17,6 +17,7 @@ import logging
 from pymongo import MongoClient
 from dotenv import load_dotenv
 from functools import wraps
+from bson.objectid import ObjectId
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -27,28 +28,19 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(config)
-app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
+app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
 
 # Configuração do MongoDB
-try:
-    # Tenta obter a URL do MongoDB das variáveis de ambiente
-    mongo_url = os.environ.get('MONGODB_URI')
-    if not mongo_url:
-        # Se não estiver definida, usa uma URL local para desenvolvimento
-        mongo_url = "mongodb://localhost:27017/"
-    
-    client = MongoClient(mongo_url)
-    db = client.calclab  # Nome do banco de dados
-    usuarios_collection = db.usuarios  # Nome da coleção
-    logger.info("Conexão com MongoDB estabelecida com sucesso")
-except Exception as e:
-    logger.error(f"Erro ao conectar com MongoDB: {str(e)}")
-    raise
+mongodb_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+client = MongoClient(mongodb_uri)
+db = client['calclab']
+usuarios = db['usuarios']
+logger.info("Conexão com MongoDB estabelecida com sucesso")
 
 # Função para carregar usuários do MongoDB
 def carregar_usuarios():
     try:
-        usuarios = list(usuarios_collection.find({}, {'_id': 0}))
+        usuarios = list(usuarios.find({}, {'_id': 0}))
         return {"usuarios": usuarios}
     except Exception as e:
         logger.error(f"Erro ao carregar usuários: {str(e)}")
@@ -57,7 +49,7 @@ def carregar_usuarios():
 # Função para salvar usuário no MongoDB
 def salvar_usuario(usuario):
     try:
-        usuarios_collection.insert_one(usuario)
+        usuarios.insert_one(usuario)
     except Exception as e:
         logger.error(f"Erro ao salvar usuário: {str(e)}")
         raise
@@ -432,7 +424,7 @@ def criar_conta():
         if request.method == 'POST':
             # Verifica se o nome de usuário já existe
             nome_usuario = request.form.get('nome_usuario')
-            if usuarios_collection.find_one({'nome_usuario': nome_usuario}):
+            if usuarios.find_one({'nome_usuario': nome_usuario}):
                 flash('Este nome de usuário já está em uso.', 'error')
                 return redirect(url_for('criar_conta'))
             
@@ -463,7 +455,7 @@ def verificar_usuario():
         data = request.get_json()
         nome_usuario = data.get('username')
         
-        if usuarios_collection.find_one({'nome_usuario': nome_usuario}):
+        if usuarios.find_one({'nome_usuario': nome_usuario}):
             return jsonify({'exists': True})
         
         return jsonify({'exists': False})
@@ -487,7 +479,7 @@ def login():
         nome_usuario = request.form.get('nome_usuario')
         senha = request.form.get('senha')
         
-        usuario = usuarios_collection.find_one({'nome_usuario': nome_usuario})
+        usuario = usuarios.find_one({'nome_usuario': nome_usuario})
         
         if usuario and check_password_hash(usuario['senha'], senha):
             session['user_id'] = str(usuario['_id'])
@@ -513,7 +505,7 @@ def esqueceu_senha():
 @app.route('/minha-conta')
 @login_required
 def minha_conta():
-    usuario = usuarios_collection.find_one({'_id': session['user_id']})
+    usuario = usuarios.find_one({'_id': session['user_id']})
     if not usuario:
         session.pop('user_id', None)
         flash('Usuário não encontrado.', 'error')
@@ -526,7 +518,7 @@ def minha_conta():
 @app.route('/editar-conta', methods=['GET', 'POST'])
 @login_required
 def editar_conta():
-    usuario = usuarios_collection.find_one({'_id': session['user_id']})
+    usuario = usuarios.find_one({'_id': session['user_id']})
     if not usuario:
         session.pop('user_id', None)
         flash('Usuário não encontrado.', 'error')
@@ -547,7 +539,7 @@ def editar_conta():
         if nova_senha:
             dados_atualizados['senha'] = generate_password_hash(nova_senha)
         
-        usuarios_collection.update_one(
+        usuarios.update_one(
             {'_id': session['user_id']},
             {'$set': dados_atualizados}
         )
