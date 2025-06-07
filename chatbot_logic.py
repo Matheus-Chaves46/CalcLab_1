@@ -3,6 +3,14 @@ import re
 import json
 import os
 from datetime import datetime
+import openai
+from dotenv import load_dotenv
+
+# Carrega variáveis de ambiente
+load_dotenv()
+
+# Configuração da API do OpenAI
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 class CalcLabChatbot:
     def __init__(self):
@@ -70,28 +78,56 @@ class CalcLabChatbot:
             'calculators': relevant_calculators
         }
 
+    def generate_ai_response(self, text: str, user_name: Optional[str] = None) -> str:
+        """Gera uma resposta usando a API do ChatGPT"""
+        try:
+            # Análise inicial do texto
+            analysis = self.analyze_input(text)
+            
+            # Prepara o contexto para o ChatGPT
+            context = f"""Você é um assistente especializado em física, química e matemática.
+            Sua função é ajudar os usuários a escolher a calculadora correta do CalcLab.
+            
+            Calculadoras disponíveis:
+            {json.dumps(self.calculators, indent=2, ensure_ascii=False)}
+            
+            Análise da pergunta do usuário:
+            Palavras-chave encontradas: {', '.join(analysis['keywords'])}
+            Calculadoras relevantes: {[calc['name'] for calc in analysis['calculators']]}
+            
+            Usuário: {text}
+            
+            Responda de forma amigável e profissional, explicando qual calculadora usar e por quê.
+            Se precisar de mais informações, peça gentilmente.
+            """
+
+            # Chama a API do ChatGPT
+            response = openai.ChatCompletion.create(
+                model="gpt-3.5-turbo",
+                messages=[
+                    {"role": "system", "content": context},
+                    {"role": "user", "content": text}
+                ],
+                temperature=0.7,
+                max_tokens=500
+            )
+
+            # Processa a resposta
+            ai_response = response.choices[0].message.content.strip()
+            
+            # Personaliza a resposta com o nome do usuário
+            if user_name:
+                ai_response = f"{user_name}, {ai_response[0].lower()}{ai_response[1:]}"
+            
+            return ai_response
+
+        except Exception as e:
+            print(f"Erro ao gerar resposta: {str(e)}")
+            return "Desculpe, tive um problema ao processar sua pergunta. Pode tentar novamente?"
+
     def generate_response(self, text: str, user_name: Optional[str] = None) -> str:
         """Gera uma resposta baseada na análise do texto"""
-        analysis = self.analyze_input(text)
-        
-        if not analysis['calculators']:
-            return f"{user_name + ', ' if user_name else ''}Desculpe, não consegui identificar qual calculadora você precisa. " \
-                   f"Você poderia me dar mais detalhes sobre o problema? Por exemplo, quais valores você tem disponível?"
-        
-        # Gera resposta personalizada
-        response = f"{user_name + ', ' if user_name else ''}Baseado no seu problema, "
-        
-        if len(analysis['calculators']) == 1:
-            calc = analysis['calculators'][0]
-            response += f"recomendo usar a calculadora de {calc['name'].replace('_', ' ')}. "
-            response += f"Você precisará dos seguintes valores: {', '.join(calc['params'])}. "
-        else:
-            response += "existem algumas opções que podem ajudar:\n\n"
-            for calc in analysis['calculators']:
-                response += f"- {calc['name'].replace('_', ' ')}: precisa de {', '.join(calc['params'])}\n"
-            response += "\nQual dessas opções melhor se encaixa no seu problema?"
-        
-        return response
+        return self.generate_ai_response(text, user_name)
 
     def save_conversation(self, user_id: str, message: str, response: str):
         """Salva a conversa no histórico"""

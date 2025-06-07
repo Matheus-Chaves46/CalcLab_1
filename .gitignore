@@ -84,4 +84,7 @@ local.properties
 # Arquivos do chatbot
 chat_history.json
 backups/
-*.db.bak 
+*.db.bak
+
+# Nova variável de ambiente
+OPENAI_API_KEY=sua_chave_aqui 
