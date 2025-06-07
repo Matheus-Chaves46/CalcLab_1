@@ -41,7 +41,7 @@ DATABASE = 'calclab.db'
 ADMIN_USERNAME = "matheus"
 ADMIN_PASSWORD = "123456"  # Em produção, use uma senha mais segura
 
-print('Banco de dados será criado em: C:\Users\mathe\Desktop\Programação\Programação Python\Python Projetcs\CalcLab\calclab.db')
+print('Banco de dados será criado em:', os.path.abspath(DATABASE))
 
 def get_db():
     """Conecta ao banco de dados SQLite"""
