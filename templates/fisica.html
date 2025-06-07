@@ -4,9 +4,7 @@
   <!-- Hero Section -->
   <div class="text-center mb-5">
     <h1 class="display-4 fw-bold text-primary">Calculadora de Física</h1>
-    <p class="lead text-muted">
-      Realize cálculos físicos complexos com facilidade
-    </p>
+    <p class="lead text-muted">Fórmulas aplicadas com simplicidade</p>
   </div>
 
   <div class="row">
@@ -64,11 +62,40 @@
         </div>
         <div class="card-body">
           <form id="form-calculadora" onsubmit="return calcular(event)">
-            <input type="hidden" id="tipo-calculo" name="tipo_calculo" />
+            <div class="mb-3">
+              <label for="tipo_calculo" class="form-label"
+                >Selecione o Cálculo:</label
+              >
+              <select
+                class="form-select"
+                id="tipo_calculo"
+                name="tipo_calculo"
+                required
+              >
+                <option value="">-- Selecione --</option>
+                {% for category_key, category in
+                config.CALCULATORS['fisica']['categories'].items() %}
+                <optgroup label="{{ category.title }}">
+                  {% for calc_key, calc in category.calculations.items() %}
+                  <option
+                    value="{{ calc_key }}"
+                    data-description="{{ calc.description }}"
+                  >
+                    {{ calc.title }}
+                  </option>
+                  {% endfor %}
+                </optgroup>
+                {% endfor %}
+              </select>
+            </div>
 
-            <!-- Campos dinâmicos serão inseridos aqui -->
-            <div id="campos-variaveis"></div>
+            <!-- Área para exibir a descrição do cálculo -->
+            <div
+              id="calculation-description"
+              class="alert alert-info d-none"
+            ></div>
 
+            <div id="form-fields"></div>
             <div class="mt-4">
               <button type="submit" class="btn btn-success me-2">
                 <i class="fas fa-calculator"></i> Calcular
@@ -103,46 +130,50 @@
 {% endblock %} {% block scripts %}
 <script>
   // Configurações dos cálculos
-  const calculatorConfig = JSON.parse('{{ config.CALCULATORS.fisica|tojson|safe }}');
+  const calculatorConfig = JSON.parse(
+    "{{ config.CALCULATORS.fisica|tojson|safe }}"
+  );
 
   // Função para formatar variáveis
   function formatarVariavel(nome) {
-      return nome
-          .split('_')
-          .map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1))
-          .join(' ');
+    return nome
+      .split("_")
+      .map((palavra) => palavra.charAt(0).toUpperCase() + palavra.slice(1))
+      .join(" ");
   }
 
   // Função para atualizar os campos de variáveis
   function atualizarVariaveis(tipo) {
-      const camposDiv = document.getElementById('campos-variaveis');
-      camposDiv.innerHTML = '';
+    const camposDiv = document.getElementById("campos-variaveis");
+    camposDiv.innerHTML = "";
 
-      // Encontra o cálculo nas categorias
-      let calcInfo = null;
-      for (const categoria of Object.values(calculatorConfig.categories)) {
-          if (tipo in categoria.calculations) {
-              calcInfo = categoria.calculations[tipo];
-              break;
-          }
+    // Encontra o cálculo nas categorias
+    let calcInfo = null;
+    for (const categoria of Object.values(calculatorConfig.categories)) {
+      if (tipo in categoria.calculations) {
+        calcInfo = categoria.calculations[tipo];
+        break;
       }
+    }
 
-      if (!calcInfo) return;
+    if (!calcInfo) return;
 
-      // Atualiza o título
-      document.getElementById('titulo-calculadora').textContent = calcInfo.title;
-      document.getElementById('tipo-calculo').value = tipo;
+    // Atualiza o título
+    document.getElementById("titulo-calculadora").textContent = calcInfo.title;
+    document.getElementById("tipo-calculo").value = tipo;
 
-      // Cria a seção de seleção de variáveis
-      const selecaoDiv = document.createElement('div');
-      selecaoDiv.className = 'card mb-4';
-      selecaoDiv.innerHTML = `
+    // Cria a seção de seleção de variáveis
+    const selecaoDiv = document.createElement("div");
+    selecaoDiv.className = "card mb-4";
+    selecaoDiv.innerHTML = `
           <div class="card-header bg-primary text-white">
               <h6 class="mb-0">Selecione as Variáveis</h6>
           </div>
           <div class="card-body" id="selecao-variaveis">
               <div class="row">
-                  ${calcInfo.variables.map(variavel => `
+                  ${calcInfo.variables
+                    .map(
+                      (variavel) => `
                       <div class="col-md-6 mb-2">
                           <div class="form-check">
                               <input class="form-check-input" type="checkbox" value="${variavel}" 
@@ -152,104 +183,128 @@
                               </label>
                           </div>
                       </div>
-                  `).join('')}
+                  `
+                    )
+                    .join("")}
               </div>
           </div>
       `;
-      camposDiv.appendChild(selecaoDiv);
+    camposDiv.appendChild(selecaoDiv);
 
-      // Cria a div para os campos de input
-      const inputsDiv = document.createElement('div');
-      inputsDiv.id = 'campos-input';
-      camposDiv.appendChild(inputsDiv);
+    // Cria a div para os campos de input
+    const inputsDiv = document.createElement("div");
+    inputsDiv.id = "campos-input";
+    camposDiv.appendChild(inputsDiv);
   }
 
   // Função para alternar a visibilidade do campo de input
   function toggleVariavel(variavel) {
-      const checkbox = document.getElementById(`check_${variavel}`);
-      const inputsDiv = document.getElementById('campos-input');
-      const existingInput = document.getElementById(`input_${variavel}`);
+    const checkbox = document.getElementById(`check_${variavel}`);
+    const inputsDiv = document.getElementById("campos-input");
+    const existingInput = document.getElementById(`input_${variavel}`);
 
-      if (checkbox.checked && !existingInput) {
-          // Criar novo campo de input
-          const div = document.createElement('div');
-          div.className = 'mb-3';
-          div.id = `input_${variavel}`;
+    if (checkbox.checked && !existingInput) {
+      // Criar novo campo de input
+      const div = document.createElement("div");
+      div.className = "mb-3";
+      div.id = `input_${variavel}`;
 
-          const label = document.createElement('label');
-          label.className = 'form-label';
-          label.textContent = formatarVariavel(variavel);
+      const label = document.createElement("label");
+      label.className = "form-label";
+      label.textContent = formatarVariavel(variavel);
 
-          const input = document.createElement('input');
-          input.type = 'number';
-          input.className = 'form-control';
-          input.name = variavel;
-          input.step = 'any';
-          input.required = true;
-          input.placeholder = `Digite o valor de ${formatarVariavel(variavel)}`;
+      const input = document.createElement("input");
+      input.type = "number";
+      input.className = "form-control";
+      input.name = variavel;
+      input.step = "any";
+      input.required = true;
+      input.placeholder = `Digite o valor de ${formatarVariavel(variavel)}`;
 
-          div.appendChild(label);
-          div.appendChild(input);
-          inputsDiv.appendChild(div);
-      } else if (!checkbox.checked && existingInput) {
-          // Remover campo de input
-          existingInput.remove();
-      }
+      div.appendChild(label);
+      div.appendChild(input);
+      inputsDiv.appendChild(div);
+    } else if (!checkbox.checked && existingInput) {
+      // Remover campo de input
+      existingInput.remove();
+    }
   }
 
   // Função para selecionar um cálculo
   function selecionarCalculo(tipo) {
-      atualizarVariaveis(tipo);
-      document.getElementById('resultado').style.display = 'none';
-      document.getElementById('erro').style.display = 'none';
+    atualizarVariaveis(tipo);
+    document.getElementById("resultado").style.display = "none";
+    document.getElementById("erro").style.display = "none";
   }
 
   // Função para calcular
   async function calcular(event) {
-      event.preventDefault();
+    event.preventDefault();
 
-      const form = event.target;
-      const formData = new FormData(form);
-      const data = Object.fromEntries(formData.entries());
+    const form = event.target;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-      try {
-          const response = await fetch('/fisica', {
-              method: 'POST',
-              headers: {
-                  'Content-Type': 'application/json'
-              },
-              body: JSON.stringify(data)
-          });
+    try {
+      const response = await fetch("/fisica", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-          const result = await response.json();
+      const result = await response.json();
 
-          if (response.ok) {
-              document.getElementById('resultado').style.display = 'block';
-              document.getElementById('erro').style.display = 'none';
+      if (response.ok) {
+        document.getElementById("resultado").style.display = "block";
+        document.getElementById("erro").style.display = "none";
 
-              // Formata o resultado
-              let resultadoHtml = '';
-              for (const [chave, valor] of Object.entries(result.resultado)) {
-                  resultadoHtml += `<strong>${formatarVariavel(chave)}:</strong> ${valor}<br>`;
-              }
-              document.getElementById('resultado-valor').innerHTML = resultadoHtml;
-          } else {
-              throw new Error(result.erro);
-          }
-      } catch (error) {
-          document.getElementById('resultado').style.display = 'none';
-          document.getElementById('erro').style.display = 'block';
-          document.getElementById('erro-mensagem').textContent = error.message;
+        // Formata o resultado
+        let resultadoHtml = "";
+        for (const [chave, valor] of Object.entries(result.resultado)) {
+          resultadoHtml += `<strong>${formatarVariavel(
+            chave
+          )}:</strong> ${valor}<br>`;
+        }
+        document.getElementById("resultado-valor").innerHTML = resultadoHtml;
+      } else {
+        throw new Error(result.erro);
       }
+    } catch (error) {
+      document.getElementById("resultado").style.display = "none";
+      document.getElementById("erro").style.display = "block";
+      document.getElementById("erro-mensagem").textContent = error.message;
+    }
 
-      return false;
+    return false;
   }
 
   // Função para limpar o formulário
   function limparFormulario() {
-      document.getElementById('form-calculadora').reset();
-      document.getElementById('resultado').style.display = 'none';
-      document.getElementById('erro').style.display = 'none';
+    document.getElementById("form-calculadora").reset();
+    document.getElementById("resultado").style.display = "none";
+    document.getElementById("erro").style.display = "none";
   }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const tipoCalculoSelect = document.getElementById("tipo_calculo");
+    const calculationDescriptionDiv = document.getElementById(
+      "calculation-description"
+    );
+
+    tipoCalculoSelect.addEventListener("change", function () {
+      const selectedOption = this.options[this.selectedIndex];
+      const description = selectedOption.dataset.description;
+
+      if (description) {
+        calculationDescriptionDiv.textContent = description;
+        calculationDescriptionDiv.classList.remove("d-none");
+      } else {
+        calculationDescriptionDiv.textContent = "";
+        calculationDescriptionDiv.classList.add("d-none");
+      }
+    });
+  });
 </script>
 {% endblock %}
