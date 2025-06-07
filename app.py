@@ -3,16 +3,34 @@ Aplicação principal do CalcLab.
 """
 
 from typing import Dict, Any, Optional
-from flask import Flask, render_template, request, jsonify, Response
+from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash
 from datetime import datetime
 from werkzeug.exceptions import NotFound, BadRequest
 import config
 import calc_matematica as calc_mat
 import calc_fisica as calc_fis
 import calc_quimica as calc_qui
+import json
+import os
+from werkzeug.security import generate_password_hash
 
 app = Flask(__name__)
 app.config.from_object(config)
+app.secret_key = os.urandom(24)  # Necessário para flash messages
+
+# Função para carregar usuários do JSON
+def carregar_usuarios():
+    try:
+        with open('data/usuarios.json', 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        return {"usuarios": []}
+
+# Função para salvar usuários no JSON
+def salvar_usuarios(usuarios):
+    os.makedirs('data', exist_ok=True)
+    with open('data/usuarios.json', 'w', encoding='utf-8') as f:
+        json.dump(usuarios, f, ensure_ascii=False, indent=4)
 
 @app.context_processor
 def inject_now() -> Dict[str, datetime]:
@@ -377,6 +395,49 @@ def contato() -> str:
         str: HTML renderizado da página de contato.
     """
     return render_template('contato.html')
+
+@app.route('/criar-conta', methods=['GET', 'POST'])
+def criar_conta():
+    if request.method == 'POST':
+        usuarios = carregar_usuarios()
+        
+        # Verifica se o nome de usuário já existe
+        nome_usuario = request.form.get('nome_usuario')
+        for usuario in usuarios['usuarios']:
+            if usuario['nome_usuario'] == nome_usuario:
+                flash('Este nome de usuário já está em uso.', 'error')
+                return redirect(url_for('criar_conta'))
+        
+        # Cria novo usuário
+        novo_usuario = {
+            'nome_completo': request.form.get('nome_completo'),
+            'nome_usuario': nome_usuario,
+            'email': request.form.get('email'),
+            'senha': generate_password_hash(request.form.get('senha')),
+            'data_nascimento': request.form.get('data_nascimento'),
+            'serie': request.form.get('serie'),
+            'materia_dificuldade': request.form.get('materia_dificuldade')
+        }
+        
+        usuarios['usuarios'].append(novo_usuario)
+        salvar_usuarios(usuarios)
+        
+        flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+        return redirect(url_for('index'))
+    
+    return render_template('criar_conta.html')
+
+@app.route('/verificar-usuario', methods=['POST'])
+def verificar_usuario():
+    data = request.get_json()
+    nome_usuario = data.get('username')
+    
+    usuarios = carregar_usuarios()
+    for usuario in usuarios['usuarios']:
+        if usuario['nome_usuario'] == nome_usuario:
+            return jsonify({'exists': True})
+    
+    return jsonify({'exists': False})
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
