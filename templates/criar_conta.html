@@ -362,5 +362,49 @@
         alert("Erro ao verificar usuário. Tente novamente.");
       }
     });
+
+  // Verifica o nome de usuário quando o campo perde o foco
+  document.getElementById("nome_usuario").addEventListener("blur", function () {
+    const username = this.value;
+    if (username) {
+      fetch("/verificar-usuario", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username: username }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          const errorDiv = document.getElementById("usernameError");
+          if (data.exists) {
+            errorDiv.textContent = "Este nome de usuário já está em uso.";
+            this.setCustomValidity("Este nome de usuário já está em uso.");
+          } else {
+            errorDiv.textContent = "";
+            this.setCustomValidity("");
+          }
+        })
+        .catch((error) => {
+          console.error("Erro ao verificar usuário:", error);
+        });
+    }
+  });
+
+  // Valida a senha quando o campo perde o foco
+  document.getElementById("senha").addEventListener("blur", function () {
+    validatePassword(this.value);
+  });
+
+  // Valida o formulário antes de enviar
+  document
+    .getElementById("signupForm")
+    .addEventListener("submit", function (e) {
+      const password = document.getElementById("senha").value;
+      if (!validatePassword(password)) {
+        e.preventDefault();
+        alert("Por favor, atenda a todos os requisitos de senha.");
+      }
+    });
 </script>
 {% endblock %}

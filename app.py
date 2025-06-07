@@ -528,6 +528,24 @@ def editar_conta():
     db.close()
     return render_template('editar_conta.html', usuario=dict(user))
 
+@app.route('/verificar-usuario', methods=['POST'])
+def verificar_usuario():
+    try:
+        data = request.get_json()
+        nome_usuario = data.get('username')
+        
+        db = get_db()
+        usuario = db.execute('SELECT id FROM usuarios WHERE nome_usuario = ?', (nome_usuario,)).fetchone()
+        db.close()
+        
+        if usuario:
+            return jsonify({'exists': True})
+        
+        return jsonify({'exists': False})
+    except Exception as e:
+        logger.error(f"Erro na rota verificar_usuario: {str(e)}")
+        return jsonify({'error': 'Erro ao verificar usuário'}), 500
+
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()
 
