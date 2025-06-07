@@ -35,8 +35,8 @@ app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
 DATABASE = 'calclab.db'
 
 # Adicione estas constantes no início do arquivo, após as importações
-ADMIN_USERNAME = "admin"
-ADMIN_PASSWORD = "admin123"  # Em produção, use uma senha mais segura
+ADMIN_USERNAME = "matheus"
+ADMIN_PASSWORD = "123456"  # Em produção, use uma senha mais segura
 
 def get_db():
     """Conecta ao banco de dados SQLite"""
@@ -636,6 +636,40 @@ def admin_logout():
     session.pop('admin_username', None)
     flash('Logout realizado com sucesso.', 'success')
     return redirect(url_for('admin_login'))
+
+@app.route('/admin-secret-123', methods=['GET', 'POST'])
+def secret_admin():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session['is_admin'] = True
+            return redirect(url_for('secret_admin_dashboard'))
+        else:
+            flash('Usuário ou senha incorretos', 'error')
+    
+    return render_template('secret_admin.html')
+
+@app.route('/admin-secret-123/dashboard')
+def secret_admin_dashboard():
+    if not session.get('is_admin'):
+        return redirect(url_for('secret_admin'))
+    
+    try:
+        db = get_db()
+        usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
+        db.close()
+        return render_template('secret_admin_dashboard.html', usuarios=usuarios)
+    except Exception as e:
+        logger.error(f"Erro ao listar usuários: {str(e)}")
+        flash('Erro ao carregar lista de usuários.', 'error')
+        return redirect(url_for('secret_admin'))
+
+@app.route('/admin-secret-123/logout')
+def secret_admin_logout():
+    session.pop('is_admin', None)
+    return redirect(url_for('secret_admin'))
 
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()
