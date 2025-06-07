@@ -303,91 +303,76 @@ def fisica() -> Response:
             if not calc_info:
                 raise NotFound('Cálculo não encontrado')
             
-            # Coleta os valores das variáveis
+            # Coleta os valores das variáveis, incluindo a variável a ser calculada como None
             variaveis = {}
             for var in calc_info['variables']:
-                if var in data:
+                if var in data and data[var] is not None:
                     variaveis[var] = float(data[var])
+                else:
+                    variaveis[var] = None # A variável que não foi fornecida será None
             
             # Chama a função apropriada baseada no tipo de cálculo
-            if tipo_calculo == "velocidade_media":
+            # As funções em calc_fisica.py agora esperam a variável a ser calculada como None
+            if tipo_calculo == 'velocidade_media':
                 resultado = calc_fis.velocidade_media(**variaveis)
-
-            elif tipo_calculo == "movimento_uniforme":
+            elif tipo_calculo == 'movimento_uniforme':
                 resultado = calc_fis.movimento_uniforme(**variaveis)
-
-            elif tipo_calculo == "movimento_uniformemente_variado":
+            elif tipo_calculo == 'movimento_uniformemente_variado':
                 resultado = calc_fis.movimento_uniformemente_variado(**variaveis)
-
-            elif tipo_calculo == "equacao_torricelli":
+            elif tipo_calculo == 'equacao_torricelli':
                 resultado = calc_fis.equacao_torricelli(**variaveis)
-
-            elif tipo_calculo == "principio_fundamental_dinamica":
+            elif tipo_calculo == 'principio_fundamental_dinamica':
                 resultado = calc_fis.principio_fundamental_dinamica(**variaveis)
-
-            elif tipo_calculo == "forca_peso":
+            elif tipo_calculo == 'forca_peso':
                 resultado = calc_fis.forca_peso(**variaveis)
-
-            elif tipo_calculo == "forca_atrito":
+            elif tipo_calculo == 'forca_atrito':
                 resultado = calc_fis.forca_atrito(**variaveis)
-
-            elif tipo_calculo == "trabalho_forca_constante":
+            elif tipo_calculo == 'trabalho_forca_constante':
                 resultado = calc_fis.trabalho_forca_constante(**variaveis)
-
-            elif tipo_calculo == "energia_cinetica":
+            elif tipo_calculo == 'energia_cinetica':
                 resultado = calc_fis.energia_cinetica(**variaveis)
-
-            elif tipo_calculo == "energia_potencial":
-                resultado = calc_fis.energia_potencial(**variaveis)
-
-            elif tipo_calculo == "potencia_media":
-                resultado = calc_fis.potencia_media(**variaveis)
-
-            elif tipo_calculo == "pressao":
-                resultado = calc_fis.pressao(**variaveis)
-
-            elif tipo_calculo == "pressao_hidrostatica":
+            elif tipo_calculo == 'pressao_hidrostatica':
                 resultado = calc_fis.pressao_hidrostatica(**variaveis)
-
-            elif tipo_calculo == "empuxo":
-                resultado = calc_fis.empuxo(**variaveis)
-
-            elif tipo_calculo == "dilatacao_linear":
-                resultado = calc_fis.dilatacao_linear(**variaveis)
-
-            elif tipo_calculo == "equacao_fundamental_calorimetria":
-                resultado = calc_fis.equacao_fundamental_calorimetria(**variaveis)
-
-            elif tipo_calculo == "primeira_lei_termodinamica":
+            elif tipo_calculo == 'primeira_lei_termodinamica':
                 resultado = calc_fis.primeira_lei_termodinamica(**variaveis)
-
-            elif tipo_calculo == "equacao_dos_espelhos_e_lentes":
-                resultado = calc_fis.equacao_dos_espelhos_e_lentes(**variaveis)
-
-            elif tipo_calculo == "formula_do_aumento_da_imagem":
-                resultado = calc_fis.formula_do_aumento_da_imagem(**variaveis)
-
-            elif tipo_calculo == "velocidade_onda":
-                resultado = calc_fis.velocidade_onda(**variaveis)
-
-            elif tipo_calculo == "lei_ohm":
+            elif tipo_calculo == 'lei_ohm':
                 resultado = calc_fis.lei_ohm(**variaveis)
-
-            elif tipo_calculo == "potencia_eletrica":
+            elif tipo_calculo == 'potencia_eletrica':
                 resultado = calc_fis.potencia_eletrica(**variaveis)
-
-            elif tipo_calculo == "forca_entre_cargas_eletricas":
+            elif tipo_calculo == 'forca_entre_cargas_eletricas':
                 resultado = calc_fis.forca_entre_cargas_eletricas(**variaveis)
-
+            elif tipo_calculo == 'energia_potencial_elastica':
+                resultado = calc_fis.energia_potencial_elastica(**variaveis)
+            elif tipo_calculo == 'energia_mecanica':
+                resultado = calc_fis.energia_mecanica(**variaveis)
+            elif tipo_calculo == 'energia_potencial':
+                resultado = calc_fis.energia_potencial(**variaveis)
+            elif tipo_calculo == 'potencia':
+                resultado = calc_fis.potencia(**variaveis)
+            elif tipo_calculo == 'pressao':
+                resultado = calc_fis.pressao(**variaveis)
+            elif tipo_calculo == 'equacao_dos_espelhos_e_lentes':
+                resultado = calc_fis.equacao_dos_espelhos_e_lentes(**variaveis)
+            elif tipo_calculo == 'formula_do_aumento_da_imagem':
+                resultado = calc_fis.formula_do_aumento_da_imagem(**variaveis)
+            elif tipo_calculo == 'velocidade_onda':
+                resultado = calc_fis.velocidade_onda(**variaveis)
+            elif tipo_calculo == 'empuxo':
+                resultado = calc_fis.empuxo(**variaveis)
+            elif tipo_calculo == 'dilatacao_linear':
+                resultado = calc_fis.dilatacao_linear(**variaveis)
+            else:
+                raise NotFound('Cálculo não suportado')
             
             return jsonify({'resultado': resultado})
-            
-        except ValueError as e:
-            return jsonify({'erro': str(e)}), 400
+        
+        except (BadRequest, NotFound, ValueError) as e:
+            return jsonify({'error': str(e)}), 400
         except Exception as e:
-            return jsonify({'erro': f'Erro inesperado: {str(e)}'}), 500
-            
-    return render_template('fisica.html')
+            logger.exception("Erro interno no cálculo de física:")
+            return jsonify({'error': 'Erro interno do servidor'}), 500
+    
+    return render_template('fisica.html', config=config)
 
 @app.route('/quimica', methods=['GET', 'POST'])
 def quimica() -> Response:

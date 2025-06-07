@@ -289,160 +289,165 @@ CALCULATORS = {
                 'calculations': {
                     'velocidade_media': {
                         'title': 'Velocidade Média',
-                        'description': 'Calcula Velocidade Média',
+                        'description': 'Calcula a velocidade média, deslocamento ou tempo.',
                         'variables': ['velocidade_media', 'deslocamento', 'tempo']
                     },
                     'movimento_uniforme': {
                         'title': 'Movimento Uniforme',
-                        'description': 'Calcula aceleração média',
-                        'variables': ['posicao_final', 'posicao_inicial', 'tempo', 'velocidade']
+                        'description': 'Calcula posição final/inicial, velocidade ou tempo em movimento uniforme.',
+                        'variables': ['posicao_final', 'posicao_inicial', 'velocidade', 'tempo']
                     },
                     'movimento_uniformente_variado': {
                         'title': 'Movimento Uniformemente Variado',
-                        'description': 'Calcula posição em MU',
-                        'variables': ['posicao_final', 'posicao_inicial', 'tempo', 'velocidade_inicial', 'aceleracao']
+                        'description': 'Calcula posição final/inicial, velocidade inicial, tempo ou aceleração em movimento uniformemente variado.',
+                        'variables': ['posicao_final', 'posicao_inicial', 'velocidade_inicial', 'tempo', 'aceleracao']
                     },
                     'equacao_torricelli': {
                         'title': 'Equação de Torricelli',
-                        'description': 'Calcula posição em MUV',
+                        'description': 'Calcula velocidade final/inicial, aceleração ou deslocamento sem usar o tempo.',
                         'variables': ['velocidade_final', 'velocidade_inicial', 'aceleracao', 'deslocamento']
                     }
                 }
             },
             'dinamica': {
                 'title': '🛠️ Dinâmica',
-                'description': 'Cálculos de forças',
+                'description': 'Cálculos de forças e leis de Newton.',
                 'calculations': {
                     'principio_fundamental_dinamica': {
                         'title': 'Princípio Fundamental da Dinâmica',
-                        'description': 'Calcula força resultante',
-                        'variables': ['força', 'massa', 'aceleração']
+                        'description': 'Calcula força, massa ou aceleração (F=ma).',
+                        'variables': ['forca', 'massa', 'aceleracao']
                     },
                     'forca_peso': {
                         'title': 'Força Peso',
-                        'description': 'Calcula força peso',
+                        'description': 'Calcula força peso, massa ou gravidade (P=mg).',
                         'variables': ['forca_peso', 'massa', 'gravidade']
                     },
                     'forca_atrito': {
                         'title': 'Força de Atrito',
-                        'description': 'Calcula força de atrito',
+                        'description': 'Calcula força de atrito, coeficiente de atrito ou força normal.',
                         'variables': ['forca_atrito', 'coeficiente', 'normal']
                     }
                 }
             },
-            'trabalho e energia': {
+            'trabalho_e_energia': {
                 'title': '⚙️ Trabalho e Energia',
-                'description': 'Cálculos de energia',
+                'description': 'Cálculos relacionados a trabalho, energia e potência.',
                 'calculations': {
                     'trabalho_forca_constante': {
                         'title': 'Trabalho de Força Constante',
-                        'description': 'Calcula energia cinética',
+                        'description': 'Calcula o trabalho realizado por uma força constante.',
                         'variables': ['trabalho', 'forca', 'deslocamento', 'angulo']
                     },
+                    'energia_cinetica': {
+                        'title': 'Energia Cinética',
+                        'description': 'Calcula energia cinética, massa ou velocidade.',
+                        'variables': ['energia_cinetica', 'massa', 'velocidade']
+                    },
                     'energia_potencial': {
-                        'title': 'Energia Potencial',
-                        'description': 'Calcula energia potencial gravitacional',
+                        'title': 'Energia Potencial Gravitacional',
+                        'description': 'Calcula energia potencial gravitacional, massa, altura ou gravidade.',
                         'variables': ['energia_potencial', 'massa', 'altura', 'gravidade']
                     },
                     'potencia': {
                         'title': 'Potência Média',
-                        'description': 'Calcula energia mecânica total',
-                        'variables': ['potencia', 'trabalho', 'tempo']
+                        'description': 'Calcula potência média, trabalho ou tempo.',
+                        'variables': ['potencia_media', 'trabalho', 'tempo']
                     },
                     'energia_potencial_elastica': {
                         'title': 'Energia Potencial Elástica',
-                        'description': 'Calcula energia mecânica total',
-                        'variables': ['energia_potencial_elastica', 'constante', 'deformacao']
+                        'description': 'Calcula energia potencial elástica, constante elástica ou deformação.',
+                        'variables': ['energia', 'constante', 'deformacao']
                     },
                     'energia_mecanica': {
                         'title': 'Energia Mecânica',
-                        'description': 'Calcula energia mecânica total',
-                        'variables': ['energia_mecanica', 'energia_cinetica', 'energia_potencial']
+                        'description': 'Calcula energia mecânica, cinética ou potencial.',
+                        'variables': ['energia_mec', 'energia_cinetica', 'energia_potencial']
                     },           
                 }
             },
             'hidroestatica': {
-                'title': '🌊 Hidroestática',
-                'description': 'Cálculos de Hidroestática',
+                'title': '🌊 Hidrostática',
+                'description': 'Cálculos relacionados a fluidos em repouso.',
                 'calculations': {
                     'pressao': {
                         'title': 'Pressão',
-                        'description': 'Calcula trabalho de uma força',
+                        'description': 'Calcula pressão, força ou área.',
                         'variables': ['pressao', 'forca', 'area']
                     },
                     'pressao_hidrostatica': {
                         'title': 'Pressão Hidrostática',
-                        'description': 'Calcula impulso de uma força',
-                        'variables': ['pressao_hidrostatica', 'densidade', 'altura', 'gravidade']
+                        'description': 'Calcula pressão hidrostática, densidade, altura ou gravidade.',
+                        'variables': ['pressao', 'densidade', 'altura', 'gravidade']
                     },
                     'empuxo': {
                         'title': 'Empuxo',
-                        'description': 'Calcula impulso de uma força',
+                        'description': 'Calcula empuxo, densidade, volume ou gravidade.',
                         'variables': ['empuxo', 'densidade', 'volume', 'gravidade']
                     }
                 }
             },
             'termologia': {
                 'title': '🌡️ Termologia',
-                'description': 'Cálculos térmicos',
+                'description': 'Cálculos térmicos e termodinâmicos.',
                 'calculations': {
                     'dilatacao_linear': {
                         'title': 'Dilatação Linear',
-                        'description': 'Converte entre escalas termométricas',
-                        'variables': ['comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura']
+                        'description': 'Calcula dilatação linear, comprimento final/inicial, coeficiente ou variação de temperatura.',
+                        'variables': ['dilatacao_linear', 'comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura']
                     },
                     'primeira_lei_termodinamica': {
                         'title': 'Primeira Lei da Termodinâmica',
-                        'description': 'Calcula dilatação térmica',
-                        'variables': ['variacao_interna', 'trabalho', 'calor']
+                        'description': 'Calcula variação da energia interna, calor ou trabalho.',
+                        'variables': ['variacao_interna', 'calor', 'trabalho']
                     }
                 }
             },
             'optica': {
                 'title': '🔍 Óptica',
-                'description': 'Cálculos ópticos',
+                'description': 'Cálculos envolvendo espelhos, lentes e fenômenos luminosos.',
                 'calculations': {
                     'equacao_dos_espelhos_e_lentes': {
                         'title': 'Equação dos Espelhos e Lentes',
-                        'description': 'Calcula resistência elétrica',
+                        'description': 'Calcula distância focal, distância do objeto ou distância da imagem.',
                         'variables': ['distancia_focal', 'distancia_objeto', 'distancia_imagem']
                     },
                     'formula_do_aumento_da_imagem': {
                         'title': 'Fórmula do Aumento da Imagem',
-                        'description': 'Calcula capacitância',
+                        'description': 'Calcula altura da imagem/objeto ou distância da imagem/objeto.',
                         'variables': ['altura_imagem', 'altura_objeto', 'distancia_objeto', 'distancia_imagem']
                     }
                 }
             },
             'ondulatoria':{
                 'title': '📡 Ondulatória',
-                'description': 'Cálculos ondulatórios',
+                'description': 'Cálculos relacionados a ondas.',
                 'calculations': {
                     'velocidade_onda': {
                         'title': 'Velocidade de uma Onda',
-                        'description': 'Calcula resistência elétrica',
-                        'variables': ['velocidade_onda', 'frequencia', 'comprimento_onda']
+                        'description': 'Calcula velocidade, frequência ou comprimento de onda.',
+                        'variables': ['velocidade', 'frequencia', 'comprimento_onda']
                     }
                 }
             },
              'eletricidade':{
                 'title': '⚡ Eletricidade',
-                'description': 'Cálculos com energia elétrica',
+                'description': 'Cálculos com energia elétrica e circuitos.',
                 'calculations': {
                     'lei_ohm': {
                         'title': 'Lei de Ohm',
-                        'description': 'Calcula resistência elétrica',
-                        'variables': ['resistencia', 'corrente', 'tensao']
+                        'description': 'Calcula tensão, resistência ou corrente.',
+                        'variables': ['tensao', 'resistencia', 'corrente']
                     },
                     'potencia_eletrica': {
-                        'title': 'Potência Elétrica ou Energia Elétrica',
-                        'description': 'Calcula resistência elétrica',
+                        'title': 'Potência Elétrica',
+                        'description': 'Calcula potência, tensão ou corrente elétrica.',
                         'variables': ['potencia', 'tensao', 'corrente']
                     },
                     'forca_entre_cargas_eletricas': {
                         'title': 'Força entre Cargas Elétricas (Lei de Coulomb)',
-                        'description': 'Calcula resistência elétrica',
-                        'variables': ['forca_entre_cargas_eletricas', 'k', 'q1', 'q2', 'd']
+                        'description': 'Calcula força, constante eletrostática, cargas ou distância.',
+                        'variables': ['forca', 'k', 'q1', 'q2', 'd']
                     },
                 }
             },
