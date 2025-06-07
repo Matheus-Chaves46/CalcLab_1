@@ -678,6 +678,14 @@ def secret_admin_dashboard():
         usuarios_formatados = []
         for usuario in usuarios:
             usuario_dict = dict(usuario)
+            # Formatar data de nascimento se existir
+            if usuario_dict.get('data_nascimento'):
+                try:
+                    dt_nasc = datetime.strptime(usuario_dict['data_nascimento'], '%Y-%m-%d')
+                    usuario_dict['data_nascimento'] = dt_nasc.strftime('%d/%m/%Y')
+                except:
+                    pass
+            # Formatar data de cadastro
             if usuario_dict['created_at']:
                 try:
                     dt = datetime.strptime(usuario_dict['created_at'], '%Y-%m-%d %H:%M:%S')
