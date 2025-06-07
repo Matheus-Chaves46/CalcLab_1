@@ -3,7 +3,7 @@ Aplicação principal do CalcLab.
 """
 
 from typing import Dict, Any, Optional
-from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash, session
+from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash, session, send_file
 from datetime import datetime, timedelta
 from werkzeug.exceptions import NotFound, BadRequest
 import config
@@ -764,6 +764,13 @@ def before_request():
     if (datetime.now() - app.last_backup) > timedelta(hours=24):
         backup_database()
         app.last_backup = datetime.now()
+
+@app.route('/download-db-temp')
+def download_db_temp():
+    """Rota temporária para baixar o arquivo do banco de dados (APAGAR DEPOIS DE USAR!)"""
+    # O arquivo calclab.db está na raiz do projeto no ambiente do Render
+    db_path = 'calclab.db'
+    return send_file(db_path, as_attachment=True)
 
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()
