@@ -1,0 +1,41 @@
+{% extends "base.html" %} {% block title %}Usuários - Área Administrativa{%
+endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h4 class="mb-0">Lista de Usuários</h4>
+          <a href="{{ url_for('admin_logout') }}" class="btn btn-light">Sair</a>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nome de Usuário</th>
+                  <th>Email</th>
+                  <th>Data de Criação</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for usuario in usuarios %}
+                <tr>
+                  <td>{{ usuario['id'] }}</td>
+                  <td>{{ usuario['nome_usuario'] }}</td>
+                  <td>{{ usuario['email'] }}</td>
+                  <td>{{ usuario['created_at'] }}</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

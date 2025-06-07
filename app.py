@@ -34,6 +34,10 @@ app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
 # Configuração do banco de dados
 DATABASE = 'calclab.db'
 
+# Adicione estas constantes no início do arquivo, após as importações
+ADMIN_USERNAME = "admin"
+ADMIN_PASSWORD = "admin123"  # Em produção, use uma senha mais segura
+
 def get_db():
     """Conecta ao banco de dados SQLite"""
     db = sqlite3.connect(DATABASE)
@@ -55,6 +59,15 @@ def login_required(f):
         if 'user_id' not in session:
             flash('Por favor, faça login para acessar esta página.', 'error')
             return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('is_admin'):
+            flash('Acesso restrito. Faça login como administrador.', 'error')
+            return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated_function
 
@@ -545,6 +558,33 @@ def verificar_usuario():
     except Exception as e:
         logger.error(f"Erro na rota verificar_usuario: {str(e)}")
         return jsonify({'error': 'Erro ao verificar usuário'}), 500
+
+@app.route('/admin/login', methods=['GET', 'POST'])
+def admin_login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+            session['is_admin'] = True
+            return redirect(url_for('admin_usuarios'))
+        
+        flash('Credenciais inválidas.', 'error')
+    return render_template('admin_login.html')
+
+@app.route('/admin/usuarios')
+@admin_required
+def admin_usuarios():
+    db = get_db()
+    usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
+    db.close()
+    return render_template('admin_usuarios.html', usuarios=usuarios)
+
+@app.route('/admin/logout')
+def admin_logout():
+    session.pop('is_admin', None)
+    flash('Logout realizado com sucesso.', 'success')
+    return redirect(url_for('admin_login'))
 
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()
