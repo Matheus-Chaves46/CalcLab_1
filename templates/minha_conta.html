@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% block title %}Minha Conta - {{ config.SITE_NAME
+}}{% endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div
+          class="card-header bg-primary text-white d-flex justify-content-between align-items-center"
+        >
+          <h4 class="mb-0">Minha Conta</h4>
+          <div>
+            <a
+              href="{{ url_for('editar_conta') }}"
+              class="btn btn-light btn-sm"
+            >
+              <i class="fas fa-pencil-alt"></i> Editar dados
+            </a>
+            <a
+              href="{{ url_for('logout') }}"
+              class="btn btn-danger btn-sm ms-2"
+            >
+              <i class="fas fa-sign-out-alt"></i> Sair
+            </a>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h5>Nome Completo</h5>
+              <p class="text-muted">{{ usuario.nome_completo }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <h5>Nome de Usuário</h5>
+              <p class="text-muted">{{ usuario.nome_usuario }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h5>E-mail</h5>
+              <p class="text-muted">{{ usuario.email }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <h5>Senha</h5>
+              <p class="text-muted">••••••••</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h5>Data de Nascimento</h5>
+              <p class="text-muted">{{ usuario.data_nascimento }}</p>
+            </div>
+            <div class="col-md-6 mb-3">
+              <h5>Série</h5>
+              <p class="text-muted">{{ usuario.serie }}</p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <h5>Matéria de Maior Dificuldade</h5>
+              <p class="text-muted">{{ usuario.materia_dificuldade }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

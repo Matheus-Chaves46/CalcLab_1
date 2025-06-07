@@ -1,0 +1,24 @@
+{% extends "base.html" %} {% block title %}Esqueceu a Senha - {{
+config.SITE_NAME }}{% endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Esqueceu a Senha?</h4>
+        </div>
+        <div class="card-body text-center">
+          <div class="alert alert-info">
+            <i class="fas fa-tools fa-3x mb-3"></i>
+            <h5>Página em manutenção</h5>
+            <p class="mb-0">Esta funcionalidade estará disponível em breve.</p>
+          </div>
+          <a href="{{ url_for('login') }}" class="btn btn-primary">
+            <i class="fas fa-arrow-left"></i> Voltar para o Login
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

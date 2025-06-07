@@ -3,7 +3,7 @@ Aplicação principal do CalcLab.
 """
 
 from typing import Dict, Any, Optional
-from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash
+from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash, session
 from datetime import datetime
 from werkzeug.exceptions import NotFound, BadRequest
 import config
@@ -12,10 +12,11 @@ import calc_fisica as calc_fis
 import calc_quimica as calc_qui
 import json
 import os
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 import logging
 from pymongo import MongoClient
 from dotenv import load_dotenv
+from functools import wraps
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -469,6 +470,90 @@ def verificar_usuario():
     except Exception as e:
         logger.error(f"Erro na rota verificar_usuario: {str(e)}")
         return jsonify({'error': 'Erro ao verificar usuário'}), 500
+
+# Decorator para verificar se o usuário está logado
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('Por favor, faça login para acessar esta página.', 'warning')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        nome_usuario = request.form.get('nome_usuario')
+        senha = request.form.get('senha')
+        
+        usuario = usuarios_collection.find_one({'nome_usuario': nome_usuario})
+        
+        if usuario and check_password_hash(usuario['senha'], senha):
+            session['user_id'] = str(usuario['_id'])
+            flash('Login realizado com sucesso!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Nome de usuário ou senha incorretos.', 'error')
+    
+    return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('user_id', None)
+    flash('Você foi desconectado com sucesso.', 'success')
+    return redirect(url_for('index'))
+
+@app.route('/esqueceu-senha')
+def esqueceu_senha():
+    return render_template('esqueceu_senha.html')
+
+@app.route('/minha-conta')
+@login_required
+def minha_conta():
+    usuario = usuarios_collection.find_one({'_id': session['user_id']})
+    if not usuario:
+        session.pop('user_id', None)
+        flash('Usuário não encontrado.', 'error')
+        return redirect(url_for('login'))
+    
+    # Remove a senha do objeto antes de enviar para o template
+    usuario.pop('senha', None)
+    return render_template('minha_conta.html', usuario=usuario)
+
+@app.route('/editar-conta', methods=['GET', 'POST'])
+@login_required
+def editar_conta():
+    usuario = usuarios_collection.find_one({'_id': session['user_id']})
+    if not usuario:
+        session.pop('user_id', None)
+        flash('Usuário não encontrado.', 'error')
+        return redirect(url_for('login'))
+    
+    if request.method == 'POST':
+        # Atualiza os dados do usuário
+        dados_atualizados = {
+            'nome_completo': request.form.get('nome_completo'),
+            'email': request.form.get('email'),
+            'data_nascimento': request.form.get('data_nascimento'),
+            'serie': request.form.get('serie'),
+            'materia_dificuldade': request.form.get('materia_dificuldade')
+        }
+        
+        # Se uma nova senha foi fornecida, atualiza
+        nova_senha = request.form.get('nova_senha')
+        if nova_senha:
+            dados_atualizados['senha'] = generate_password_hash(nova_senha)
+        
+        usuarios_collection.update_one(
+            {'_id': session['user_id']},
+            {'$set': dados_atualizados}
+        )
+        
+        flash('Dados atualizados com sucesso!', 'success')
+        return redirect(url_for('minha_conta'))
+    
+    return render_template('editar_conta.html', usuario=usuario)
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)

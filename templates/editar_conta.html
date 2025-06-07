@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Editar Conta - {{ config.SITE_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Editar Dados da Conta</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('editar_conta') }}">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nome_completo" class="form-label">Nome Completo</label>
+                                <input type="text" class="form-control" id="nome_completo" name="nome_completo" value="{{ usuario.nome_completo }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="email" class="form-label">E-mail</label>
+                                <input type="email" class="form-control" id="email" name="email" value="{{ usuario.email }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="data_nascimento" class="form-label">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="{{ usuario.data_nascimento }}" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="serie" class="form-label">Série</label>
+                                <select class="form-control" id="serie" name="serie" required>
+                                    <option value="1º ano" {% if usuario.serie == '1º ano' %}selected{% endif %}>1º ano</option>
+                                    <option value="2º ano" {% if usuario.serie == '2º ano' %}selected{% endif %}>2º ano</option>
+                                    <option value="3º ano" {% if usuario.serie == '3º ano' %}selected{% endif %}>3º ano</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Matéria de Maior Dificuldade</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="materia_dificuldade" id="matematica" value="Matemática" {% if usuario.materia_dificuldade == 'Matemática' %}checked{% endif %} required>
+                                <label class="form-check-label" for="matematica">Matemática</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="materia_dificuldade" id="fisica" value="Física" {% if usuario.materia_dificuldade == 'Física' %}checked{% endif %}>
+                                <label class="form-check-label" for="fisica">Física</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="materia_dificuldade" id="quimica" value="Química" {% if usuario.materia_dificuldade == 'Química' %}checked{% endif %}>
+                                <label class="form-check-label" for="quimica">Química</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="nova_senha" class="form-label">Nova Senha (opcional)</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="nova_senha" name="nova_senha">
+                                <span class="input-group-text password-toggle" onclick="togglePassword('nova_senha')">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                            <small class="form-text text-muted">Deixe em branco para manter a senha atual</small>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ url_for('minha_conta') }}" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Salvar Alterações
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.nextElementSibling.querySelector('i');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+    }
+}
+</script>
+{% endblock %} 
