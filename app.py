@@ -46,12 +46,42 @@ def get_db():
 
 def init_db():
     """Inicializa o banco de dados criando a tabela de usuários se não existir"""
-    if not os.path.exists(DATABASE):
+    try:
         db = get_db()
-        with app.open_resource('schema.sql') as f:
-            db.executescript(f.read().decode('utf8'))
+        
+        # Criar tabela de usuários
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nome_usuario TEXT UNIQUE NOT NULL,
+                senha TEXT NOT NULL,
+                email TEXT NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        ''')
+        
+        # Criar tabela de admins
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS admins (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                username TEXT UNIQUE NOT NULL,
+                password TEXT NOT NULL
+            )
+        ''')
+        
+        # Verificar se já existe um admin
+        admin = db.execute('SELECT * FROM admins WHERE username = ?', ('admin',)).fetchone()
+        if not admin:
+            # Inserir admin padrão
+            db.execute('INSERT INTO admins (username, password) VALUES (?, ?)', ('admin', 'admin123'))
+            logger.info("Admin padrão criado com sucesso")
+        
         db.commit()
         db.close()
+        logger.info("Banco de dados inicializado com sucesso")
+    except Exception as e:
+        logger.error(f"Erro ao inicializar banco de dados: {str(e)}")
+        raise
 
 def login_required(f):
     @wraps(f)
@@ -567,28 +597,38 @@ def admin_login():
         
         logger.info(f"Tentativa de login admin - Usuário: {username}")
         
-        db = get_db()
-        admin = db.execute('SELECT * FROM admins WHERE username = ?', (username,)).fetchone()
-        db.close()
-        
-        if admin and admin['password'] == password:
-            session['is_admin'] = True
-            session['admin_username'] = username
-            flash('Login administrativo realizado com sucesso!', 'success')
-            return redirect(url_for('admin_usuarios'))
-        else:
-            flash('Usuário ou senha incorretos.', 'error')
-            logger.warning(f"Tentativa de login admin falhou - Usuário: {username}")
+        try:
+            db = get_db()
+            admin = db.execute('SELECT * FROM admins WHERE username = ?', (username,)).fetchone()
+            db.close()
+            
+            if admin and admin['password'] == password:
+                session['is_admin'] = True
+                session['admin_username'] = username
+                flash('Login administrativo realizado com sucesso!', 'success')
+                logger.info(f"Login admin bem-sucedido para usuário: {username}")
+                return redirect(url_for('admin_usuarios'))
+            else:
+                flash('Usuário ou senha incorretos.', 'error')
+                logger.warning(f"Tentativa de login admin falhou - Usuário: {username}")
+        except Exception as e:
+            logger.error(f"Erro durante login admin: {str(e)}")
+            flash('Erro ao tentar fazer login. Por favor, tente novamente.', 'error')
     
     return render_template('admin_login.html')
 
 @app.route('/admin/usuarios')
 @admin_required
 def admin_usuarios():
-    db = get_db()
-    usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
-    db.close()
-    return render_template('admin_usuarios.html', usuarios=usuarios)
+    try:
+        db = get_db()
+        usuarios = db.execute('SELECT id, nome_usuario, email, created_at FROM usuarios').fetchall()
+        db.close()
+        return render_template('admin_usuarios.html', usuarios=usuarios)
+    except Exception as e:
+        logger.error(f"Erro ao listar usuários: {str(e)}")
+        flash('Erro ao carregar lista de usuários.', 'error')
+        return redirect(url_for('admin_login'))
 
 @app.route('/admin/logout')
 def admin_logout():
