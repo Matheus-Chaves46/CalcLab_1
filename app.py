@@ -567,8 +567,13 @@ def admin_login():
         
         logger.info(f"Tentativa de login admin - Usuário: {username}")
         
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
+        db = get_db()
+        admin = db.execute('SELECT * FROM admins WHERE username = ?', (username,)).fetchone()
+        db.close()
+        
+        if admin and admin['password'] == password:
             session['is_admin'] = True
+            session['admin_username'] = username
             flash('Login administrativo realizado com sucesso!', 'success')
             return redirect(url_for('admin_usuarios'))
         else:
@@ -588,6 +593,7 @@ def admin_usuarios():
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('is_admin', None)
+    session.pop('admin_username', None)
     flash('Logout realizado com sucesso.', 'success')
     return redirect(url_for('admin_login'))
 
