@@ -4,7 +4,7 @@ Aplicação principal do CalcLab.
 
 from typing import Dict, Any, Optional
 from flask import Flask, render_template, request, jsonify, Response, redirect, url_for, flash, session
-from datetime import datetime
+from datetime import datetime, timedelta
 from werkzeug.exceptions import NotFound, BadRequest
 import config
 import calc_matematica as calc_mat
@@ -46,9 +46,8 @@ def get_db():
     return db
 
 def get_brazil_time():
-    """Retorna o horário atual do Brasil"""
-    tz = pytz.timezone('America/Sao_Paulo')
-    return datetime.now(tz).strftime('%d/%m/%Y %H:%M:%S')
+    """Retorna o horário atual do Brasil (UTC-3)"""
+    return (datetime.utcnow() - timedelta(hours=3)).strftime('%d/%m/%Y %H:%M:%S')
 
 def init_db():
     """Inicializa o banco de dados criando a tabela de usuários se não existir"""
@@ -675,9 +674,8 @@ def secret_admin_dashboard():
                 try:
                     # Converte o timestamp do SQLite para datetime
                     dt = datetime.strptime(usuario_dict['created_at'], '%Y-%m-%d %H:%M:%S')
-                    # Converte para o fuso horário do Brasil
-                    tz = pytz.timezone('America/Sao_Paulo')
-                    dt = pytz.utc.localize(dt).astimezone(tz)
+                    # Ajusta para o fuso horário do Brasil (UTC-3)
+                    dt = dt - timedelta(hours=3)
                     # Formata a data
                     usuario_dict['created_at'] = dt.strftime('%d/%m/%Y %H:%M:%S')
                 except:
