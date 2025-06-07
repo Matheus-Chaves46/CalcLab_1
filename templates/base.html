@@ -148,7 +148,10 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link btn btn-outline-light me-2" href="/criar-conta">
+              <a
+                class="nav-link btn btn-outline-light me-2"
+                href="/criar-conta"
+              >
                 <i class="fas fa-user-plus me-1"></i>
                 Criar Conta
               </a>
@@ -159,7 +162,25 @@
     </nav>
 
     <!-- Main Content -->
-    <main>{% block content %}{% endblock %}</main>
+    <main>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="container mt-3">
+        <div
+          class="alert alert-{{ category if category != 'error' else 'danger' }} alert-dismissible fade show"
+          role="alert"
+        >
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+            aria-label="Close"
+          ></button>
+        </div>
+      </div>
+      {% endfor %} {% endif %} {% endwith %} {% block content %}{% endblock %}
+    </main>
 
     <!-- Footer -->
     <footer class="bg-dark text-light py-4 mt-5">

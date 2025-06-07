@@ -1,0 +1,366 @@
+{% extends "base.html" %} {% block title %}Criar Conta - {{ config.SITE_NAME
+}}{% endblock %} {% block styles %}
+<style>
+  .password-criteria {
+    margin-top: 5px;
+    font-size: 0.9em;
+  }
+  .password-criteria i {
+    margin-right: 5px;
+  }
+  .criteria-met {
+    color: #28a745;
+  }
+  .criteria-not-met {
+    color: #dc3545;
+  }
+  .password-toggle {
+    cursor: pointer;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .error-message {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+          <h4 class="mb-0">Criar Conta</h4>
+        </div>
+        <div class="card-body">
+          <form
+            id="signupForm"
+            method="POST"
+            action="{{ url_for('criar_conta') }}"
+          >
+            <!-- Nome Completo -->
+            <div class="form-group">
+              <label for="nome_completo">Nome Completo</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome_completo"
+                name="nome_completo"
+                required
+              />
+            </div>
+
+            <!-- Nome de Usuário -->
+            <div class="form-group">
+              <label for="nome_usuario">Nome de Usuário</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nome_usuario"
+                name="nome_usuario"
+                required
+              />
+              <small class="form-text text-muted"
+                >O nome de usuário deve conter pelo menos um número.</small
+              >
+              <div id="usernameError" class="error-message"></div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="email">E-mail</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                name="email"
+                required
+              />
+            </div>
+
+            <!-- Confirmação de Email -->
+            <div class="form-group">
+              <label for="confirm_email">Confirmação do E-mail</label>
+              <input
+                type="email"
+                class="form-control"
+                id="confirm_email"
+                name="confirm_email"
+                required
+              />
+              <div id="emailError" class="error-message"></div>
+            </div>
+
+            <!-- Senha -->
+            <div class="form-group">
+              <label for="senha">Criar Senha</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="senha"
+                  name="senha"
+                  required
+                />
+                <span
+                  class="input-group-text password-toggle"
+                  onclick="togglePassword('senha')"
+                >
+                  <i class="fas fa-eye"></i>
+                </span>
+              </div>
+              <div class="password-criteria">
+                <div id="uppercase" class="criteria-not-met">
+                  <i class="fas fa-times-circle"></i> Pelo menos uma letra
+                  maiúscula
+                </div>
+                <div id="number" class="criteria-not-met">
+                  <i class="fas fa-times-circle"></i> Pelo menos um número
+                </div>
+                <div id="special" class="criteria-not-met">
+                  <i class="fas fa-times-circle"></i> Pelo menos um caractere
+                  especial
+                </div>
+                <div id="length" class="criteria-not-met">
+                  <i class="fas fa-times-circle"></i> Mínimo de 8 caracteres
+                </div>
+              </div>
+            </div>
+
+            <!-- Confirmação de Senha -->
+            <div class="form-group">
+              <label for="confirm_senha">Confirmar Senha</label>
+              <div class="input-group">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="confirm_senha"
+                  name="confirm_senha"
+                  required
+                />
+                <span
+                  class="input-group-text password-toggle"
+                  onclick="togglePassword('confirm_senha')"
+                >
+                  <i class="fas fa-eye"></i>
+                </span>
+              </div>
+              <div id="passwordError" class="error-message"></div>
+            </div>
+
+            <!-- Data de Nascimento -->
+            <div class="form-group">
+              <label for="data_nascimento">Data de Nascimento</label>
+              <input
+                type="date"
+                class="form-control"
+                id="data_nascimento"
+                name="data_nascimento"
+                required
+              />
+            </div>
+
+            <!-- Série -->
+            <div class="form-group">
+              <label for="serie">Série que está cursando</label>
+              <select class="form-control" id="serie" name="serie" required>
+                <option value="">Selecione sua série</option>
+                <option value="1º ano">1º ano</option>
+                <option value="2º ano">2º ano</option>
+                <option value="3º ano">3º ano</option>
+              </select>
+            </div>
+
+            <!-- Matéria de Dificuldade -->
+            <div class="form-group">
+              <label>Matéria de maior dificuldade</label>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="materia_dificuldade"
+                  id="matematica"
+                  value="Matemática"
+                  required
+                />
+                <label class="form-check-label" for="matematica"
+                  >Matemática</label
+                >
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="materia_dificuldade"
+                  id="fisica"
+                  value="Física"
+                />
+                <label class="form-check-label" for="fisica">Física</label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="materia_dificuldade"
+                  id="quimica"
+                  value="Química"
+                />
+                <label class="form-check-label" for="quimica">Química</label>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">
+              Criar Conta
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const icon = input.nextElementSibling.querySelector("i");
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.classList.remove("fa-eye");
+      icon.classList.add("fa-eye-slash");
+    } else {
+      input.type = "password";
+      icon.classList.remove("fa-eye-slash");
+      icon.classList.add("fa-eye");
+    }
+  }
+
+  function validatePassword(password) {
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    const hasSpecial = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasLength = password.length >= 8;
+
+    document.getElementById("uppercase").className = hasUpperCase
+      ? "criteria-met"
+      : "criteria-not-met";
+    document.getElementById("number").className = hasNumber
+      ? "criteria-met"
+      : "criteria-not-met";
+    document.getElementById("special").className = hasSpecial
+      ? "criteria-met"
+      : "criteria-not-met";
+    document.getElementById("length").className = hasLength
+      ? "criteria-met"
+      : "criteria-not-met";
+
+    return hasUpperCase && hasNumber && hasSpecial && hasLength;
+  }
+
+  function validateUsername(username) {
+    return /[0-9]/.test(username);
+  }
+
+  document.getElementById("senha").addEventListener("input", function () {
+    validatePassword(this.value);
+  });
+
+  document
+    .getElementById("confirm_senha")
+    .addEventListener("input", function () {
+      const senha = document.getElementById("senha").value;
+      const confirmSenha = this.value;
+      const errorDiv = document.getElementById("passwordError");
+
+      if (senha !== confirmSenha) {
+        errorDiv.textContent = "As senhas não coincidem";
+      } else {
+        errorDiv.textContent = "";
+      }
+    });
+
+  document
+    .getElementById("confirm_email")
+    .addEventListener("input", function () {
+      const email = document.getElementById("email").value;
+      const confirmEmail = this.value;
+      const errorDiv = document.getElementById("emailError");
+
+      if (email !== confirmEmail) {
+        errorDiv.textContent = "Os e-mails não coincidem";
+      } else {
+        errorDiv.textContent = "";
+      }
+    });
+
+  document
+    .getElementById("nome_usuario")
+    .addEventListener("input", function () {
+      const username = this.value;
+      const errorDiv = document.getElementById("usernameError");
+
+      if (!validateUsername(username)) {
+        errorDiv.textContent =
+          "O nome de usuário deve conter pelo menos um número";
+      } else {
+        errorDiv.textContent = "";
+      }
+    });
+
+  document
+    .getElementById("signupForm")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const username = document.getElementById("nome_usuario").value;
+      const password = document.getElementById("senha").value;
+      const confirmPassword = document.getElementById("confirm_senha").value;
+      const email = document.getElementById("email").value;
+      const confirmEmail = document.getElementById("confirm_email").value;
+
+      if (!validateUsername(username)) {
+        alert("O nome de usuário deve conter pelo menos um número");
+        return;
+      }
+
+      if (!validatePassword(password)) {
+        alert("A senha não atende a todos os critérios");
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        alert("As senhas não coincidem");
+        return;
+      }
+
+      if (email !== confirmEmail) {
+        alert("Os e-mails não coincidem");
+        return;
+      }
+
+      try {
+        const response = await fetch("/verificar-usuario", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ username: username }),
+        });
+
+        const data = await response.json();
+
+        if (data.exists) {
+          alert("Este nome de usuário já está em uso");
+          return;
+        }
+
+        this.submit();
+      } catch (error) {
+        console.error("Erro ao verificar usuário:", error);
+        alert("Erro ao verificar usuário. Tente novamente.");
+      }
+    });
+</script>
+{% endblock %}
