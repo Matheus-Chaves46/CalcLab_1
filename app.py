@@ -491,7 +491,8 @@ def login():
         
         if usuario and check_password_hash(usuario['senha'], senha):
             session['user_id'] = str(usuario['_id'])
-            flash('Login realizado com sucesso!', 'success')
+            session['nome_usuario'] = usuario['nome_usuario']  # Adiciona o nome de usuário à sessão
+            flash('Bem-vindo(a), ' + usuario['nome_usuario'] + '!', 'success')
             return redirect(url_for('index'))
         else:
             flash('Nome de usuário ou senha incorretos.', 'error')
@@ -501,6 +502,7 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
+    session.pop('nome_usuario', None)  # Remove o nome de usuário da sessão
     flash('Você foi desconectado com sucesso.', 'success')
     return redirect(url_for('index'))
 
