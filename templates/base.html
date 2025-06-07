@@ -17,14 +17,17 @@
       rel="stylesheet"
     />
 
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo.png') }}"
+    <link
+      rel="icon"
+      type="image/png"
+      href="{{ url_for('static', filename='logo.png') }}"
     />
     <!-- Custom CSS -->
     <style>
       :root {
-        --primary-color:rgb(253, 57, 13);
+        --primary-color: rgb(253, 57, 13);
         --secondary-color: #6c757d;
-        --success-color:rgb(255, 0, 225);
+        --success-color: rgb(255, 0, 225);
         --info-color: #0dcaf0;
         --warning-color: #ffc107;
         --danger-color: #dc3545;
@@ -136,6 +139,18 @@
               <a class="nav-link" href="/quimica">
                 <i class="fas fa-flask me-1"></i>
                 Química
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-outline-light me-2" href="/login">
+                <i class="fas fa-sign-in-alt me-1"></i>
+                Login
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link btn btn-light" href="/criar-conta">
+                <i class="fas fa-user-plus me-1"></i>
+                Criar Conta
               </a>
             </li>
           </ul>
