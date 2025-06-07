@@ -765,13 +765,6 @@ def before_request():
         backup_database()
         app.last_backup = datetime.now()
 
-@app.route('/download-db-temp')
-def download_db_temp():
-    """Rota temporária para baixar o arquivo do banco de dados (APAGAR DEPOIS DE USAR!)"""
-    # O arquivo calclab.db está na raiz do projeto no ambiente do Render
-    db_path = 'calclab.db'
-    return send_file(db_path, as_attachment=True)
-
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()
 
