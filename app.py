@@ -565,11 +565,16 @@ def admin_login():
         username = request.form.get('username')
         password = request.form.get('password')
         
+        logger.info(f"Tentativa de login admin - Usuário: {username}")
+        
         if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
             session['is_admin'] = True
+            flash('Login administrativo realizado com sucesso!', 'success')
             return redirect(url_for('admin_usuarios'))
-        
-        flash('Credenciais inválidas.', 'error')
+        else:
+            flash('Usuário ou senha incorretos.', 'error')
+            logger.warning(f"Tentativa de login admin falhou - Usuário: {username}")
+    
     return render_template('admin_login.html')
 
 @app.route('/admin/usuarios')
