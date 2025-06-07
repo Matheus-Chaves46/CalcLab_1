@@ -18,6 +18,7 @@ from pymongo import MongoClient
 from dotenv import load_dotenv
 from functools import wraps
 from bson.objectid import ObjectId
+import sqlite3
 
 # Carrega variáveis de ambiente
 load_dotenv()
@@ -30,29 +31,32 @@ app = Flask(__name__)
 app.config.from_object(config)
 app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
 
-# Configuração do MongoDB
-mongodb_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
-client = MongoClient(mongodb_uri)
-db = client['calclab']
-usuarios = db['usuarios']
-logger.info("Conexão com MongoDB estabelecida com sucesso")
+# Configuração do banco de dados
+DATABASE = 'calclab.db'
 
-# Função para carregar usuários do MongoDB
-def carregar_usuarios():
-    try:
-        usuarios = list(usuarios.find({}, {'_id': 0}))
-        return {"usuarios": usuarios}
-    except Exception as e:
-        logger.error(f"Erro ao carregar usuários: {str(e)}")
-        return {"usuarios": []}
+def get_db():
+    """Conecta ao banco de dados SQLite"""
+    db = sqlite3.connect(DATABASE)
+    db.row_factory = sqlite3.Row
+    return db
 
-# Função para salvar usuário no MongoDB
-def salvar_usuario(usuario):
-    try:
-        usuarios.insert_one(usuario)
-    except Exception as e:
-        logger.error(f"Erro ao salvar usuário: {str(e)}")
-        raise
+def init_db():
+    """Inicializa o banco de dados criando a tabela de usuários se não existir"""
+    if not os.path.exists(DATABASE):
+        db = get_db()
+        with app.open_resource('schema.sql') as f:
+            db.executescript(f.read().decode('utf8'))
+        db.commit()
+        db.close()
+
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user_id' not in session:
+            flash('Por favor, faça login para acessar esta página.', 'error')
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.context_processor
 def inject_now() -> Dict[str, datetime]:
@@ -418,60 +422,30 @@ def contato() -> str:
     """
     return render_template('contato.html')
 
-@app.route('/criar-conta', methods=['GET', 'POST'])
+@app.route('/criar_conta', methods=['GET', 'POST'])
 def criar_conta():
-    try:
-        if request.method == 'POST':
-            # Verifica se o nome de usuário já existe
-            nome_usuario = request.form.get('nome_usuario')
-            if usuarios.find_one({'nome_usuario': nome_usuario}):
-                flash('Este nome de usuário já está em uso.', 'error')
-                return redirect(url_for('criar_conta'))
-            
-            # Cria novo usuário
-            novo_usuario = {
-                'nome_completo': request.form.get('nome_completo'),
-                'nome_usuario': nome_usuario,
-                'email': request.form.get('email'),
-                'senha': generate_password_hash(request.form.get('senha')),
-                'data_nascimento': request.form.get('data_nascimento'),
-                'serie': request.form.get('serie'),
-                'materia_dificuldade': request.form.get('materia_dificuldade')
-            }
-            
-            salvar_usuario(novo_usuario)
-            flash('Conta criada com sucesso! Faça login para continuar.', 'success')
-            return redirect(url_for('index'))
+    if request.method == 'POST':
+        db = get_db()
         
-        return render_template('criar_conta.html')
-    except Exception as e:
-        logger.error(f"Erro na rota criar_conta: {str(e)}")
-        flash('Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.', 'error')
-        return redirect(url_for('index'))
-
-@app.route('/verificar-usuario', methods=['POST'])
-def verificar_usuario():
-    try:
-        data = request.get_json()
-        nome_usuario = data.get('username')
+        # Verifica se o nome de usuário já existe
+        nome_usuario = request.form.get('nome_usuario')
+        if db.execute('SELECT id FROM usuarios WHERE nome_usuario = ?', (nome_usuario,)).fetchone():
+            db.close()
+            flash('Este nome de usuário já está em uso.', 'error')
+            return redirect(url_for('criar_conta'))
         
-        if usuarios.find_one({'nome_usuario': nome_usuario}):
-            return jsonify({'exists': True})
+        # Cria novo usuário
+        db.execute(
+            'INSERT INTO usuarios (nome_usuario, senha, email) VALUES (?, ?, ?)',
+            (nome_usuario, generate_password_hash(request.form.get('senha')), request.form.get('email'))
+        )
+        db.commit()
+        db.close()
         
-        return jsonify({'exists': False})
-    except Exception as e:
-        logger.error(f"Erro na rota verificar_usuario: {str(e)}")
-        return jsonify({'error': 'Erro ao verificar usuário'}), 500
-
-# Decorator para verificar se o usuário está logado
-def login_required(f):
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if 'user_id' not in session:
-            flash('Por favor, faça login para acessar esta página.', 'warning')
-            return redirect(url_for('login'))
-        return f(*args, **kwargs)
-    return decorated_function
+        flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+        return redirect(url_for('login'))
+    
+    return render_template('criar_conta.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -479,22 +453,23 @@ def login():
         nome_usuario = request.form.get('nome_usuario')
         senha = request.form.get('senha')
         
-        usuario = usuarios.find_one({'nome_usuario': nome_usuario})
+        db = get_db()
+        user = db.execute('SELECT * FROM usuarios WHERE nome_usuario = ?', (nome_usuario,)).fetchone()
+        db.close()
         
-        if usuario and check_password_hash(usuario['senha'], senha):
-            session['user_id'] = str(usuario['_id'])
-            session['nome_usuario'] = usuario['nome_usuario']  # Adiciona o nome de usuário à sessão
-            flash('Bem-vindo(a), ' + usuario['nome_usuario'] + '!', 'success')
+        if user and check_password_hash(user['senha'], senha):
+            session['user_id'] = user['id']
+            session['nome_usuario'] = user['nome_usuario']
+            flash('Bem-vindo(a), ' + user['nome_usuario'] + '!', 'success')
             return redirect(url_for('index'))
-        else:
-            flash('Nome de usuário ou senha incorretos.', 'error')
-    
+        
+        flash('Nome de usuário ou senha inválidos.', 'error')
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
-    session.pop('nome_usuario', None)  # Remove o nome de usuário da sessão
+    session.pop('nome_usuario', None)
     flash('Você foi desconectado com sucesso.', 'success')
     return redirect(url_for('index'))
 
@@ -502,52 +477,59 @@ def logout():
 def esqueceu_senha():
     return render_template('esqueceu_senha.html')
 
-@app.route('/minha-conta')
+@app.route('/minha_conta')
 @login_required
 def minha_conta():
-    usuario = usuarios.find_one({'_id': session['user_id']})
-    if not usuario:
+    db = get_db()
+    user = db.execute('SELECT * FROM usuarios WHERE id = ?', (session['user_id'],)).fetchone()
+    db.close()
+    
+    if not user:
         session.pop('user_id', None)
+        session.pop('nome_usuario', None)
         flash('Usuário não encontrado.', 'error')
         return redirect(url_for('login'))
     
-    # Remove a senha do objeto antes de enviar para o template
-    usuario.pop('senha', None)
-    return render_template('minha_conta.html', usuario=usuario)
+    return render_template('minha_conta.html', usuario=dict(user))
 
-@app.route('/editar-conta', methods=['GET', 'POST'])
+@app.route('/editar_conta', methods=['GET', 'POST'])
 @login_required
 def editar_conta():
-    usuario = usuarios.find_one({'_id': session['user_id']})
-    if not usuario:
+    db = get_db()
+    user = db.execute('SELECT * FROM usuarios WHERE id = ?', (session['user_id'],)).fetchone()
+    
+    if not user:
+        db.close()
         session.pop('user_id', None)
+        session.pop('nome_usuario', None)
         flash('Usuário não encontrado.', 'error')
         return redirect(url_for('login'))
     
     if request.method == 'POST':
-        # Atualiza os dados do usuário
-        dados_atualizados = {
-            'nome_completo': request.form.get('nome_completo'),
-            'email': request.form.get('email'),
-            'data_nascimento': request.form.get('data_nascimento'),
-            'serie': request.form.get('serie'),
-            'materia_dificuldade': request.form.get('materia_dificuldade')
-        }
-        
-        # Se uma nova senha foi fornecida, atualiza
+        email = request.form.get('email')
         nova_senha = request.form.get('nova_senha')
+        
         if nova_senha:
-            dados_atualizados['senha'] = generate_password_hash(nova_senha)
+            db.execute(
+                'UPDATE usuarios SET email = ?, senha = ? WHERE id = ?',
+                (email, generate_password_hash(nova_senha), session['user_id'])
+            )
+        else:
+            db.execute(
+                'UPDATE usuarios SET email = ? WHERE id = ?',
+                (email, session['user_id'])
+            )
         
-        usuarios.update_one(
-            {'_id': session['user_id']},
-            {'$set': dados_atualizados}
-        )
-        
+        db.commit()
+        db.close()
         flash('Dados atualizados com sucesso!', 'success')
         return redirect(url_for('minha_conta'))
     
-    return render_template('editar_conta.html', usuario=usuario)
+    db.close()
+    return render_template('editar_conta.html', usuario=dict(user))
+
+# Inicializa o banco de dados quando a aplicação inicia
+init_db()
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
