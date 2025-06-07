@@ -13,24 +13,45 @@ import calc_quimica as calc_qui
 import json
 import os
 from werkzeug.security import generate_password_hash
+import logging
+
+# Configuração de logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config.from_object(config)
-app.secret_key = os.urandom(24)  # Necessário para flash messages
+app.secret_key = os.environ.get('SECRET_KEY', os.urandom(24))
+
+# Garante que o diretório data existe
+DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+os.makedirs(DATA_DIR, exist_ok=True)
+USERS_FILE = os.path.join(DATA_DIR, 'usuarios.json')
 
 # Função para carregar usuários do JSON
 def carregar_usuarios():
     try:
-        with open('data/usuarios.json', 'r', encoding='utf-8') as f:
-            return json.load(f)
-    except FileNotFoundError:
+        if os.path.exists(USERS_FILE):
+            with open(USERS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        else:
+            # Se o arquivo não existe, cria um novo com estrutura vazia
+            data = {"usuarios": []}
+            with open(USERS_FILE, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=4)
+            return data
+    except Exception as e:
+        logger.error(f"Erro ao carregar usuários: {str(e)}")
         return {"usuarios": []}
 
 # Função para salvar usuários no JSON
 def salvar_usuarios(usuarios):
-    os.makedirs('data', exist_ok=True)
-    with open('data/usuarios.json', 'w', encoding='utf-8') as f:
-        json.dump(usuarios, f, ensure_ascii=False, indent=4)
+    try:
+        with open(USERS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(usuarios, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        logger.error(f"Erro ao salvar usuários: {str(e)}")
+        raise
 
 @app.context_processor
 def inject_now() -> Dict[str, datetime]:
@@ -398,46 +419,55 @@ def contato() -> str:
 
 @app.route('/criar-conta', methods=['GET', 'POST'])
 def criar_conta():
-    if request.method == 'POST':
-        usuarios = carregar_usuarios()
+    try:
+        if request.method == 'POST':
+            usuarios = carregar_usuarios()
+            
+            # Verifica se o nome de usuário já existe
+            nome_usuario = request.form.get('nome_usuario')
+            for usuario in usuarios['usuarios']:
+                if usuario['nome_usuario'] == nome_usuario:
+                    flash('Este nome de usuário já está em uso.', 'error')
+                    return redirect(url_for('criar_conta'))
+            
+            # Cria novo usuário
+            novo_usuario = {
+                'nome_completo': request.form.get('nome_completo'),
+                'nome_usuario': nome_usuario,
+                'email': request.form.get('email'),
+                'senha': generate_password_hash(request.form.get('senha')),
+                'data_nascimento': request.form.get('data_nascimento'),
+                'serie': request.form.get('serie'),
+                'materia_dificuldade': request.form.get('materia_dificuldade')
+            }
+            
+            usuarios['usuarios'].append(novo_usuario)
+            salvar_usuarios(usuarios)
+            
+            flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+            return redirect(url_for('index'))
         
-        # Verifica se o nome de usuário já existe
-        nome_usuario = request.form.get('nome_usuario')
-        for usuario in usuarios['usuarios']:
-            if usuario['nome_usuario'] == nome_usuario:
-                flash('Este nome de usuário já está em uso.', 'error')
-                return redirect(url_for('criar_conta'))
-        
-        # Cria novo usuário
-        novo_usuario = {
-            'nome_completo': request.form.get('nome_completo'),
-            'nome_usuario': nome_usuario,
-            'email': request.form.get('email'),
-            'senha': generate_password_hash(request.form.get('senha')),
-            'data_nascimento': request.form.get('data_nascimento'),
-            'serie': request.form.get('serie'),
-            'materia_dificuldade': request.form.get('materia_dificuldade')
-        }
-        
-        usuarios['usuarios'].append(novo_usuario)
-        salvar_usuarios(usuarios)
-        
-        flash('Conta criada com sucesso! Faça login para continuar.', 'success')
+        return render_template('criar_conta.html')
+    except Exception as e:
+        logger.error(f"Erro na rota criar_conta: {str(e)}")
+        flash('Ocorreu um erro ao processar sua solicitação. Por favor, tente novamente.', 'error')
         return redirect(url_for('index'))
-    
-    return render_template('criar_conta.html')
 
 @app.route('/verificar-usuario', methods=['POST'])
 def verificar_usuario():
-    data = request.get_json()
-    nome_usuario = data.get('username')
-    
-    usuarios = carregar_usuarios()
-    for usuario in usuarios['usuarios']:
-        if usuario['nome_usuario'] == nome_usuario:
-            return jsonify({'exists': True})
-    
-    return jsonify({'exists': False})
+    try:
+        data = request.get_json()
+        nome_usuario = data.get('username')
+        
+        usuarios = carregar_usuarios()
+        for usuario in usuarios['usuarios']:
+            if usuario['nome_usuario'] == nome_usuario:
+                return jsonify({'exists': True})
+        
+        return jsonify({'exists': False})
+    except Exception as e:
+        logger.error(f"Erro na rota verificar_usuario: {str(e)}")
+        return jsonify({'error': 'Erro ao verificar usuário'}), 500
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
