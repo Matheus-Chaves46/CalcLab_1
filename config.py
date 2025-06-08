@@ -11,7 +11,7 @@ SITE_DESCRIPTION = "Calculadora científica online para Matemática, Física e Q
 SITE_URL = "http://localhost:5000"
 
 # Configurações do Flask
-SECRET_KEY = os.urandom(24)
+# SECRET_KEY = os.urandom(24) # Removido para evitar que a chave mude a cada reinício
 PERMANENT_SESSION_LIFETIME = timedelta(minutes=30)
 
 # Configurações de email

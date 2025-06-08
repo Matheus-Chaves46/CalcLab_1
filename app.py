@@ -33,6 +33,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config.from_object(config)
 app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
+print(f"DEBUG: Flask SECRET_KEY in app.py: {app.secret_key}")
 
 # Configuração do banco de dados
 DATABASE = 'calclab.db'
@@ -100,7 +101,6 @@ def login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if 'user_id' not in session:
-            flash('Por favor, faça login para acessar esta página.', 'error')
             return redirect(url_for('login'))
         return f(*args, **kwargs)
     return decorated_function
