@@ -46,6 +46,16 @@ endblock %} {% block content %}
             </div>
             <button type="submit" class="btn btn-primary w-100">Entrar</button>
           </form>
+          <div class="text-center mt-3">
+            <p class="mb-0">
+              Não tem uma conta?
+              <a
+                href="{{ url_for('criar_conta') }}"
+                class="text-decoration-none"
+                >Criar conta</a
+              >
+            </p>
+          </div>
         </div>
       </div>
     </div>
