@@ -17,23 +17,40 @@ class CalculadoraMatematica:
         
         # Combobox para seleção de operação
         self.operacao = ttk.Combobox(self.frame, values=[
-            "Função Quadrática",
-            "Equação Linear",
-            "Sistema Linear",
-            "Progressão Aritmética",
-            "Progressão Geométrica",
-            "Área",
-            "Volume",
-            "Perímetro",
-            "Teorema de Pitágoras",
-            "Trigonometria",
-            "Média",
-            "Mediana",
-            "Moda",
-            "Desvio Padrão"
+            'Produtos Notáveis',
+            'Formula do Delta',
+            'Formula de Bhaskara',
+            'Função do 1° Grau',
+            'Função do 2° Grau',
+            'Vertice da Parabola',
+            'Função Exponencial',
+            'Função Logaritmica',
+            'PA: Termo Geral',
+            'PA: Soma dos Termos',
+            'PG: Termo Geral',
+            'PG: Soma dos Termos Finitos',
+            'PG: Soma Infinita',
+            'Relacoes Fundamentais',
+            'Lei dos Senos',
+            'Lei dos Cossenos',
+            'Area do Triangulo',
+            'Area do Circulo',
+            'Volume do Cubo',
+            'Volume da Esfera',
+            'Volume do Cilindro',
+            'Fatorial',
+            'Permutação Simples',
+            'Combinacao Simples',
+            'Probabilidade',
+            'Determinante da Matriz',
+            'Multiplicação de Matriz',
+            'Limite',
+            'Derivada de Funcao Potencia'
         ])
         self.operacao.grid(row=0, column=0, columnspan=2, pady=5)
+        self.operacao.set("Função Quadrática")
         self.operacao.bind('<<ComboboxSelected>>', self.atualizar_campos)
+        self.atualizar_campos()
         
         # Frame para campos de entrada
         self.campos_frame = ttk.Frame(self.frame)
@@ -49,43 +66,62 @@ class CalculadoraMatematica:
         # Label para resultado
         self.resultado = ttk.Label(self.frame, text="")
         self.resultado.grid(row=3, column=0, columnspan=2, pady=5)
+        
+        # Label para fórmula
+        self.formula = ttk.Label(self.frame, text="")
+        self.formula.grid(row=4, column=0, columnspan=2, pady=5)
     
     def atualizar_campos(self, event=None):
         # Limpar campos existentes
         for widget in self.campos_frame.winfo_children():
             widget.destroy()
         self.entradas.clear()
+        self.formula.config(text="")
         
         operacao = self.operacao.get()
         
         if operacao == "Função Quadrática":
             self.criar_campos(['a', 'b', 'c', 'x'])
+            self.formula.config(text="Fórmula: f(x) = ax² + bx + c")
         elif operacao == "Equação Linear":
             self.criar_campos(['a', 'b', 'x'])
+            self.formula.config(text="Fórmula: ax + b = 0")
         elif operacao == "Sistema Linear":
             self.criar_campos(['a1', 'b1', 'c1', 'a2', 'b2', 'c2'])
+            self.formula.config(text="Fórmula: a₁x + b₁y = c₁\na₂x + b₂y = c₂")
         elif operacao == "Progressão Aritmética":
             self.criar_campos(['a1', 'r', 'n'])
+            self.formula.config(text="Fórmula: aₙ = a₁ + (n-1)r")
         elif operacao == "Progressão Geométrica":
             self.criar_campos(['a1', 'q', 'n'])
+            self.formula.config(text="Fórmula: aₙ = a₁ · qⁿ⁻¹")
         elif operacao == "Área":
             self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio'])
+            self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
         elif operacao == "Volume":
             self.criar_campos(['tipo', 'lado', 'base', 'altura', 'profundidade', 'raio'])
+            self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
         elif operacao == "Perímetro":
             self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio', 'lado1', 'lado2', 'lado3'])
+            self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
         elif operacao == "Teorema de Pitágoras":
             self.criar_campos(['a', 'b', 'c'])
+            self.formula.config(text="Fórmula: a² + b² = c²")
         elif operacao == "Trigonometria":
             self.criar_campos(['angulo', 'hipotenusa', 'cateto_oposto', 'cateto_adjacente'])
+            self.formula.config(text="Fórmula: Sen(θ) = CO/H, Cos(θ) = CA/H, Tan(θ) = CO/CA")
         elif operacao == "Média":
             self.criar_campos(['valores'])
+            self.formula.config(text="Fórmula: Σx / n")
         elif operacao == "Mediana":
             self.criar_campos(['valores'])
+            self.formula.config(text="Fórmula: Valor do meio em um conjunto ordenado")
         elif operacao == "Moda":
             self.criar_campos(['valores'])
+            self.formula.config(text="Fórmula: Valor mais frequente em um conjunto")
         elif operacao == "Desvio Padrão":
             self.criar_campos(['valores'])
+            self.formula.config(text="Fórmula: σ = √[Σ(xᵢ - μ)² / N]")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):

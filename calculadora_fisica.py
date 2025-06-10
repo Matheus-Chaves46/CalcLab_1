@@ -17,34 +17,36 @@ class CalculadoraFisica:
         
         # Combobox para seleção de operação
         self.operacao = ttk.Combobox(self.frame, values=[
-            "Velocidade Média",
+            "Velocidade Media",
             "Movimento Uniforme",
             "Movimento Uniformemente Variado",
-            "Equação de Torricelli",
-            "Princípio Fundamental da Dinâmica",
-            "Força Peso",
-            "Força de Atrito",
-            "Trabalho da Força Constante",
-            "Energia Cinética",
+            "Equacao de Torricelli",
+            "Principio Fundamental da Dinamica",
+            "Forca Peso",
+            "Forca de Atrito",
+            "Trabalho da Forca Constante",
+            "Energia Cinetica",
             "Energia Potencial",
-            "Potência Média",
-            "Pressão",
-            "Pressão Hidrostática",
+            "Potencia Media",
+            "Pressao",
+            "Pressao Hidrostatica",
             "Empuxo",
-            "Dilatação Linear",
-            "Equação Fundamental da Calorimetria",
-            "Primeira Lei da Termodinâmica",
-            "Equação dos Espelhos e Lentes",
-            "Fórmula do Aumento da Imagem",
+            "Dilatacao Linear",
+            "Equacao Fundamental da Calorimetria",
+            "Primeira Lei da Termodinamica",
+            "Equacao dos Espelhos e Lentes",
+            "Formula do Aumento da Imagem",
             "Velocidade de uma Onda",
             "Lei de Ohm",
-            "Potência Elétrica ou Energia Elétrica",
-            "Força entre Cargas Elétricas (Lei de Coulomb)",
-            "Energia Potencial Elástica",
-            "Energia Mecânica"
+            "Potencia Eletrica ou Energia Eletrica",
+            "Forca entre Cargas Eletricas (Lei de Coulomb)",
+            "Energia Potencial Elastica",
+            "Energia Mecanica"
         ])
         self.operacao.grid(row=0, column=0, columnspan=2, pady=5)
+        self.operacao.set("Velocidade Media")
         self.operacao.bind('<<ComboboxSelected>>', self.atualizar_campos)
+        self.atualizar_campos()
         
         # Frame para campos de entrada
         self.campos_frame = ttk.Frame(self.frame)
@@ -60,6 +62,10 @@ class CalculadoraFisica:
         # Label para resultado
         self.resultado = ttk.Label(self.frame, text="")
         self.resultado.grid(row=3, column=0, columnspan=2, pady=5)
+        
+        # Label para fórmula
+        self.formula = ttk.Label(self.frame, text="")
+        self.formula.grid(row=4, column=0, columnspan=2, pady=5)
     
     def atualizar_campos(self, event=None):
         # Limpar campos existentes
@@ -69,84 +75,85 @@ class CalculadoraFisica:
         
         operacao = self.operacao.get()
         
-        if operacao == "Velocidade Média":
+        if operacao == "Velocidade Media":
             self.criar_campos(['velocidade_media', 'deslocamento', 'tempo'])
+            self.formula.config(text="Fórmula: v = Δs/Δt")
         elif operacao == "Movimento Uniforme":
             self.criar_campos(['movimento_uniforme', 'posicao_final', 'posicao_inicial', 'tempo', 'velocidade'])
-            
+            self.formula.config(text="Fórmula: S = S₀ + v·t")
         elif operacao == "Movimento Uniformemente Variado":
             self.criar_campos(['movimento_uniformemente_variado', 'posicao_final', 'posicao_inicial', 'tempo', 'velocidade_inicial', 'aceleracao'])
-            
-        elif operacao == "Equação de Torricelli":
+            self.formula.config(text="Fórmula: S = S₀ + v₀·t + (a·t²)/2")
+        elif operacao == "Equacao de Torricelli":
             self.criar_campos(['equacao_torricelli', 'velocidade_final', 'velocidade_inicial', 'aceleracao', 'deslocamento'])
-            
-        elif operacao == "Princípio Fundamental da Dinâmica":
-            self.criar_campos(['princípio_fundamental_da_dinâmica', 'força', 'massa', 'aceleração'])
-            
-        elif operacao == "Força Peso":
-            self.criar_campos(['força_peso', 'massa', 'gravidade'])
-            
-        elif operacao == "Força de Atrito":
-            self.criar_campos(['força_atrito', 'coeficiente', 'normal'])
-            
-        elif operacao == "Trabalho da Força Constante":
-            self.criar_campos(['força', 'deslocamento', 'angulo', 'trabalho'])
-            
-        elif operacao == "Energia Cinética":
-            self.criar_campos(['energia', 'massa', 'velocidade'])
-            
+            self.formula.config(text="Fórmula: v² = v₀² + 2·a·ΔS")
+        elif operacao == "Principio Fundamental da Dinamica":
+            self.criar_campos(['principio_fundamental_da_dinamica', 'forca', 'massa', 'aceleracao'])
+            self.formula.config(text="Fórmula: F = m·a")
+        elif operacao == "Forca Peso":
+            self.criar_campos(['forca_peso', 'massa', 'gravidade'])
+            self.formula.config(text="Fórmula: P = m·g")
+        elif operacao == "Forca de Atrito":
+            self.criar_campos(['forca_atrito', 'coeficiente', 'normal'])
+            self.formula.config(text="Fórmula: Fₐ = μ·N")
+        elif operacao == "Trabalho da Forca Constante":
+            self.criar_campos(['forca', 'deslocamento', 'angulo', 'trabalho'])
+            self.formula.config(text="Fórmula: τ = F·d·cos(θ)")
+        elif operacao == "Energia Cinetica":
+            self.criar_campos(['energia_cinetica', 'massa', 'velocidade'])
+            self.formula.config(text="Fórmula: Eₖ = (m·v²)/2")
         elif operacao == "Energia Potencial":
-            self.criar_campos(['energia', 'massa', 'altura', 'gravidade'])
-            
-        elif operacao == "Potência":
-            self.criar_campos(['potencia', 'trabalho', 'tempo'])
-            
-        elif operacao == "Pressão":
+            self.criar_campos(['energia_potencial', 'massa', 'altura', 'gravidade'])
+            self.formula.config(text="Fórmula: Eₚ = m·g·h")
+        elif operacao == "Potencia Media":
+            self.criar_campos(['potencia_media', 'trabalho', 'tempo'])
+            self.formula.config(text="Fórmula: P = τ/Δt")
+        elif operacao == "Pressao":
             self.criar_campos(['pressao', 'forca', 'area'])
-            
-        elif operacao == "Pressão Hidrostática":
-            self.criar_campos(['pressao', 'densidade', 'altura', 'gravidade'])
-            
+            self.formula.config(text="Fórmula: p = F/A")
+        elif operacao == "Pressao Hidrostatica":
+            self.criar_campos(['pressao_hidrostatica', 'densidade', 'altura', 'gravidade'])
+            self.formula.config(text="Fórmula: p = ρ·g·h")
         elif operacao == "Empuxo":
             self.criar_campos(['empuxo', 'densidade', 'volume', 'gravidade'])
-            
-        elif operacao == "Dilatação Linear":
+            self.formula.config(text="Fórmula: E = ρ·V·g")
+        elif operacao == "Dilatacao Linear":
             self.criar_campos(['comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura'])
-            
-        elif operacao == "Energia Interna":
-            self.criar_campos(['energia', 'mols', 'R', 'temperatura'])
-            
-        elif operacao == "Primeira Lei da Termodinâmica":
+            self.formula.config(text="Fórmula: L = L₀·(1 + α·ΔT)")
+        elif operacao == "Equacao Fundamental da Calorimetria":
+            self.criar_campos(['calor', 'massa', 'calor_especifico', 'variacao_temperatura'])
+            self.formula.config(text="Fórmula: Q = m·c·ΔT")
+        elif operacao == "Primeira Lei da Termodinamica":
             self.criar_campos(['variacao_interna', 'trabalho', 'calor'])
-            
-        elif operacao == "Equação dos Espelhos e Lentes":
+            self.formula.config(text="Fórmula: ΔU = Q - τ")
+        elif operacao == "Equacao dos Espelhos e Lentes":
             self.criar_campos(['distancia_focal', 'distancia_objeto', 'distancia_imagem'])
-            
+            self.formula.config(text="Fórmula: 1/f = 1/p + 1/p'")
         elif operacao == "Formula do Aumento da Imagem":
             self.criar_campos(['altura_imagem', 'altura_objeto', 'distancia_objeto', 'distancia_imagem'])
-            
+            self.formula.config(text="Fórmula: A = -p'/p = i/o")
         elif operacao == "Velocidade de uma Onda":
-            self.criar_campos(['velocidade', 'frequencia', 'comprimento_onda'])
-            
+            self.criar_campos(['velocidade_onda', 'frequencia', 'comprimento_onda'])
+            self.formula.config(text="Fórmula: v = λ·f")
         elif operacao == "Lei de Ohm":
             self.criar_campos(['resistencia', 'corrente', 'tensao'])
-            
-        elif operacao == "Potência Elétrica ou Energia Elétrica":
-            self.criar_campos(['p', 'v', 'i'])
-            
-        elif operacao == "Força entre Cargas Elétricas (Lei de Coulomb)":
-            self.criar_campos(['forca', 'k', 'q1', 'q2', 'd'])
-            
-        elif operacao == "Energia Potencial Elástica":
-            self.criar_campos(['energia', 'constante', 'deformacao'])
-        
-        elif operacao == "Energia Mecânica":
-            self.criar_campos(['energia', 'energia_cinetica', 'energia_potencial']) 
-
-            
+            self.formula.config(text="Fórmula: R = U/i")
+        elif operacao == "Potencia Eletrica ou Energia Eletrica":
+            self.criar_campos(['potencia_eletrica', 'tensao', 'corrente'])
+            self.formula.config(text="Fórmula: P = U·i")
+        elif operacao == "Forca entre Cargas Eletricas (Lei de Coulomb)":
+            self.criar_campos(['forca_coulomb', 'constante', 'carga1', 'carga2', 'distancia'])
+            self.formula.config(text="Fórmula: F = k·|q₁·q₂|/d²")
+        elif operacao == "Energia Potencial Elastica":
+            self.criar_campos(['energia_potencial_elastica', 'constante_elastica', 'deformacao'])
+            self.formula.config(text="Fórmula: Eₚ = (k·x²)/2")
+        elif operacao == "Energia Mecanica":
+            self.criar_campos(['energia_mecanica', 'energia_cinetica', 'energia_potencial'])
+            self.formula.config(text="Fórmula: Eₘ = Eₖ + Eₚ")
+    
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):
-            ttk.Label(self.campos_frame, text=campo).grid(row=i, column=0, padx=5, pady=2)
+            ttk.Label(self.campos_frame, text=campo.replace('_', ' ').title()).grid(row=i, column=0, padx=5, pady=2)
             self.entradas[campo] = ttk.Entry(self.campos_frame)
             self.entradas[campo].grid(row=i, column=1, padx=5, pady=2)
     
@@ -156,65 +163,70 @@ class CalculadoraFisica:
             valores = {}
             
             for campo, entrada in self.entradas.items():
-                valores[campo] = float(entrada.get())
+                valor = entrada.get()
+                if valor:  # Só adiciona se o campo não estiver vazio
+                    valores[campo] = float(valor)
             
-            if operacao == "Velocidade Média":
-                resultado = velocidade_media(valores['velocidade_media'], valores['deslocamento'], valores['tempo'])
+            if operacao == "Velocidade Media":
+                resultado, unidades = velocidade_media(valores.get('velocidade_media'), valores.get('deslocamento'), valores.get('tempo'))
             elif operacao == "Movimento Uniforme":
-                resultado = movimento_uniforme(valores['posicao_final'], valores['posicao_inicial'], valores['tempo'], valores['velocidade'])
+                resultado, unidades = movimento_uniforme(valores.get('posicao_final'), valores.get('posicao_inicial'), valores.get('tempo'), valores.get('velocidade'))
             elif operacao == "Movimento Uniformemente Variado":
-                resultado = movimento_uniformemente_variado(valores['posicao_final'], valores['posicao_inicial'], valores['tempo'], valores['velocidade_inicial'], valores['aceleracao'])
-            elif operacao == "Equação de Torricelli":
-                resultado = equacao_torricelli(valores['velocidade_final'], valores['velocidade_inicial'], valores['aceleracao'], valores['deslocamento'])
-            elif operacao == "Princípio Fundamental da Dinâmica":
-                resultado = principio_fundamental_dinamica(valores['força'], valores['massa'], valores['aceleração'])
-            elif operacao == "Força Peso":
-                resultado = forca_peso(valores['forca_peso'], valores['massa'], valores['gravidade'])
-            elif operacao == "Força de Atrito":
-                resultado = forca_atrito(valores['forca_atrito'], valores['coeficiente'], valores['normal'])
-            elif operacao == "Trabalho da Força Constante":
-                resultado = trabalho_forca_constante(valores['trabalho'], valores['forca'], valores['deslocamento'], valores['angulo'])
-            elif operacao == "Energia Cinética":
-                resultado = energia_cinetica(valores['energia_cinetica'], valores['massa'], valores['velocidade'])
+                resultado, unidades = movimento_uniformemente_variado(valores.get('posicao_final'), valores.get('posicao_inicial'), valores.get('tempo'), valores.get('velocidade_inicial'), valores.get('aceleracao'))
+            elif operacao == "Equacao de Torricelli":
+                resultado, unidades = equacao_torricelli(valores.get('velocidade_final'), valores.get('velocidade_inicial'), valores.get('aceleracao'), valores.get('deslocamento'))
+            elif operacao == "Principio Fundamental da Dinamica":
+                resultado, unidades = principio_fundamental_dinamica(valores.get('forca'), valores.get('massa'), valores.get('aceleracao'))
+            elif operacao == "Forca Peso":
+                resultado, unidades = forca_peso(valores.get('forca_peso'), valores.get('massa'), valores.get('gravidade'))
+            elif operacao == "Forca de Atrito":
+                resultado, unidades = forca_atrito(valores.get('forca_atrito'), valores.get('coeficiente'), valores.get('normal'))
+            elif operacao == "Trabalho da Forca Constante":
+                resultado, unidades = trabalho_forca_constante(valores.get('trabalho'), valores.get('forca'), valores.get('deslocamento'), valores.get('angulo'))
+            elif operacao == "Energia Cinetica":
+                resultado, unidades = energia_cinetica(valores.get('energia_cinetica'), valores.get('massa'), valores.get('velocidade'))
             elif operacao == "Energia Potencial":
-                resultado = energia_potencial(valores['energia_potencial'], valores['massa'], valores['altura'], valores['gravidade'])
-            elif operacao == "Potência":
-                resultado = potencia(valores['potencia'], valores['trabalho'], valores['tempo'])
-            elif operacao == "Pressão":
-                resultado = pressao(valores['pressao'], valores['forca'], valores['area'])
-            elif operacao == "Pressão Hidrostática":
-                resultado = pressao_hidrostatica(valores['pressao_hidrostatica'], valores['densidade'], valores['altura'], valores['gravidade'])
+                resultado, unidades = energia_potencial(valores.get('energia_potencial'), valores.get('massa'), valores.get('altura'), valores.get('gravidade'))
+            elif operacao == "Potencia Media":
+                resultado, unidades = potencia(valores.get('potencia_media'), valores.get('trabalho'), valores.get('tempo'))
+            elif operacao == "Pressao":
+                resultado, unidades = pressao(valores.get('pressao'), valores.get('forca'), valores.get('area'))
+            elif operacao == "Pressao Hidrostatica":
+                resultado, unidades = pressao_hidrostatica(valores.get('pressao_hidrostatica'), valores.get('densidade'), valores.get('altura'), valores.get('gravidade'))
             elif operacao == "Empuxo":
-                resultado = empuxo(valores['empuxo'], valores['densidade'], valores['volume'], valores['gravidade'])
-            elif operacao == "Dilatação Linear":
-                resultado = dilatacao_linear(valores['comprimento_final'], valores['comprimento_inicial'], valores['coeficiente'], valores['variacao_de_temperatura'])
-            elif operacao == "Energia Interna":
-                resultado = primeira_lei_termodinamica(valores['variacao_interna'], valores['trabalho'], valores['calor'])
-            elif operacao == "Equação dos Espelhos e Lentes":
-                resultado = equacao_dos_espelhos_e_lentes(valores['distancia_focal'], valores['distancia_objeto'], valores['distancia_imagem'])
+                resultado, unidades = empuxo(valores.get('empuxo'), valores.get('densidade'), valores.get('volume'), valores.get('gravidade'))
+            elif operacao == "Dilatacao Linear":
+                resultado, unidades = dilatacao_linear(valores.get('comprimento_final'), valores.get('comprimento_inicial'), valores.get('coeficiente'), valores.get('variacao_de_temperatura'))
+            elif operacao == "Equacao Fundamental da Calorimetria":
+                resultado, unidades = equacao_fundamental_calorimetria(valores.get('calor'), valores.get('massa'), valores.get('calor_especifico'), valores.get('variacao_temperatura'))
+            elif operacao == "Primeira Lei da Termodinamica":
+                resultado, unidades = primeira_lei_termodinamica(valores.get('variacao_interna'), valores.get('trabalho'), valores.get('calor'))
+            elif operacao == "Equacao dos Espelhos e Lentes":
+                resultado, unidades = equacao_dos_espelhos_e_lentes(valores.get('distancia_focal'), valores.get('distancia_objeto'), valores.get('distancia_imagem'))
             elif operacao == "Formula do Aumento da Imagem":
-                resultado = formula_do_aumento_da_imagem(valores['altura_imagem'], valores['altura_objeto'], valores['distancia_objeto'], valores['distancia_imagem'])
+                resultado, unidades = formula_do_aumento_da_imagem(valores.get('altura_imagem'), valores.get('altura_objeto'), valores.get('distancia_objeto'), valores.get('distancia_imagem'))
             elif operacao == "Velocidade de uma Onda":
-                resultado = velocidade_onda(valores['velocidade_onda'], valores['frequencia'], valores['comprimento_onda'])
+                resultado, unidades = velocidade_onda(valores.get('velocidade_onda'), valores.get('frequencia'), valores.get('comprimento_onda'))
             elif operacao == "Lei de Ohm":
-                resultado = lei_ohm(valores['lei_ohm'], valores['resistencia'], valores['corrente'], valores['tensao'])
-            elif operacao == "Potência Elétrica ou Energia Elétrica":
-                resultado = potencia_eletrica(valores['potencia_eletrica'], valores['p'], valores['v'], valores['i'])
-            elif operacao == "Força entre Cargas Elétricas (Lei de Coulomb)":
-                resultado = forca_entre_cargas_eletricas(valores['forca_entre_cargas_eletricas'], valores['k'], valores['q1'], valores['q2'], valores['d'])
-            elif operacao == "Energia Potencial Elástica":
-                resultado = energia_potencial_elastica(valores['energia_potencial_elastica'], valores['constante'], valores['deformacao'])
-            elif operacao == "Energia Mecânica":
-                resultado = energia_mecanica(valores['energia_mecanica'], valores['energia_cinetica'], valores['energia_potencial'])
+                resultado, unidades = lei_ohm(valores.get('resistencia'), valores.get('corrente'), valores.get('tensao'))
+            elif operacao == "Potencia Eletrica ou Energia Eletrica":
+                resultado, unidades = potencia_eletrica(valores.get('potencia_eletrica'), valores.get('tensao'), valores.get('corrente'))
+            elif operacao == "Forca entre Cargas Eletricas (Lei de Coulomb)":
+                resultado, unidades = forca_entre_cargas_eletricas(valores.get('forca_coulomb'), valores.get('constante'), valores.get('carga1'), valores.get('carga2'), valores.get('distancia'))
+            elif operacao == "Energia Potencial Elastica":
+                resultado, unidades = energia_potencial_elastica(valores.get('energia_potencial_elastica'), valores.get('constante_elastica'), valores.get('deformacao'))
+            elif operacao == "Energia Mecanica":
+                resultado, unidades = energia_mecanica(valores.get('energia_mecanica'), valores.get('energia_cinetica'), valores.get('energia_potencial'))
             
-            self.resultado.config(text=f"Resultado: {resultado}")
+            # Formatar o resultado com a unidade
+            resultado_formatado = ""
+            for variavel, valor in resultado.items():
+                unidade = unidades[variavel]
+                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.2f} {unidade}\n"
+            
+            self.resultado.config(text=resultado_formatado.strip())
             
         except ValueError as e:
             self.resultado.config(text=f"Erro: {str(e)}")
         except Exception as e:
             self.resultado.config(text=f"Erro: {str(e)}")
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = CalculadoraFisica(root)
-    root.mainloop()

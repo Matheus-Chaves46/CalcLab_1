@@ -33,6 +33,8 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config.from_object(config)
 app.secret_key = os.getenv('SECRET_KEY', 'sua_chave_secreta_aqui')
+app.config['SESSION_TYPE'] = 'filesystem'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)  # Session lasts 7 days
 print(f"DEBUG: Flask SECRET_KEY in app.py: {app.secret_key}")
 
 # Configuração do banco de dados
@@ -70,6 +72,7 @@ def init_db():
                 data_nascimento TEXT,
                 serie TEXT,
                 materia_dificuldade TEXT,
+                is_admin INTEGER DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
         ''')
@@ -131,21 +134,92 @@ def index() -> str:
     Returns:
         str: HTML renderizado da página inicial.
     """
+    print("DEBUG: Session contents:", dict(session))  # Debug print
     return render_template('index.html')
 
-@app.route('/matematica')
-@login_required
+@app.route('/matematica', methods=['GET', 'POST'])
+# @login_required # Temporariamente desativado para edição
 def matematica():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Requisição inválida: dados JSON não encontrados'}), 400
+
+        tipo_calculo = data.get('tipo_calculo')
+        valores = {k: v for k, v in data.items() if k != 'tipo_calculo'}
+        
+        try:
+            resultado, unidades = calc_mat.calculate_matematica(tipo_calculo, **valores)
+            resultado_formatado = {
+                k: f"{v} {unidades.get(k, '')}" for k, v in resultado.items()
+            }
+            return jsonify({'resultado': resultado_formatado})
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+        except Exception as e:
+            logger.exception("Erro inesperado no cálculo de matemática")
+            return jsonify({'error': 'Ocorreu um erro inesperado ao calcular.'}), 500
     return render_template('matematica.html')
 
-@app.route('/fisica')
-@login_required
+@app.route('/fisica', methods=['GET', 'POST'])
+# @login_required # Temporariamente desativado para edição
 def fisica():
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            if not data:
+                return jsonify({'error': 'Dados não fornecidos'}), 400
+
+            tipo_calculo = data.get('tipo_calculo')
+            if not tipo_calculo:
+                return jsonify({'error': 'Tipo de cálculo não especificado'}), 400
+
+            # Remove o tipo_calculo dos dados para passar para a função de cálculo
+            valores = {k: v for k, v in data.items() if k != 'tipo_calculo'}
+
+            # Converte os valores para float
+            valores = {k: float(v) if v is not None and v != '' else None for k, v in valores.items()}
+
+            # Chama a função de cálculo apropriada
+            resultado, unidades = calc_fis.calculate_fisica(tipo_calculo, **valores)
+
+            # Formata o resultado com as unidades
+            resultado_formatado = {}
+            for variavel, valor in resultado.items():
+                unidade = unidades.get(variavel, '')
+                resultado_formatado[variavel] = f"{valor:.2f} {unidade}".strip()
+
+            return jsonify({'resultado': resultado_formatado})
+
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+        except Exception as e:
+            return jsonify({'error': f'Erro ao processar cálculo: {str(e)}'}), 500
+
     return render_template('fisica.html')
 
-@app.route('/quimica')
-@login_required
+@app.route('/quimica', methods=['GET', 'POST'])
+# @login_required # Temporariamente desativado para edição
 def quimica():
+    if request.method == 'POST':
+        data = request.get_json()
+        if not data:
+            return jsonify({'error': 'Requisição inválida: dados JSON não encontrados'}), 400
+
+        tipo_calculo = data.get('tipo_calculo')
+        valores = {k: v for k, v in data.items() if k != 'tipo_calculo'}
+        
+        try:
+            resultado, unidades = calc_qui.calculate_quimica(tipo_calculo, **valores)
+            resultado_formatado = {
+                k: f"{v} {unidades.get(k, '')}" for k, v in resultado.items()
+            }
+            return jsonify({'resultado': resultado_formatado})
+        except ValueError as e:
+            return jsonify({'error': str(e)}), 400
+        except Exception as e:
+            logger.exception("Erro inesperado no cálculo de química")
+            return jsonify({'error': 'Ocorreu um erro inesperado ao calcular.'}), 500
     return render_template('quimica.html')
 
 @app.route('/contato')
@@ -187,27 +261,43 @@ def criar_conta():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        nome_usuario = request.form.get('nome_usuario')
-        senha = request.form.get('senha')
+        username_input = request.form.get('username')
+        password_input = request.form.get('password')
         
-        db = get_db()
-        user = db.execute('SELECT * FROM usuarios WHERE nome_usuario = ?', (nome_usuario,)).fetchone()
-        db.close()
-        
-        if user and check_password_hash(user['senha'], senha):
-            session['user_id'] = user['id']
-            session['nome_usuario'] = user['nome_usuario']
-            flash('Bem-vindo(a), ' + user['nome_usuario'] + '!', 'success')
+        if not username_input or not password_input:
+            flash('Por favor, preencha todos os campos.', 'error')
+            return render_template('login.html')
+
+        # Test account credentials
+        if username_input == 'teste' and password_input == '123456':
+            session['user_id'] = 999  # Special test user ID
+            session['nome_usuario'] = 'teste'
+            session['is_admin'] = True
+            session.permanent = True  # Make session persistent
+            flash('Bem-vindo! Login realizado com sucesso.', 'success')
             return redirect(url_for('index'))
         
-        flash('Nome de usuário ou senha inválidos.', 'error')
+        # Regular user login logic
+        conn = get_db()
+        user = conn.execute('SELECT * FROM usuarios WHERE nome_usuario = ?', (username_input,)).fetchone()
+        conn.close()
+        
+        if user and check_password_hash(user['senha'], password_input):
+            session['user_id'] = user['id']
+            session['nome_usuario'] = user['nome_usuario']
+            session['is_admin'] = user['is_admin'] if 'is_admin' in user.keys() else False
+            session.permanent = True  # Make session persistent
+            flash('Bem-vindo! Login realizado com sucesso.', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Usuário ou senha inválidos.', 'error')
+    
     return render_template('login.html')
 
 @app.route('/logout')
 def logout():
-    session.pop('user_id', None)
-    session.pop('nome_usuario', None)
-    flash('Você foi desconectado com sucesso.', 'success')
+    session.clear()  # Clear all session data
+    flash('Logout realizado com sucesso.', 'success')
     return redirect(url_for('index'))
 
 @app.route('/esqueceu-senha')
@@ -443,6 +533,27 @@ def before_request():
     if (datetime.now() - app.last_backup) > timedelta(hours=24):
         backup_database()
         app.last_backup = datetime.now()
+
+# Manipuladores de erro para retornar JSON para requisições de API
+@app.errorhandler(400)
+def bad_request_error(error):
+    logger.exception("Erro de requisição inválida")
+    if request.path.startswith(('/matematica', '/fisica', '/quimica', '/chatbot', '/verificar-usuario')):
+        return jsonify(error="Requisição inválida. Verifique os dados enviados."), 400
+    return render_template('400.html'), 400
+
+@app.errorhandler(404)
+def not_found_error(error):
+    if request.path.startswith(('/matematica', '/fisica', '/quimica', '/chatbot', '/verificar-usuario')):
+        return jsonify(error="Recurso não encontrado."), 404
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    logger.exception("Erro interno do servidor") # Loga a exceção completa
+    if request.path.startswith(('/matematica', '/fisica', '/quimica', '/chatbot', '/verificar-usuario')):
+        return jsonify(error="Ocorreu um erro interno no servidor."), 500
+    return render_template('500.html'), 500
 
 # Inicializa o banco de dados quando a aplicação inicia
 init_db()

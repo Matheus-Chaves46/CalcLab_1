@@ -17,19 +17,21 @@ class CalculadoraQuimica:
         
         # Combobox para seleção de operação
         self.operacao = ttk.Combobox(self.frame, values=[
-            "Massa Molar",
-            "Concentração Molar",
-            "pH",
-            "pOH",
-            "Constante de Equilíbrio",
-            "Energia Livre de Gibbs",
-            "Lei de Henry",
-            "Razão Molar",
-            "Rendimento Teórico",
-            "Pressão Osmótica"
+            'Pureza',
+            'Rendimento',
+            'Excesso',
+            'Quantidade de Reagentes Necessario',
+            'Balanceamento',
+            'Gases',
+            'Tabela Periodica',
+            'Pilha de Daniels',
+            'Termoquimica',
+            'Equilíbrio Quimico'
         ])
         self.operacao.grid(row=0, column=0, columnspan=2, pady=5)
+        self.operacao.set("Massa Molar")
         self.operacao.bind('<<ComboboxSelected>>', self.atualizar_campos)
+        self.atualizar_campos()
         
         # Frame para campos de entrada
         self.campos_frame = ttk.Frame(self.frame)
@@ -45,35 +47,50 @@ class CalculadoraQuimica:
         # Label para resultado
         self.resultado = ttk.Label(self.frame, text="")
         self.resultado.grid(row=3, column=0, columnspan=2, pady=5)
+        
+        # Label para fórmula
+        self.formula = ttk.Label(self.frame, text="")
+        self.formula.grid(row=4, column=0, columnspan=2, pady=5)
     
     def atualizar_campos(self, event=None):
         # Limpar campos existentes
         for widget in self.campos_frame.winfo_children():
             widget.destroy()
         self.entradas.clear()
+        self.formula.config(text="")
         
         operacao = self.operacao.get()
         
         if operacao == "Massa Molar":
             self.criar_campos(['formula'])
+            self.formula.config(text="Fórmula: Σ(massa atômica * número de átomos)")
         elif operacao == "Concentração Molar":
             self.criar_campos(['mols', 'volume'])
+            self.formula.config(text="Fórmula: C = n/V")
         elif operacao == "pH":
             self.criar_campos(['concentracao_h'])
+            self.formula.config(text="Fórmula: pH = -log[H⁺]")
         elif operacao == "pOH":
             self.criar_campos(['concentracao_oh'])
+            self.formula.config(text="Fórmula: pOH = -log[OH⁻]")
         elif operacao == "Constante de Equilíbrio":
             self.criar_campos(['produtos', 'reagentes'])
+            self.formula.config(text="Fórmula: K = [Produtos]ˣ / [Reagentes]ʸ")
         elif operacao == "Energia Livre de Gibbs":
             self.criar_campos(['entalpia', 'entropia', 'temperatura'])
+            self.formula.config(text="Fórmula: ΔG = ΔH - TΔS")
         elif operacao == "Lei de Henry":
             self.criar_campos(['pressao', 'constante_henry'])
+            self.formula.config(text="Fórmula: P = kH · C")
         elif operacao == "Razão Molar":
             self.criar_campos(['mols_reagente', 'mols_produto'])
+            self.formula.config(text="Fórmula: Razão = mols do reagente / mols do produto")
         elif operacao == "Rendimento Teórico":
             self.criar_campos(['mols_obtidos', 'mols_esperados'])
+            self.formula.config(text="Fórmula: Rendimento = (Mols obtidos / Mols esperados) * 100%")
         elif operacao == "Pressão Osmótica":
             self.criar_campos(['concentracao', 'temperatura'])
+            self.formula.config(text="Fórmula: Π = M · R · T")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):

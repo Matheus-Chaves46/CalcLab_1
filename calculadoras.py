@@ -38,8 +38,3 @@ class Calculadoras:
     def abrir_calculadora_fisica(self):
         janela = tk.Toplevel(self.root)
         CalculadoraFisica(janela)
-
-if __name__ == "__main__":
-    root = tk.Tk()
-    app = Calculadoras(root)
-    root.mainloop()

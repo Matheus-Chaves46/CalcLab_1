@@ -19,10 +19,25 @@
               class="alert alert-info d-none mb-3"
             ></div>
 
+            <!-- Mensagem de erro (movida para cá para maior visibilidade) -->
+            <div
+              id="erro"
+              class="alert alert-danger mt-3"
+              style="display: none"
+            ></div>
+
             <!-- Campos dinâmicos serão inseridos aqui -->
             <div id="campos-variaveis"></div>
 
-            <div class="mt-4">
+            <!-- Mensagem para selecionar um cálculo (inicialmente visível) -->
+            <div
+              id="select-calculation-message"
+              class="alert alert-info mt-3 text-center"
+            >
+              Selecione um tipo de cálculo no menu ao lado para começar.
+            </div>
+
+            <div class="mt-4" id="action-buttons" style="display: none">
               <button type="submit" class="btn btn-success me-2">
                 Calcular
               </button>
@@ -41,11 +56,6 @@
             class="alert alert-success mt-4"
             style="display: none"
           ></div>
-          <div
-            id="erro"
-            class="alert alert-danger mt-4"
-            style="display: none"
-          ></div>
         </div>
       </div>
     </div>
@@ -61,7 +71,7 @@
             config.CALCULATORS['matematica']['categories'].items() %}
             <li class="list-group-item bg-light p-0">
               <a
-                class="nav-link py-2 px-3 text-primary"
+                class="nav-link py-2 px-3"
                 data-bs-toggle="collapse"
                 href="#collapse{{ loop.index }}"
                 role="button"
@@ -76,7 +86,7 @@
                   <li class="list-group-item bg-light border-top p-0">
                     <a
                       href="#"
-                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center"
+                      class="list-group-item list-group-item-action d-flex justify-content-between align-items-center text-dark"
                       data-calculation="{{ calc_id }}"
                       data-description="{{ calc_info.description }}"
                     >
@@ -102,7 +112,38 @@
 
   // Função para formatar o nome da variável
   function formatarVariavel(variavel) {
-    return variavel.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const nomesFormatados = {
+      // Álgebra
+      'a': 'Coeficiente a',
+      'b': 'Coeficiente b',
+      'c': 'Coeficiente c',
+      'a1': 'Coeficiente a₁',
+      'b1': 'Coeficiente b₁',
+      'c1': 'Coeficiente c₁',
+      'a2': 'Coeficiente a₂',
+      'b2': 'Coeficiente b₂',
+      'c2': 'Coeficiente c₂',
+
+      // Funções e Progressões
+      'n': 'Número de Termos',
+      'q': 'Razão (q)',
+      'valores': 'Valores',
+
+      // Trigonometria
+      'base': 'Base',
+      'altura': 'Altura',
+      'raio': 'Raio',
+      'lado': 'Lado',
+      'angulo': 'Ângulo',
+      'area': 'Área',
+      'perimetro': 'Perímetro',
+      'volume': 'Volume',
+      'comprimento': 'Comprimento',
+      'largura': 'Largura',
+      'profundidade': 'Profundidade'
+    };
+
+    return nomesFormatados[variavel] || variavel.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
   // Função para atualizar os campos de variáveis e exibir descrição
@@ -119,6 +160,10 @@
           calculationDescriptionDiv.classList.add('d-none');
       }
 
+      // Oculta a mensagem de seleção de cálculo e mostra os botões
+      document.getElementById('select-calculation-message').classList.add('d-none');
+      document.getElementById('action-buttons').style.display = 'block';
+
       // Encontra o cálculo nas categorias
       let calcInfo = null;
       for (const categoryKey in CALCULATORS_CONFIG.matematica.categories) {
@@ -134,19 +179,143 @@
       document.getElementById('titulo-calculadora').textContent = calcInfo.title;
       document.getElementById('tipo-calculo').value = tipo;
 
-      // Chamar o script para criar os campos
-      const variaveis = calcInfo.variables;
-      variaveis.forEach(function (v) {
-          const formGroup = document.createElement('div');
-          formGroup.className = 'mb-3';
-          formGroup.innerHTML = `
-              <label for="${v}" class="form-label">${formatarVariavel(v)}</label>
-              <input type="number" step="any" class="form-control" id="${v}" name="${v}" required>
+      // Cria a seção de seleção de variáveis com checkboxes
+      const variablesContainer = document.createElement('div');
+      variablesContainer.className = 'card mt-3 mb-3';
+      variablesContainer.innerHTML = `
+          <div class="card-header bg-secondary text-white">
+              <h6 class="mb-0">Selecione as Variáveis que você tem:</h6>
+          </div>
+          <div class="card-body">
+              <div class="row" id="checkboxes-container"></div>
+              <div id="inputs-container"></div>
+          </div>
+      `;
+      camposDiv.appendChild(variablesContainer);
+
+      const checkboxesContainer = document.getElementById('checkboxes-container');
+      const inputsContainer = document.getElementById('inputs-container');
+
+      calcInfo.variables.forEach(function (v) {
+          const colDiv = document.createElement('div');
+          colDiv.className = 'col-md-6 mb-2';
+          colDiv.innerHTML = `
+              <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="${v}" id="check_${v}">
+                  <label class="form-check-label" for="check_${v}">
+                      ${formatarVariavel(v)}
+                  </label>
+              </div>
           `;
-          camposDiv.appendChild(formGroup);
+          checkboxesContainer.appendChild(colDiv);
+
+          // Adiciona listener para o checkbox
+          const checkbox = document.getElementById(`check_${v}`);
+          checkbox.addEventListener('change', function() {
+              toggleVariableInput(v, calcInfo.variables.length);
+          });
       });
 
+      // Esconde a info de calcular ao mudar o cálculo
+      document.getElementById('variavel-a-calcular-info').classList.add('d-none');
       document.getElementById('erro').style.display = 'none';
+  }
+
+  // Função para adicionar/remover campo de input e gerenciar a variável a calcular
+  function toggleVariableInput(variableName, totalVariables) {
+      const inputsContainer = document.getElementById('inputs-container');
+      const allCheckboxes = document.querySelectorAll('#checkboxes-container input[type="checkbox"]');
+      const checkedCount = document.querySelectorAll('#checkboxes-container input[type="checkbox"]:checked').length;
+      const calculateInfoDiv = document.getElementById('variavel-a-calcular-info');
+      const calculateVariableNameSpan = document.getElementById('variavel-calculada-nome');
+      const erroDiv = document.getElementById('erro');
+
+      // Limpa erros anteriores
+      erroDiv.style.display = 'none';
+      erroDiv.textContent = '';
+
+      // Remove todos os campos de input existentes
+      const existingInputs = inputsContainer.querySelectorAll('.input-field');
+      existingInputs.forEach(input => input.remove());
+
+      // Adiciona campos de input para cada checkbox marcado
+      allCheckboxes.forEach(cb => {
+          if (cb.checked) {
+              const inputDiv = document.createElement('div');
+              inputDiv.className = 'mb-3 input-field';
+              inputDiv.id = `input_${cb.value}`;
+
+              // Define placeholders for each variable
+              const placeholders = {
+                  // Álgebra
+                  'a': 'Digite o valor de a',
+                  'b': 'Digite o valor de b',
+                  'c': 'Digite o valor de c',
+                  'a1': 'Digite o valor de a1',
+                  'b1': 'Digite o valor de b1',
+                  'c1': 'Digite o valor de c1',
+                  'a2': 'Digite o valor de a2',
+                  'b2': 'Digite o valor de b2',
+                  'c2': 'Digite o valor de c2',
+                  // Funções e Progressões
+                  'n': 'Digite o número de termos',
+                  'q': 'Digite a razão (q)',
+                  'valores': 'Digite os valores separados por vírgula (ex: 1,2,3)',
+                  // Trigonometria
+                  'base': 'Digite o valor da base',
+                  'altura': 'Digite o valor da altura',
+                  'raio': 'Digite o valor do raio',
+                  'lado': 'Digite o valor do lado',
+                  'angulo': 'Digite o valor do ângulo (em graus)',
+                  'area': 'Digite o valor da área',
+                  'perimetro': 'Digite o valor do perímetro',
+                  'volume': 'Digite o valor do volume',
+                  'comprimento': 'Digite o valor do comprimento',
+                  'largura': 'Digite o valor da largura',
+                  'profundidade': 'Digite o valor da profundidade',
+              };
+
+              inputDiv.innerHTML = `
+                  <label for="${cb.value}">${formatarVariavel(cb.value)}</label>
+                  <input
+                      type="number"
+                      class="form-control"
+                      id="${cb.value}"
+                      name="${cb.value}"
+                      step="any"
+                      placeholder="${placeholders[cb.value] || 'Digite o valor'}"
+                      required
+                  />
+              `;
+              inputsContainer.appendChild(inputDiv);
+          }
+      });
+
+      // Lógica para determinar a variável a calcular
+      if (checkedCount === totalVariables) {
+          // Todas as variáveis selecionadas: Exibe mensagem de erro
+          erroDiv.textContent = 'Você deve deixar uma variável sem selecionar para que ela possa ser calculada.';
+          erroDiv.style.display = 'block';
+          calculateInfoDiv.classList.add('d-none');
+          // Desmarca o último checkbox marcado
+          const checkbox = document.getElementById(`check_${variableName}`);
+          checkbox.checked = false;
+          // Remove o campo de input correspondente
+          const input = document.getElementById(`input_${variableName}`);
+          if (input) {
+              input.remove();
+          }
+      } else if (checkedCount === totalVariables - 1) {
+          const unselectedCheckboxes = Array.from(allCheckboxes).filter(cb => !cb.checked);
+          const unselectedVariable = unselectedCheckboxes[0].value;
+          // Exibe a variável formatada (com primeira letra maiúscula)
+          calculateVariableNameSpan.textContent = formatarVariavel(unselectedVariable);
+          calculateInfoDiv.classList.remove('d-none');
+          erroDiv.style.display = 'none'; // Oculta erro se houver um cálculo válido
+      } else {
+          calculateInfoDiv.classList.add('d-none');
+          erroDiv.style.display = 'none';
+      }
   }
 
   // Função para calcular
@@ -154,12 +323,23 @@
     event.preventDefault(); // Impede o envio do formulário padrão
 
     const tipoCalculo = document.getElementById('tipo-calculo').value;
-    const formFields = document.querySelectorAll('#campos-variaveis input');
+    // Pega todos os inputs dentro do container de inputs dinâmicos
+    const formFields = document.querySelectorAll('#inputs-container input');
     const data = { tipo_calculo: tipoCalculo };
 
+    let allInputsFilled = true;
     formFields.forEach((field) => {
+      if (field.value === '') {
+        allInputsFilled = false;
+      }
       data[field.name] = parseFloat(field.value);
     });
+
+    if (!allInputsFilled) {
+      document.getElementById('erro').textContent = 'Por favor, preencha todos os campos selecionados.';
+      document.getElementById('erro').style.display = 'block';
+      return;
+    }
 
     try {
       const response = await fetch('/matematica', {
@@ -196,12 +376,31 @@
     document.getElementById('resultado').style.display = 'none';
     document.getElementById('erro').style.display = 'none';
     document.getElementById('form-calculadora').reset();
+    document.getElementById('campos-variaveis').innerHTML = ''; // Limpa os campos dinâmicos
+    document.getElementById('calculation-description').classList.add('d-none'); // Esconde a descrição
+
+    // Exibe a mensagem de seleção de cálculo e oculta os botões
+    document.getElementById('select-calculation-message').classList.remove('d-none');
+    document.getElementById('action-buttons').style.display = 'none';
+
+    // Re-exibe o título padrão se necessário
+    document.getElementById('titulo-calculadora').textContent = 'Calculadora de Matemática';
+
+    // Remove a classe 'active' de todos os links de cálculo
+    document.querySelectorAll('.list-group-item-action').forEach(link => {
+        link.classList.remove('active');
+    });
   }
 
   // Adicionar o event listener para os links de cálculo
   document.querySelectorAll('a[data-calculation]').forEach(link => {
       link.addEventListener('click', function(e) {
           e.preventDefault();
+
+          // Remove 'active' de todos os links e adiciona ao clicado
+          document.querySelectorAll('.list-group-item-action').forEach(l => l.classList.remove('active'));
+          this.classList.add('active');
+
           const tipo = this.dataset.calculation;
           const description = this.dataset.description; // Pega a descrição do atributo data-description
           atualizarVariaveis(tipo, description); // Passa a descrição para a função
@@ -209,5 +408,12 @@
           document.getElementById('erro').style.display = 'none'; // Esconde erro anterior
       });
   });
+
+  // Adicionar a div de informação de variável a calcular (copiado de fisica.html)
+  const variavelACalcularInfo = document.createElement('div');
+  variavelACalcularInfo.id = 'variavel-a-calcular-info';
+  variavelACalcularInfo.className = 'alert alert-warning mt-3 d-none';
+  variavelACalcularInfo.innerHTML = '<i class="fas fa-question-circle me-2"></i>Calculando: <span id="variavel-calculada-nome"></span>';
+  document.getElementById('form-calculadora').insertBefore(variavelACalcularInfo, document.getElementById('action-buttons'));
 </script>
 {% endblock %}

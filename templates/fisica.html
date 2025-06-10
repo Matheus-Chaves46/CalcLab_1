@@ -17,19 +17,34 @@
               class="alert alert-info d-none mb-3"
             ></div>
 
+            <!-- Mensagem de erro (movida para cá para maior visibilidade) -->
+            <div
+              id="erro"
+              class="alert alert-danger mt-3"
+              style="display: none"
+            ></div>
+
             <!-- Campos dinâmicos serão inseridos aqui -->
             <div id="campos-variaveis"></div>
+
+            <!-- Mensagem para selecionar um cálculo (inicialmente visível) -->
+            <div
+              id="select-calculation-message"
+              class="alert alert-info mt-3 text-center"
+            >
+              Selecione um tipo de cálculo no menu ao lado para começar.
+            </div>
 
             <!-- Botão para identificar variável a ser calculada -->
             <div
               id="variavel-a-calcular-info"
               class="alert alert-warning mt-3 d-none"
             >
-              <i class="fas fa-question-circle me-2"></i>Calcule:
+              <i class="fas fa-question-circle me-2"></i>Calculando:
               <span id="variavel-calculada-nome"></span>
             </div>
 
-            <div class="mt-4">
+            <div class="mt-4" id="action-buttons" style="display: none">
               <button type="submit" class="btn btn-success me-2">
                 Calcular
               </button>
@@ -46,11 +61,6 @@
           <div
             id="resultado"
             class="alert alert-success mt-4"
-            style="display: none"
-          ></div>
-          <div
-            id="erro"
-            class="alert alert-danger mt-4"
             style="display: none"
           ></div>
         </div>
@@ -109,7 +119,47 @@
 
   // Função para formatar o nome da variável
   function formatarVariavel(variavel) {
-    return variavel.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const nomesFormatados = {
+      // Cinemática
+      'velocidade_media': 'Velocidade Média',
+      'deslocamento': 'Deslocamento',
+      'tempo': 'Tempo',
+      'posicao_final': 'Posição Final',
+      'posicao_inicial': 'Posição Inicial',
+      'velocidade': 'Velocidade',
+      'velocidade_inicial': 'Velocidade Inicial',
+      'velocidade_final': 'Velocidade Final',
+      'aceleracao': 'Aceleração',
+
+      // Dinâmica
+      'forca': 'Força',
+      'massa': 'Massa',
+      'forca_peso': 'Força Peso',
+      'gravidade': 'Gravidade',
+      'forca_atrito': 'Força de Atrito',
+      'coeficiente': 'Coeficiente de Atrito',
+      'normal': 'Força Normal',
+
+      // Trabalho e Energia
+      'trabalho': 'Trabalho',
+      'angulo': 'Ângulo',
+      'energia_cinetica': 'Energia Cinética',
+      'energia_potencial': 'Energia Potencial',
+      'altura': 'Altura',
+
+      // Outros
+      'distancia': 'Distância',
+      'frequencia': 'Frequência',
+      'periodo': 'Período',
+      'comprimento': 'Comprimento',
+      'area': 'Área',
+      'volume': 'Volume',
+      'densidade': 'Densidade',
+      'pressao': 'Pressão',
+      'temperatura': 'Temperatura'
+    };
+
+    return nomesFormatados[variavel] || variavel.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
   }
 
   // Função para atualizar os campos de variáveis e exibir descrição
@@ -125,6 +175,10 @@
           calculationDescriptionDiv.textContent = '';
           calculationDescriptionDiv.classList.add('d-none');
       }
+
+      // Oculta a mensagem de seleção de cálculo e mostra os botões
+      document.getElementById('select-calculation-message').classList.add('d-none');
+      document.getElementById('action-buttons').style.display = 'block';
 
       // Encontra o cálculo nas categorias
       let calcInfo = null;
@@ -181,78 +235,114 @@
       // Esconde a info de calcular ao mudar o cálculo
       document.getElementById('variavel-a-calcular-info').classList.add('d-none');
       document.getElementById('erro').style.display = 'none';
+      document.getElementById('resultado').style.display = 'none';
   }
 
   // Função para adicionar/remover campo de input e gerenciar a variável a calcular
   function toggleVariableInput(variableName, totalVariables) {
-      const inputId = `input_${variableName}`;
-      let inputDiv = document.getElementById(inputId);
       const inputsContainer = document.getElementById('inputs-container');
       const allCheckboxes = document.querySelectorAll('#checkboxes-container input[type="checkbox"]');
       const checkedCount = document.querySelectorAll('#checkboxes-container input[type="checkbox"]:checked').length;
       const calculateInfoDiv = document.getElementById('variavel-a-calcular-info');
       const calculateVariableNameSpan = document.getElementById('variavel-calculada-nome');
+      const erroDiv = document.getElementById('erro');
 
-      if (event.target.checked) {
-          if (!inputDiv) { // Se o input não existe, cria
-              inputDiv = document.createElement('div');
-              inputDiv.className = 'mb-3';
-              inputDiv.id = inputId;
+      // Limpa erros anteriores
+      erroDiv.style.display = 'none';
+      erroDiv.textContent = '';
+
+      // Remove todos os campos de input existentes
+      const existingInputs = inputsContainer.querySelectorAll('.input-field');
+      existingInputs.forEach(input => input.remove());
+
+      // Adiciona campos de input para cada checkbox marcado
+      allCheckboxes.forEach(cb => {
+          if (cb.checked) {
+              const inputDiv = document.createElement('div');
+              inputDiv.className = 'mb-3 input-field';
+              inputDiv.id = `input_${cb.value}`;
+
+              // Define placeholders for each variable
+              const placeholders = {
+                  // Cinemática
+                  'velocidade_media': 'Digite a velocidade média (m/s)',
+                  'deslocamento': 'Digite o deslocamento (m)',
+                  'tempo': 'Digite o tempo (s)',
+                  'posicao_final': 'Digite a posição final (m)',
+                  'posicao_inicial': 'Digite a posição inicial (m)',
+                  'velocidade': 'Digite a velocidade (m/s)',
+                  'velocidade_inicial': 'Digite a velocidade inicial (m/s)',
+                  'velocidade_final': 'Digite a velocidade final (m/s)',
+                  'aceleracao': 'Digite a aceleração (m/s²)',
+
+                  // Dinâmica
+                  'forca': 'Digite a força (N)',
+                  'massa': 'Digite a massa (kg)',
+                  'forca_peso': 'Digite a força peso (N)',
+                  'gravidade': 'Digite a gravidade (m/s²)',
+                  'forca_atrito': 'Digite a força de atrito (N)',
+                  'coeficiente': 'Digite o coeficiente de atrito',
+                  'normal': 'Digite a força normal (N)',
+
+                  // Trabalho e Energia
+                  'trabalho': 'Digite o trabalho (J)',
+                  'angulo': 'Digite o ângulo (graus)',
+                  'energia_cinetica': 'Digite a energia cinética (J)',
+                  'energia_potencial': 'Digite a energia potencial (J)',
+                  'altura': 'Digite a altura (m)',
+
+                  // Outros
+                  'distancia': 'Digite a distância (m)',
+                  'frequencia': 'Digite a frequência (Hz)',
+                  'periodo': 'Digite o período (s)',
+                  'comprimento': 'Digite o comprimento (m)',
+                  'area': 'Digite a área (m²)',
+                  'volume': 'Digite o volume (m³)',
+                  'densidade': 'Digite a densidade (kg/m³)',
+                  'pressao': 'Digite a pressão (Pa)',
+                  'temperatura': 'Digite a temperatura (K)'
+              };
+
               inputDiv.innerHTML = `
-                  <label for="${variableName}" class="form-label">${formatarVariavel(variableName)}</label>
-                  <input type="number" step="any" class="form-control" id="${variableName}" name="${variableName}" required>
+                  <label for="${cb.value}">${formatarVariavel(cb.value)}</label>
+                  <input
+                      type="number"
+                      class="form-control"
+                      id="${cb.value}"
+                      name="${cb.value}"
+                      step="any"
+                      placeholder="${placeholders[cb.value] || 'Digite o valor'}"
+                      required
+                  />
               `;
               inputsContainer.appendChild(inputDiv);
           }
-      } else {
-          if (inputDiv) { // Se o input existe, remove
-              inputDiv.remove();
-          }
-      }
+      });
 
       // Lógica para determinar a variável a calcular
-      if (checkedCount === totalVariables - 1) {
-          let missingVariable = null;
-          let selectedVariables = [];
-          allCheckboxes.forEach(cb => {
-              if (cb.checked) {
-                  selectedVariables.push(cb.value);
-              }
-          });
-
-          const currentCalcInfo = getCurrentCalculationInfo(); // Obtém info do cálculo atual
-          if (currentCalcInfo) {
-              missingVariable = currentCalcInfo.variables.find(v => !selectedVariables.includes(v));
+      if (checkedCount === totalVariables) {
+          // Todas as variáveis selecionadas: Exibe mensagem de erro
+          erroDiv.textContent = 'Você deve deixar uma variável sem selecionar para que ela possa ser calculada.';
+          erroDiv.style.display = 'block';
+          calculateInfoDiv.classList.add('d-none');
+          // Desmarca o último checkbox marcado
+          const checkbox = document.getElementById(`check_${variableName}`);
+          checkbox.checked = false;
+          // Remove o campo de input correspondente
+          const input = document.getElementById(`input_${variableName}`);
+          if (input) {
+              input.remove();
           }
-
-          if (missingVariable) {
-              calculateVariableNameSpan.textContent = formatarVariavel(missingVariable);
-              calculateInfoDiv.classList.remove('d-none');
-              // Torna todos os campos de input não requeridos, exceto os selecionados
-              document.querySelectorAll('#inputs-container input').forEach(input => {
-                  input.required = selectedVariables.includes(input.name);
-              });
-          } else {
-              calculateInfoDiv.classList.add('d-none');
-          }
+      } else if (checkedCount === totalVariables - 1) {
+          const unselectedCheckboxes = Array.from(allCheckboxes).filter(cb => !cb.checked);
+          const unselectedVariable = unselectedCheckboxes[0].value;
+          // Exibe a variável formatada (com primeira letra maiúscula)
+          calculateVariableNameSpan.textContent = formatarVariavel(unselectedVariable);
+          calculateInfoDiv.classList.remove('d-none');
+          erroDiv.style.display = 'none'; // Oculta erro se houver um cálculo válido
       } else {
           calculateInfoDiv.classList.add('d-none');
-          // Se o número de checkboxes marcados não é n-1, todos os inputs criados são requeridos
-          document.querySelectorAll('#inputs-container input').forEach(input => {
-              input.required = true;
-          });
-      }
-
-      // Limita a seleção a n-1 variáveis
-      if (checkedCount > totalVariables -1) {
-          event.target.checked = false; // Desmarca o último checkbox clicado
-          if (inputDiv) inputDiv.remove(); // Remove o input se ele foi criado
-          calculateInfoDiv.classList.add('d-none');
-          alert('Você só pode selecionar ' + (totalVariables - 1) + ' variáveis para calcular a que falta.');
-      } else if (checkedCount === totalVariables) {
-          alert('Você já selecionou todas as variáveis. Limpe o formulário para começar de novo.');
-          event.target.checked = false;
-          if (inputDiv) inputDiv.remove();
+          erroDiv.style.display = 'none';
       }
   }
 
@@ -268,102 +358,106 @@
       return null;
   }
 
-  // Função para calcular
-  async function calcular(event) {
-    event.preventDefault(); // Impede o envio do formulário padrão
+  // Função para calcular o resultado
+  function calcular(event) {
+      event.preventDefault();
 
-    const tipoCalculo = document.getElementById('tipo-calculo').value;
-    const formFields = document.querySelectorAll('#inputs-container input'); // Pega inputs do container
-    const data = { tipo_calculo: tipoCalculo };
-    let hasEmptyField = false;
-
-    formFields.forEach((field) => {
-      if (field.required && field.value === '') {
-        hasEmptyField = true;
+      const tipoCalculo = document.getElementById('tipo-calculo').value;
+      if (!tipoCalculo) {
+          mostrarErro('Selecione um tipo de cálculo primeiro.');
+          return false;
       }
-      data[field.name] = parseFloat(field.value);
-    });
 
-    if (hasEmptyField) {
-      document.getElementById('erro').textContent = 'Por favor, preencha todas as variáveis selecionadas.';
-      document.getElementById('erro').style.display = 'block';
-      document.getElementById('resultado').style.display = 'none';
-      return;
-    }
-
-    // Identifica a variável a ser calculada (aquela que não foi fornecida)
-    const currentCalcInfo = getCurrentCalculationInfo();
-    const providedVariables = Object.keys(data).filter(key => key !== 'tipo_calculo');
-    let variableToCalculate = null;
-
-    if (currentCalcInfo && providedVariables.length === currentCalcInfo.variables.length - 1) {
-        variableToCalculate = currentCalcInfo.variables.find(v => !providedVariables.includes(v));
-        if (variableToCalculate) {
-            data[variableToCalculate] = null; // Envia como null para o backend calcular
-        }
-    } else {
-        // Se a quantidade de variáveis não for n-1, o backend vai precisar de todos os valores preenchidos.
-        // Ou o usuário pode ter clicado "Calcular" sem selecionar a quantidade correta.
-        document.getElementById('erro').textContent = 'Por favor, selecione N-1 variáveis para que o cálculo possa ser feito. Ou forneça todos os N valores para verificar.';
-        document.getElementById('erro').style.display = 'block';
-        document.getElementById('resultado').style.display = 'none';
-        return;
-    }
-
-
-    try {
-      const response = await fetch('/fisica', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
+      // Coleta os valores dos campos de input
+      const valores = {};
+      const inputs = document.querySelectorAll('#inputs-container input');
+      inputs.forEach(input => {
+          if (input.value !== '') {
+              valores[input.name] = input.value;
+          }
       });
 
-      const result = await response.json();
+      // Adiciona o tipo de cálculo aos valores
+      valores.tipo_calculo = tipoCalculo;
 
-      if (response.ok) {
-        let resultText = 'Resultado: ';
-        // Adiciona a unidade ao resultado
-        for (const key in result.resultado) {
-            resultText += `${formatarVariavel(key)} = ${result.resultado[key]}`;
-        }
-        document.getElementById('resultado').textContent = resultText;
-        document.getElementById('resultado').style.display = 'block';
-        document.getElementById('erro').style.display = 'none';
-      } else {
-        document.getElementById('erro').textContent =
-          'Erro: ' + (result.error || 'Ocorreu um erro.');
-        document.getElementById('erro').style.display = 'block';
-        document.getElementById('resultado').style.display = 'none';
-      }
-    } catch (error) {
-      document.getElementById('erro').textContent =
-        'Erro ao processar cálculo: ' + error;
-      document.getElementById('erro').style.display = 'block';
+      // Limpa mensagens anteriores
+      document.getElementById('erro').style.display = 'none';
       document.getElementById('resultado').style.display = 'none';
-    }
+
+      // Faz a requisição para o servidor
+      fetch('/fisica', {
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(valores)
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              mostrarErro(data.error);
+          } else {
+              mostrarResultado(data.resultado);
+          }
+      })
+      .catch(error => {
+          mostrarErro('Erro ao processar a requisição: ' + error.message);
+      });
+
+      return false;
   }
 
-  // Função para limpar o resultado
+  function mostrarErro(mensagem) {
+      const erroDiv = document.getElementById('erro');
+      erroDiv.textContent = mensagem;
+      erroDiv.style.display = 'block';
+      document.getElementById('resultado').style.display = 'none';
+  }
+
+  function mostrarResultado(resultado) {
+      const resultadoDiv = document.getElementById('resultado');
+      let html = '<h5>Resultado:</h5><ul class="list-unstyled">';
+
+      for (const [variavel, valor] of Object.entries(resultado)) {
+          html += `<li><strong>${formatarVariavel(variavel)}:</strong> ${valor}</li>`;
+      }
+
+      html += '</ul>';
+      resultadoDiv.innerHTML = html;
+      resultadoDiv.style.display = 'block';
+      document.getElementById('erro').style.display = 'none';
+  }
+
   function limparResultado() {
-    document.getElementById('resultado').style.display = 'none';
-    document.getElementById('erro').style.display = 'none';
-    document.getElementById('form-calculadora').reset();
-    document.getElementById('campos-variaveis').innerHTML = ''; // Limpa os campos dinâmicos
-    document.getElementById('calculation-description').classList.add('d-none'); // Esconde a descrição
-    document.getElementById('variavel-a-calcular-info').classList.add('d-none'); // Esconde a info de calcular
+      document.getElementById('resultado').style.display = 'none';
+      document.getElementById('erro').style.display = 'none';
+
+      // Limpa os campos de input
+      const inputs = document.querySelectorAll('#inputs-container input');
+      inputs.forEach(input => {
+          input.value = '';
+      });
+
+      // Desmarca os checkboxes
+      const checkboxes = document.querySelectorAll('#checkboxes-container input[type="checkbox"]');
+      checkboxes.forEach(checkbox => {
+          checkbox.checked = false;
+      });
+
+      // Esconde a info de calcular
+      document.getElementById('variavel-a-calcular-info').classList.add('d-none');
   }
 
-  // Adicionar o event listener para os links de cálculo
-  document.querySelectorAll('a[data-calculation]').forEach(link => {
-      link.addEventListener('click', function(e) {
-          e.preventDefault();
-          const tipo = this.dataset.calculation;
-          const description = this.dataset.description; // Pega a descrição do atributo data-description
-          atualizarVariaveis(tipo, description); // Passa a descrição para a função
-          document.getElementById('resultado').style.display = 'none'; // Esconde resultado anterior
-          document.getElementById('erro').style.display = 'none'; // Esconde erro anterior
+  // Adiciona os event listeners para os links de cálculo
+  document.addEventListener('DOMContentLoaded', function() {
+      const calculationLinks = document.querySelectorAll('[data-calculation]');
+      calculationLinks.forEach(link => {
+          link.addEventListener('click', function(e) {
+              e.preventDefault();
+              const tipo = this.getAttribute('data-calculation');
+              const description = this.getAttribute('data-description');
+              atualizarVariaveis(tipo, description);
+          });
       });
   });
 </script>

@@ -94,42 +94,42 @@ CALCULATORS = {
                 'description': 'Cálculos envolvendo expressões e equações algébricas.',
                 'calculations': {
                     'produtos_notaveis': {
-                        'title': 'Produtos Notáveis',
+                        'title': 'Produtos Notáveis #',
                         'description': 'Aplica identidades algébricas clássicas.',
                         'variables': ['a', 'b', 'c']
                     },
                     'formula_delta': {
-                        'title': 'Fórmula do Delta',
+                        'title': 'Fórmula do Delta [Δ = b² - 4ac]',
                         'description': 'Determina o valor de Δ em equações quadráticas.',
                         'variables': ['a', 'b']
                     },
                     'formula_bhaskara': {
-                        'title': 'Fórmula de Bhaskara',
+                        'title': 'Fórmula de Bhaskara [x = -b±√Δ/2a]',
                         'description': 'Resolve equações do 2º grau.',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     },
                     'funcao_1_grau': {
-                        'title': 'Função do 1º Grau',
+                        'title': 'Função do 1º Grau [f(x) = ax + b]',
                         'description': 'Análise de função linear',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     },
                     'funcao_2_grau': {
-                        'title': 'Função do 2º Grau',
+                        'title': 'Função do 2º Grau [f(x) = ax² + bx + c]',
                         'description': 'Análise de parábolas.',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     },
                     'vertice_parabola': {
-                        'title': 'Vértice da Parábola',
+                        'title': 'Vértice da Parábola [xv = -b/2a]',
                         'description': 'Encontra o ponto de máximo ou mínimo.',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     },
                     'funcao_exponencial': {
-                        'title': 'Função Exponencial',
+                        'title': 'Função Exponencial [f(x) a.b^x]',
                         'description': 'Comportamento de crescimento e decaimento.',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     },
                     'funcao_logaritmica': {
-                        'title': 'Função Logarítmica',
+                        'title': 'Função Logarítmica [f(x) = logb(x)]',
                         'description': 'Operações com logaritmos.',
                         'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
                     }
@@ -140,27 +140,27 @@ CALCULATORS = {
                 'description': 'Cálculos com sequências numéricas',
                 'calculations': {
                     'pa_termo_geral': {
-                        'title': 'PA: Termo Geral',
+                        'title': 'PA: Termo Geral [an = a1 + (n-1)r]',
                         'description': 'Encontra um termo específico na PA.',
                         'variables': []
                     },
                     'pa_soma_termos': {
-                        'title': 'PA: Soma dos Termos',
+                        'title': 'PA: Soma dos Termos [Sn = n(a1 + an)/2]',
                         'description': 'Soma de uma sequência aritmética.',
                         'variables': ['a1', 'q', 'n']
                     },
                     'pg_termo_geral': {
-                        'title': 'PG: Termo Geral',
+                        'title': 'PG: Termo Geral [an = a1.q^(n-1)]',
                         'description': 'Termo específico em uma PG.',
                         'variables': []
                     },
                     'pg_soma_termos_finitos': {
-                        'title': 'PG: Soma dos Termos Finitos',
+                        'title': 'PG: Soma dos Termos Finitos [Sn = a1 . (q^n - 1)/(q - 1)]',
                         'description': 'Soma parcial de uma PG.',
                         'variables': []
                     },
                     'pg_soma_infinita': {
-                        'title': 'PG: Soma Infinita',
+                        'title': 'PG: Soma Infinita [S = a1/(1-q)]',
                         'description': 'Soma de uma PG infinita (convergente).',
                         'variables': []
                     },
@@ -171,17 +171,17 @@ CALCULATORS = {
                 'description': 'Cálculos de áreas, volumes e perímetros',
                 'calculations': {
                     'relacoes_fundamentais': {
-                        'title': 'Relações Fundamentais',
+                        'title': 'Relações Fundamentais #',
                         'description': 'Seno, Cosseno Tangente.',
                         'variables': ['tipo', 'base', 'altura', 'raio']
                     },
                     'lei_senos': {
-                        'title': 'Lei Senos',
+                        'title': 'Lei Senos [a/senA = b/senB = c/senC]',
                         'description': 'Relação entre lados e senos dos ângulos.',
                         'variables': ['tipo', 'base', 'altura', 'raio']
                     },
                     'lei_cossenos': {
-                        'title': 'Lei dos Cossenos',
+                        'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cosA]',
                         'description': 'Generalização do teorema de Pitágoras.',
                         'variables': ['tipo', 'lado', 'raio']
                     },
@@ -192,27 +192,27 @@ CALCULATORS = {
                 'description': 'Cálculos Trigonométricos',
                 'calculations': {
                     'area_triangulo': {
-                        'title': 'Área do Triângulo',
+                        'title': 'Área do Triângulo [A = b.h/2]',
                         'description': 'Área usando base × altura ou trigonometria.',
                         'variables': []
                     },
                     'area_circulo': {
-                        'title': 'Área do Círculo',
+                        'title': 'Área do Círculo [A = π.r²]',
                         'description': 'Cálculo usando π × raio².',
                         'variables': []
                     },
                     'volume_cubo': {
-                        'title': 'Volume do Cubo',
+                        'title': 'Volume do Cubo [V = a³]',
                         'description': 'Lado³.',
                         'variables': []
                     },
                     'volume_esfera': {
-                        'title': 'Volume da Esfera',
+                        'title': 'Volume da Esfera [V = 4/3πr³]',
                         'description': '4/3πr³',
                         'variables': []
                     },                   
                     'volume_cilindro': {
-                        'title': 'Volume do Cilindro',
+                        'title': 'Volume do Cilindro [V = π.r².h]',
                         'description': 'π × raio² × altura.',
                         'variables': []
                     },
@@ -223,22 +223,22 @@ CALCULATORS = {
                 'description': 'Cálculos estatísticos',
                 'calculations': {
                     'fatorial': {
-                        'title': 'Fatorial',
+                        'title': 'Fatorial [n! = n.(n-1).(n-2)...1]',
                         'description': 'Produto de todos os inteiros positivos até n.',
                         'variables': ['valores']
                     },
                     'permutacao_simples': {
-                        'title': 'Permutação Simples',
+                        'title': 'Permutação Simples [P(n) = n!]',
                         'description': 'Contagem de ordens possíveis.',
                         'variables': ['valores']
                     },
                     'combinacao_simples': {
-                        'title': 'Combinação Simples',
+                        'title': 'Combinação Simples [C(n,k) = n!/k!(n-k)!]',
                         'description': 'Contagem de agrupamentos sem ordem.',
                         'variables': ['valores']
                     },
                     'probabilidade': {
-                        'title': 'Probabilidade',
+                        'title': 'Probabilidade #',
                         'description': 'Chance de um evento ocorrer.',
                         'variables': ['valores']
                     }
@@ -249,12 +249,12 @@ CALCULATORS = {
                 'description': 'Cálculos estatísticos',
                 'calculations': {
                     'determinante_matriz': {
-                        'title': 'Determinante da Matriz',
+                        'title': 'Determinante da Matriz #',
                         'description': 'Valor escalar associado à matriz.',
                         'variables': []
                     },
                     'multiplicacao_matriz': {
-                        'title': 'Multiplicação de Matriz',
+                        'title': 'Multiplicação de Matriz [Cij = n∑k=1 Aik.Bkj]',
                         'description': 'Produto entre duas matrizes.',
                         'variables': []
                     },
@@ -265,12 +265,12 @@ CALCULATORS = {
                 'description': 'Cálculos estatísticos',
                 'calculations': {
                     'limite': {
-                        'title': 'Limite',
+                        'title': 'Limite [lim f(x) = L]',
                         'description': '',
                         'variables': []
                     },
                     'derivada_funcao_potencia': {
-                        'title': 'Derivada de Função Potência',
+                        'title': 'Derivada de Função Potência [f"(x) = n.x^(n-1)]',
                         'description': '',
                         'variables': []
                     },
@@ -288,22 +288,22 @@ CALCULATORS = {
                 'description': 'Cálculos de Movimento',
                 'calculations': {
                     'velocidade_media': {
-                        'title': 'Velocidade Média',
+                        'title': 'Velocidade Média vm = [Δs/Δt]',
                         'description': 'Calcula a velocidade média, deslocamento ou tempo.',
                         'variables': ['velocidade_media', 'deslocamento', 'tempo']
                     },
                     'movimento_uniforme': {
-                        'title': 'Movimento Uniforme',
+                        'title': 'Movimento Uniforme [s = s0 + v.t]',
                         'description': 'Calcula posição final/inicial, velocidade ou tempo em movimento uniforme.',
                         'variables': ['posicao_final', 'posicao_inicial', 'velocidade', 'tempo']
                     },
                     'movimento_uniformente_variado': {
-                        'title': 'Movimento Uniformemente Variado',
+                        'title': 'Movimento Uniformemente Variado [s = s0 + v0.t + a.t²/2]',
                         'description': 'Calcula posição final/inicial, velocidade inicial, tempo ou aceleração em movimento uniformemente variado.',
                         'variables': ['posicao_final', 'posicao_inicial', 'velocidade_inicial', 'tempo', 'aceleracao']
                     },
                     'equacao_torricelli': {
-                        'title': 'Equação de Torricelli',
+                        'title': 'Equação de Torricelli [v² = v0² + 2.a.Δs]',
                         'description': 'Calcula velocidade final/inicial, aceleração ou deslocamento sem usar o tempo.',
                         'variables': ['velocidade_final', 'velocidade_inicial', 'aceleracao', 'deslocamento']
                     }
@@ -314,17 +314,17 @@ CALCULATORS = {
                 'description': 'Cálculos de forças e leis de Newton.',
                 'calculations': {
                     'principio_fundamental_dinamica': {
-                        'title': 'Princípio Fundamental da Dinâmica',
+                        'title': 'Princípio Fundamental da Dinâmica [F = m.a]',
                         'description': 'Calcula força, massa ou aceleração (F=ma).',
                         'variables': ['forca', 'massa', 'aceleracao']
                     },
                     'forca_peso': {
-                        'title': 'Força Peso',
+                        'title': 'Força Peso [P = m.g]',
                         'description': 'Calcula força peso, massa ou gravidade (P=mg).',
                         'variables': ['forca_peso', 'massa', 'gravidade']
                     },
                     'forca_atrito': {
-                        'title': 'Força de Atrito',
+                        'title': 'Força de Atrito [Fat = μ.N]',
                         'description': 'Calcula força de atrito, coeficiente de atrito ou força normal.',
                         'variables': ['forca_atrito', 'coeficiente', 'normal']
                     }
@@ -335,32 +335,32 @@ CALCULATORS = {
                 'description': 'Cálculos relacionados a trabalho, energia e potência.',
                 'calculations': {
                     'trabalho_forca_constante': {
-                        'title': 'Trabalho de Força Constante',
+                        'title': 'Trabalho de Força Constante [ω = F.d.cosθ]',
                         'description': 'Calcula o trabalho realizado por uma força constante.',
                         'variables': ['trabalho', 'forca', 'deslocamento', 'angulo']
                     },
                     'energia_cinetica': {
-                        'title': 'Energia Cinética',
+                        'title': 'Energia Cinética [Ec = m.v²/2]',
                         'description': 'Calcula energia cinética, massa ou velocidade.',
                         'variables': ['energia_cinetica', 'massa', 'velocidade']
                     },
                     'energia_potencial': {
-                        'title': 'Energia Potencial Gravitacional',
+                        'title': 'Energia Potencial Gravitacional [Ep = m.g.h]',
                         'description': 'Calcula energia potencial gravitacional, massa, altura ou gravidade.',
                         'variables': ['energia_potencial', 'massa', 'altura', 'gravidade']
                     },
                     'potencia': {
-                        'title': 'Potência Média',
+                        'title': 'Potência Média [P = ω/Δt]',
                         'description': 'Calcula potência média, trabalho ou tempo.',
                         'variables': ['potencia_media', 'trabalho', 'tempo']
                     },
                     'energia_potencial_elastica': {
-                        'title': 'Energia Potencial Elástica',
+                        'title': 'Energia Potencial Elástica [Epe = k.x²/2]',
                         'description': 'Calcula energia potencial elástica, constante elástica ou deformação.',
                         'variables': ['energia', 'constante', 'deformacao']
                     },
                     'energia_mecanica': {
-                        'title': 'Energia Mecânica',
+                        'title': 'Energia Mecânica [Em = Ec + Ep]',
                         'description': 'Calcula energia mecânica, cinética ou potencial.',
                         'variables': ['energia_mec', 'energia_cinetica', 'energia_potencial']
                     },           
@@ -371,17 +371,17 @@ CALCULATORS = {
                 'description': 'Cálculos relacionados a fluidos em repouso.',
                 'calculations': {
                     'pressao': {
-                        'title': 'Pressão',
+                        'title': 'Pressão [P = F/A]',
                         'description': 'Calcula pressão, força ou área.',
                         'variables': ['pressao', 'forca', 'area']
                     },
                     'pressao_hidrostatica': {
-                        'title': 'Pressão Hidrostática',
+                        'title': 'Pressão Hidrostática [P = ρ.g.h]',
                         'description': 'Calcula pressão hidrostática, densidade, altura ou gravidade.',
                         'variables': ['pressao', 'densidade', 'altura', 'gravidade']
                     },
                     'empuxo': {
-                        'title': 'Empuxo',
+                        'title': 'Empuxo [E = ρ.g.V]',
                         'description': 'Calcula empuxo, densidade, volume ou gravidade.',
                         'variables': ['empuxo', 'densidade', 'volume', 'gravidade']
                     }
@@ -392,12 +392,12 @@ CALCULATORS = {
                 'description': 'Cálculos térmicos e termodinâmicos.',
                 'calculations': {
                     'dilatacao_linear': {
-                        'title': 'Dilatação Linear',
+                        'title': 'Dilatação Linear [ΔL = L0.α.ΔT]',
                         'description': 'Calcula dilatação linear, comprimento final/inicial, coeficiente ou variação de temperatura.',
                         'variables': ['dilatacao_linear', 'comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura']
                     },
                     'primeira_lei_termodinamica': {
-                        'title': 'Primeira Lei da Termodinâmica',
+                        'title': 'Primeira Lei da Termodinâmica [ΔU = Q - W]',
                         'description': 'Calcula variação da energia interna, calor ou trabalho.',
                         'variables': ['variacao_interna', 'calor', 'trabalho']
                     }
@@ -408,12 +408,12 @@ CALCULATORS = {
                 'description': 'Cálculos envolvendo espelhos, lentes e fenômenos luminosos.',
                 'calculations': {
                     'equacao_dos_espelhos_e_lentes': {
-                        'title': 'Equação dos Espelhos e Lentes',
+                        'title': 'Equação dos Espelhos e Lentes [1/f = 1/p + 1/p"]',
                         'description': 'Calcula distância focal, distância do objeto ou distância da imagem.',
                         'variables': ['distancia_focal', 'distancia_objeto', 'distancia_imagem']
                     },
                     'formula_do_aumento_da_imagem': {
-                        'title': 'Fórmula do Aumento da Imagem',
+                        'title': 'Fórmula do Aumento da Imagem [A = i/o = p"/p]',
                         'description': 'Calcula altura da imagem/objeto ou distância da imagem/objeto.',
                         'variables': ['altura_imagem', 'altura_objeto', 'distancia_objeto', 'distancia_imagem']
                     }
@@ -424,7 +424,7 @@ CALCULATORS = {
                 'description': 'Cálculos relacionados a ondas.',
                 'calculations': {
                     'velocidade_onda': {
-                        'title': 'Velocidade de uma Onda',
+                        'title': 'Velocidade de uma Onda [v = λ.f]',
                         'description': 'Calcula velocidade, frequência ou comprimento de onda.',
                         'variables': ['velocidade', 'frequencia', 'comprimento_onda']
                     }
@@ -435,17 +435,17 @@ CALCULATORS = {
                 'description': 'Cálculos com energia elétrica e circuitos.',
                 'calculations': {
                     'lei_ohm': {
-                        'title': 'Lei de Ohm',
+                        'title': 'Lei de Ohm [U = R.I]',
                         'description': 'Calcula tensão, resistência ou corrente.',
                         'variables': ['tensao', 'resistencia', 'corrente']
                     },
                     'potencia_eletrica': {
-                        'title': 'Potência Elétrica',
+                        'title': 'Potência Elétrica [P = U.I]',
                         'description': 'Calcula potência, tensão ou corrente elétrica.',
                         'variables': ['potencia', 'tensao', 'corrente']
                     },
                     'forca_entre_cargas_eletricas': {
-                        'title': 'Força entre Cargas Elétricas (Lei de Coulomb)',
+                        'title': 'Força entre Cargas Elétricas (Lei de Coulomb) [F = k.q1.q2/r²]',
                         'description': 'Calcula força, constante eletrostática, cargas ou distância.',
                         'variables': ['forca', 'k', 'q1', 'q2', 'd']
                     },
@@ -463,32 +463,27 @@ CALCULATORS = {
                 'description': 'Cálculos de soluções',
                 'calculations': {
                     'pureza': {
-                        'title': 'Pureza',
+                        'title': 'Pureza [massa da subs pura/massa da amotra . 100]',
                         'description': 'Calcula concentração em g/L ou mol/L',
                         'variables': ['massa_soluto', 'volume_solucao', 'massa_molar']
                     },
                     'rendimento': {
-                        'title': 'Rendimento',
+                        'title': 'Rendimento [rend real / rend teorico . 100]',
                         'description': 'Calcula concentração após diluição',
                         'variables': ['concentracao_inicial', 'volume_inicial', 'volume_final']
                     },
                     'excesso': {
-                        'title': 'Excesso',
-                        'description': 'Calcula concentração por titulação',
-                        'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
-                    },
-                    'massa_reagentes_produtos': {
-                        'title': 'Excesso',
+                        'title': 'Excesso #',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     },
                     'quantidade_reagente_necessario': {
-                        'title': 'Quantidade de Reagente Necessário',
+                        'title': 'Quantidade de Reagente Necessário #',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     },
                     'balanceamento': {
-                        'title': 'Balanceamento',
+                        'title': 'Balanceamento #',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     }
@@ -499,7 +494,7 @@ CALCULATORS = {
                 'description': 'Cálculos de pH e pOH',
                 'calculations': {
                     'gases': {
-                        'title': 'Gases',
+                        'title': 'Gases P.V = n.R.T',
                         'description': 'Calcula pH de uma solução',
                         'variables': ['concentracao_hidrogenio']
                     },
