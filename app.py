@@ -1,4 +1,4 @@
-"""
+""" 
 Aplicação principal do CalcLab.
 """
 

@@ -118,7 +118,7 @@ class CalculadoraFisica:
             self.criar_campos(['empuxo', 'densidade', 'volume', 'gravidade'])
             self.formula.config(text="Fórmula: E = ρ·V·g")
         elif operacao == "Dilatacao Linear":
-            self.criar_campos(['comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura'])
+            self.criar_campos(['dilatacao_linear', 'coeficiente_dilatacao', 'comprimento_inicial', 'variacao_de_temperatura'])
             self.formula.config(text="Fórmula: L = L₀·(1 + α·ΔT)")
         elif operacao == "Equacao Fundamental da Calorimetria":
             self.criar_campos(['calor', 'massa', 'calor_especifico', 'variacao_temperatura'])
@@ -196,7 +196,7 @@ class CalculadoraFisica:
             elif operacao == "Empuxo":
                 resultado, unidades = empuxo(valores.get('empuxo'), valores.get('densidade'), valores.get('volume'), valores.get('gravidade'))
             elif operacao == "Dilatacao Linear":
-                resultado, unidades = dilatacao_linear(valores.get('comprimento_final'), valores.get('comprimento_inicial'), valores.get('coeficiente'), valores.get('variacao_de_temperatura'))
+                resultado, unidades = dilatacao_linear(valores.get('coeficiente_dilatacao'), valores.get('comprimento_inicial'), valores.get('dilatacao_linear'), valores.get('variacao_de_temperatura'))
             elif operacao == "Equacao Fundamental da Calorimetria":
                 resultado, unidades = equacao_fundamental_calorimetria(valores.get('calor'), valores.get('massa'), valores.get('calor_especifico'), valores.get('variacao_temperatura'))
             elif operacao == "Primeira Lei da Termodinamica":
@@ -222,7 +222,7 @@ class CalculadoraFisica:
             resultado_formatado = ""
             for variavel, valor in resultado.items():
                 unidade = unidades[variavel]
-                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.2f} {unidade}\n"
+                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.5f} {unidade}\n"
             
             self.resultado.config(text=resultado_formatado.strip())
             

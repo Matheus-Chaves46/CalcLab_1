@@ -67,7 +67,7 @@ THEME = {
 
 # Configurações de contato
 CONTACT = {
-    'email': os.getenv('CONTACT_EMAIL', 'contato@calclab.com'),
+    'email': os.getenv('CONTACT_EMAIL', 'suporte.calclab@gmail.com'),
     'phone': os.getenv('CONTACT_PHONE', '+55 38 98824-8721'),
     'whatsapp': os.getenv('CONTACT_WHATSAPP', '+55 3 98824-8721'),
     'telegram': os.getenv('CONTACT_TELEGRAM', '@calclab')
@@ -77,7 +77,7 @@ CONTACT = {
 SOCIAL_MEDIA = {
     'facebook': os.getenv('FACEBOOK_URL', 'https://facebook.com/calclab'),
     'twitter': os.getenv('TWITTER_URL', 'https://twitter.com/calclab'),
-    'instagram': os.getenv('INSTAGRAM_URL', 'https://instagram.com/calclab'),
+    'instagram': os.getenv('INSTAGRAM_URL', 'https://instagram.com/calclab_'),
     'linkedin': os.getenv('LINKEDIN_URL', 'https://linkedin.com/company/calclab'),
     'github': os.getenv('GITHUB_URL', 'https://github.com/calclab')
 }
@@ -394,7 +394,7 @@ CALCULATORS = {
                     'dilatacao_linear': {
                         'title': 'Dilatação Linear [ΔL = L0.α.ΔT]',
                         'description': 'Calcula dilatação linear, comprimento final/inicial, coeficiente ou variação de temperatura.',
-                        'variables': ['dilatacao_linear', 'comprimento_final', 'comprimento_inicial', 'variacao_de_temperatura']
+                        'variables': ['dilatacao_linear', 'coeficiente_dilatacao', 'comprimento_inicial', 'variacao_de_temperatura']
                     },
                     'primeira_lei_termodinamica': {
                         'title': 'Primeira Lei da Termodinâmica [ΔU = Q - W]',
@@ -463,29 +463,29 @@ CALCULATORS = {
                 'description': 'Cálculos de soluções',
                 'calculations': {
                     'pureza': {
-                        'title': 'Pureza [massa da subs pura/massa da amotra . 100]',
+                        'title': 'Pureza [massa da subs pura/massa da subs amotra . 100]',
                         'description': 'Calcula concentração em g/L ou mol/L',
-                        'variables': ['massa_soluto', 'volume_solucao', 'massa_molar']
+                        'variables': ['pureza', 'massa_substancia_pura', 'massa_substancia_amostra']
                     },
                     'rendimento': {
                         'title': 'Rendimento [rend real / rend teorico . 100]',
                         'description': 'Calcula concentração após diluição',
-                        'variables': ['concentracao_inicial', 'volume_inicial', 'volume_final']
+                        'variables': ['rendimento', 'rendimento_real', 'rendimento_teorico']
                     },
                     'excesso': {
                         'title': 'Excesso [E = Qnt inicial de reagente - Qnt regeante que reagiu]',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
+                        'variables': ['excesso', 'quantidade_incial_reagentes', 'quantidade_reagentes_reagidos']
                     },
                     'quantidade_reagente_necessario': {
                         'title': 'Quantidade de Reagente Necessário',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
+                        'variables': ['#', '#', '#', '#']
                     },
                     'balanceamento': {
                         'title': 'Balanceamento',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
+                        'variables': ['equação']
                     }
                 }
             },
@@ -496,29 +496,29 @@ CALCULATORS = {
                     'gases': {
                         'title': 'Gases [P.V = n.R.T]',
                         'description': 'Calcula pH de uma solução',
-                        'variables': ['concentracao_hidrogenio']
+                        'variables': ['pressao', 'volume', 'numero_mols', 'constante', 'temperatura']
                     },
                 }
             },
-            'tabela_e_estrutura_atomica': {
+            'tabela_periodica': {
                 'title': '🔬 Tabela e Estrutura Atômica',
                 'description': 'Tabela periódica',
                 'calculations': {
                     'tabela_periodica': {
                         'title': 'Tabela Periódica',
                         'description': 'Mostra as informações de um determinado elemento químico.',
-                        'variables': ['pressao_inicial', 'volume_inicial', 'volume_final']
+                        'variables': ['elemento']
                     },
                 }
             },
-            'eletroquimica': {
+            'pilha_de_daniels': {
                 'title': '🔋 Eletroquímica',
                 'description': 'Cálculos estequiométricos',
                 'calculations': {
                     'pilha_daniels': {
                         'title': 'Pilha de Daniels',
                         'description': 'Calcula massa molar',
-                        'variables': ['massa', 'quantidade_mols']
+                        'variables': ['#', '#', '#', '#']
                     },
                 }
             },
@@ -529,7 +529,7 @@ CALCULATORS = {
                     'termoquimica': {
                         'title': 'Termoquímica ΔH = H produtos - H reagentes',
                         'description': 'Calcula massa molar',
-                        'variables': ['massa', 'quantidade_mols']
+                        'variables': ['delta_h', 'entalpia_produtos', 'entalpia_reagentes']
                     },
                 }
             },
@@ -540,7 +540,7 @@ CALCULATORS = {
                     'equilibrio_quimico': {
                         'title': 'Equilíbrio Químico',
                         'description': 'Calcula massa molar',
-                        'variables': ['massa', 'quantidade_mols']
+                        'variables': ['#', '#', '#', '#']
                     },
                 }
             },

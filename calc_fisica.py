@@ -688,37 +688,34 @@ def empuxo(
         raise ValueError(f"Erro no cálculo do Empuxo: {str(e)}")
 
 def dilatacao_linear(
-    comprimento_final: Optional[float] = None,
+    coeficiente_dilatacao: Optional[float] = None,
     comprimento_inicial: Optional[float] = None,
-    coeficiente: Optional[float] = None,
+    dilatacao_linear: Optional[float] = None,
     variacao_de_temperatura: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
+    coeficiente_dilatacao = coeficiente_dilatacao * 10**-5
     try:
-        valores = {'comprimento_final': comprimento_final, 'comprimento_inicial': comprimento_inicial,
-                  'coeficiente': coeficiente, 'variacao_de_temperatura': variacao_de_temperatura, 'dilatacao_linear': dilatacao_linear}
+        valores = {'coeficiente_dilataco': coeficiente_dilatacao, 'comprimento_inicial': comprimento_inicial, 'variacao_de_temperatura': variacao_de_temperatura, 'dilatacao_linear': dilatacao_linear}
         if sum(1 for v in valores.values() if v is None) != 1:
             raise ValueError("Exatamente três valores devem ser fornecidos para calcular o quarto.")
         
-        if comprimento_final is None:
-            comprimento_final = comprimento_inicial * (1 + coeficiente * variacao_de_temperatura)
-            return {'comprimento_final': comprimento_final}, {'comprimento_final': 'm'}
+        if coeficiente_dilatacao is None:
+            coeficiente_dilatacao = (dilatacao_linear) / (variacao_de_temperatura * comprimento_inicial)
+            return {'coeficiente_dilatacao': coeficiente_dilatacao}, {'coeficiente_dilatacao': 'm'}
         elif comprimento_inicial is None:
-            den = (1 + coeficiente * variacao_de_temperatura)
-            if den == 0:
+            if comprimento_inicial == 0:
                 raise ValueError("Denominador não pode ser zero para calcular o comprimento inicial.")
-            comprimento_inicial = comprimento_final / den
+            comprimento_inicial = (dilatacao_linear) / (coeficiente_dilatacao * variacao_de_temperatura)
             return {'comprimento_inicial': comprimento_inicial}, {'comprimento_inicial': 'm'}
-        elif coeficiente is None:
-            den = (comprimento_inicial * variacao_de_temperatura)
-            if den == 0:
+        elif dilatacao_linear is None:
+            if dilatacao_linear == 0:
                 raise ValueError("Comprimento inicial ou variação de temperatura não podem ser zero para calcular o coeficiente.")
-            coeficiente = (comprimento_final - comprimento_inicial) / den
-            return {'coeficiente': coeficiente}, {'coeficiente': '°C⁻¹'}
+            dilatacao_linear = (comprimento_inicial * coeficiente_dilatacao * variacao_de_temperatura)
+            return {f'dilatacao_linear': dilatacao_linear}, {'dilatacao_linear': '°C⁻¹'}
         else: # variacao_de_temperatura is None
-            den = (comprimento_inicial * coeficiente)
-            if den == 0:
+            if variacao_de_temperatura == 0:
                 raise ValueError("Comprimento inicial ou coeficiente não podem ser zero para calcular a variação de temperatura.")
-            variacao_de_temperatura = (comprimento_final - comprimento_inicial) / den
+            variacao_de_temperatura = (dilatacao_linear) / (coeficiente_dilatacao * comprimento_inicial)
             return {'variacao_de_temperatura': variacao_de_temperatura}, {'variacao_de_temperatura': '°C'}
             
     except (TypeError, ZeroDivisionError) as e:
@@ -830,7 +827,7 @@ def forca_entre_cargas_eletricas(
         raise ValueError(f"Erro na Força entre Cargas Elétricas: {str(e)}")
 
 def energia_potencial_elastica(
-    energia: Optional[float] = None,
+    energia_potencial_elastica: Optional[float] = None,
     constante_elastica: Optional[float] = None,
     deformacao: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:

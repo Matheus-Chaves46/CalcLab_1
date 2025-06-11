@@ -61,36 +61,36 @@ class CalculadoraQuimica:
         
         operacao = self.operacao.get()
         
-        if operacao == "Massa Molar":
-            self.criar_campos(['formula'])
-            self.formula.config(text="Fórmula: Σ(massa atômica * número de átomos)")
-        elif operacao == "Concentração Molar":
-            self.criar_campos(['mols', 'volume'])
-            self.formula.config(text="Fórmula: C = n/V")
-        elif operacao == "pH":
-            self.criar_campos(['concentracao_h'])
-            self.formula.config(text="Fórmula: pH = -log[H⁺]")
-        elif operacao == "pOH":
-            self.criar_campos(['concentracao_oh'])
-            self.formula.config(text="Fórmula: pOH = -log[OH⁻]")
-        elif operacao == "Constante de Equilíbrio":
-            self.criar_campos(['produtos', 'reagentes'])
-            self.formula.config(text="Fórmula: K = [Produtos]ˣ / [Reagentes]ʸ")
-        elif operacao == "Energia Livre de Gibbs":
-            self.criar_campos(['entalpia', 'entropia', 'temperatura'])
-            self.formula.config(text="Fórmula: ΔG = ΔH - TΔS")
-        elif operacao == "Lei de Henry":
-            self.criar_campos(['pressao', 'constante_henry'])
-            self.formula.config(text="Fórmula: P = kH · C")
-        elif operacao == "Razão Molar":
-            self.criar_campos(['mols_reagente', 'mols_produto'])
-            self.formula.config(text="Fórmula: Razão = mols do reagente / mols do produto")
-        elif operacao == "Rendimento Teórico":
-            self.criar_campos(['mols_obtidos', 'mols_esperados'])
-            self.formula.config(text="Fórmula: Rendimento = (Mols obtidos / Mols esperados) * 100%")
-        elif operacao == "Pressão Osmótica":
-            self.criar_campos(['concentracao', 'temperatura'])
-            self.formula.config(text="Fórmula: Π = M · R · T")
+        if operacao == "Pureza":
+            self.criar_campos(['pureza', 'massa_substancia_pura', 'massa_substancia_amostra'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Rendimento":
+            self.criar_campos(['rendimento', 'rendimento_real', 'rendimento_teorico'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Excesso":
+            self.criar_campos(['excesso', 'quantidade_incial_reagentes', 'quantidade_reagentes_reagidos'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Quantidade Reagente Necessario":
+            self.criar_campos([''])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Balanceamento":
+            self.criar_campos(['equação'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Gases":
+            self.criar_campos(['pressao', 'volume', 'numero_mols', 'constante', 'temperatura'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Tabela Periodica":
+            self.criar_campos(['elemento'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Pilha de Daniels":
+            self.criar_campos([''])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Termoquimica":
+            self.criar_campos(['delta_h', 'entalpia_produtos', 'entalpia_reagentes'])
+            self.formula.config(text="Fórmula:")
+        elif operacao == "Equilibrio Quimico":
+            self.criar_campos([''])
+            self.formula.config(text="Fórmula:")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):
