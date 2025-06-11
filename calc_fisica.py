@@ -24,6 +24,7 @@ def calculate_fisica(tipo_calculo: str, **kwargs) -> Tuple[Dict[str, float], Dic
         'trabalho_forca_constante': trabalho_forca_constante,
         'energia_cinetica': energia_cinetica,
         'energia_potencial': energia_potencial,
+        'energia_potencial_elastica': energia_potencial_elastica,
         'potencia': potencia,
         'pressao': pressao,
         'pressao_hidrostatica': pressao_hidrostatica,
@@ -442,22 +443,19 @@ def pressao_hidrostatica(
             pressao_hidrostatica = densidade * gravidade * altura
             return {'pressao_hidrostatica': pressao_hidrostatica}, {'pressao_hidrostatica': 'Pa'}
         elif densidade is None:
-            den = (gravidade * altura)
-            if den == 0:
+            densidade = (pressao_hidrostatica) / (gravidade * altura) 
+            if densidade == 0:
                 raise ValueError("Gravidade ou altura não podem ser zero para calcular a densidade.")
-            densidade = pressao_hidrostatica / den
             return {'densidade': densidade}, {'densidade': 'kg/m³'}
         elif altura is None:
-            den = (densidade * gravidade)
-            if den == 0:
+            altura = (densidade) / (gravidade * pressao_hidrostatica)
+            if altura == 0:
                 raise ValueError("Densidade ou gravidade não podem ser zero para calcular a altura.")
-            altura = pressao_hidrostatica / den
             return {'altura': altura}, {'altura': 'm'}
         else: # gravidade is None
-            den = (densidade * altura)
-            if den == 0:
+            gravidade = (pressao_hidrostatica) / (densidade * altura)
+            if gravidade == 0:
                 raise ValueError("Densidade ou altura não podem ser zero para calcular a gravidade.")
-            gravidade = pressao_hidrostatica / den
             return {'gravidade': gravidade}, {'gravidade': 'm/s²'}
             
     except (TypeError, ZeroDivisionError) as e:
@@ -697,7 +695,7 @@ def dilatacao_linear(
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         valores = {'comprimento_final': comprimento_final, 'comprimento_inicial': comprimento_inicial,
-                  'coeficiente': coeficiente, 'variacao_de_temperatura': variacao_de_temperatura}
+                  'coeficiente': coeficiente, 'variacao_de_temperatura': variacao_de_temperatura, 'dilatacao_linear': dilatacao_linear}
         if sum(1 for v in valores.values() if v is None) != 1:
             raise ValueError("Exatamente três valores devem ser fornecidos para calcular o quarto.")
         
@@ -837,7 +835,7 @@ def energia_potencial_elastica(
     deformacao: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        valores = {'energia': energia, 'constante_elastica': constante_elastica, 'deformacao': deformacao}
+        valores = {'energia_potencial_elastica': energia_potencial_elastica, 'constante_elastica': constante_elastica, 'deformacao': deformacao}
         none_count = sum(1 for v in valores.values() if v is None)
         
         if none_count != 1:

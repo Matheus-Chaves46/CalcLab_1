@@ -71,7 +71,7 @@
             config.CALCULATORS['matematica']['categories'].items() %}
             <li class="list-group-item bg-light p-0">
               <a
-                class="nav-link py-2 px-3"
+                class="nav-link py-2 px-3 text-primary"
                 data-bs-toggle="collapse"
                 href="#collapse{{ loop.index }}"
                 role="button"
@@ -114,10 +114,10 @@
   function formatarVariavel(variavel) {
     const nomesFormatados = {
       // Álgebra
-      'a': 'Coeficiente a',
-      'b': 'Coeficiente b',
-      'c': 'Coeficiente c',
-      'a1': 'Coeficiente a₁',
+      'a': 'a',
+      'b': 'b',
+      'c': 'c',
+      'delta': 'Coeficiente a₁',
       'b1': 'Coeficiente b₁',
       'c1': 'Coeficiente c₁',
       'a2': 'Coeficiente a₂',

@@ -369,3 +369,48 @@ def desvio_padrao(valores: List[float]) -> float:
         return float(np.std(valores))
     except (TypeError, ValueError) as e:
         raise ValueError(f"Erro ao calcular desvio padrão: {str(e)}")
+
+def quadrado_soma(a: float, b: float) -> float:
+    """Calcula o quadrado da soma (a + b)² = a² + 2ab + b².
+    
+    Args:
+        a (float): Primeiro termo
+        b (float): Segundo termo
+        
+    Returns:
+        float: Resultado do quadrado da soma
+    """
+    try:
+        return float(a**2 + 2*a*b + b**2)
+    except (TypeError, ValueError) as e:
+        raise ValueError(f"Erro ao calcular quadrado da soma: {str(e)}")
+
+def quadrado_diferenca(a: float, b: float) -> float:
+    """Calcula o quadrado da diferença (a - b)² = a² - 2ab + b².
+    
+    Args:
+        a (float): Primeiro termo
+        b (float): Segundo termo
+        
+    Returns:
+        float: Resultado do quadrado da diferença
+    """
+    try:
+        return float(a**2 - 2*a*b + b**2)
+    except (TypeError, ValueError) as e:
+        raise ValueError(f"Erro ao calcular quadrado da diferença: {str(e)}")
+
+def diferenca_quadrados(a: float, b: float) -> float:
+    """Calcula a diferença dos quadrados a² - b² = (a + b)(a - b).
+    
+    Args:
+        a (float): Primeiro termo
+        b (float): Segundo termo
+        
+    Returns:
+        float: Resultado da diferença dos quadrados
+    """
+    try:
+        return float((a + b) * (a - b))
+    except (TypeError, ValueError) as e:
+        raise ValueError(f"Erro ao calcular diferença dos quadrados: {str(e)}")

@@ -94,44 +94,44 @@ CALCULATORS = {
                 'description': 'Cálculos envolvendo expressões e equações algébricas.',
                 'calculations': {
                     'produtos_notaveis': {
-                        'title': 'Produtos Notáveis #',
+                        'title': 'Produtos Notáveis',
                         'description': 'Aplica identidades algébricas clássicas.',
                         'variables': ['a', 'b', 'c']
                     },
                     'formula_delta': {
                         'title': 'Fórmula do Delta [Δ = b² - 4ac]',
                         'description': 'Determina o valor de Δ em equações quadráticas.',
-                        'variables': ['a', 'b']
+                        'variables': ['delta', 'b' , 'a', 'c']
                     },
                     'formula_bhaskara': {
                         'title': 'Fórmula de Bhaskara [x = -b±√Δ/2a]',
                         'description': 'Resolve equações do 2º grau.',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['x', 'b', 'delta', 'a']
                     },
                     'funcao_1_grau': {
                         'title': 'Função do 1º Grau [f(x) = ax + b]',
                         'description': 'Análise de função linear',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['fx', 'ax', 'b']
                     },
                     'funcao_2_grau': {
                         'title': 'Função do 2º Grau [f(x) = ax² + bx + c]',
                         'description': 'Análise de parábolas.',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['fx', 'ax2', 'bx', 'c']
                     },
                     'vertice_parabola': {
-                        'title': 'Vértice da Parábola [xv = -b/2a]',
+                        'title': 'Vértice da Parábola [Vp = -b/2a]',
                         'description': 'Encontra o ponto de máximo ou mínimo.',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['vp', 'b', 'a']
                     },
                     'funcao_exponencial': {
                         'title': 'Função Exponencial [f(x) a.b^x]',
                         'description': 'Comportamento de crescimento e decaimento.',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['fx', 'a', 'b', 'x']
                     },
                     'funcao_logaritmica': {
                         'title': 'Função Logarítmica [f(x) = logb(x)]',
                         'description': 'Operações com logaritmos.',
-                        'variables': ['a1', 'b1', 'c1', 'a2', 'b2', 'c2']
+                        'variables': ['fx', 'b', 'x']
                     }
                 }
             },
@@ -142,27 +142,27 @@ CALCULATORS = {
                     'pa_termo_geral': {
                         'title': 'PA: Termo Geral [an = a1 + (n-1)r]',
                         'description': 'Encontra um termo específico na PA.',
-                        'variables': []
+                        'variables': ['an', 'n', 'r']
                     },
                     'pa_soma_termos': {
                         'title': 'PA: Soma dos Termos [Sn = n(a1 + an)/2]',
                         'description': 'Soma de uma sequência aritmética.',
-                        'variables': ['a1', 'q', 'n']
+                        'variables': ['Sn', 'n', 'a', 'an']
                     },
                     'pg_termo_geral': {
                         'title': 'PG: Termo Geral [an = a1.q^(n-1)]',
                         'description': 'Termo específico em uma PG.',
-                        'variables': []
+                        'variables': ['an', 'a1', 'a', 'n']
                     },
                     'pg_soma_termos_finitos': {
                         'title': 'PG: Soma dos Termos Finitos [Sn = a1 . (q^n - 1)/(q - 1)]',
                         'description': 'Soma parcial de uma PG.',
-                        'variables': []
+                        'variables': ['sn', 'a1', 'q', 'n']
                     },
                     'pg_soma_infinita': {
                         'title': 'PG: Soma Infinita [S = a1/(1-q)]',
                         'description': 'Soma de uma PG infinita (convergente).',
-                        'variables': []
+                        'variables': ['s', 'a1', 'q']
                     },
                 }
             },
@@ -171,19 +171,19 @@ CALCULATORS = {
                 'description': 'Cálculos de áreas, volumes e perímetros',
                 'calculations': {
                     'relacoes_fundamentais': {
-                        'title': 'Relações Fundamentais #',
+                        'title': 'Relações Fundamentais',
                         'description': 'Seno, Cosseno Tangente.',
-                        'variables': ['tipo', 'base', 'altura', 'raio']
+                        'variables': ['#', '#', '#', '#']
                     },
                     'lei_senos': {
-                        'title': 'Lei Senos [a/senA = b/senB = c/senC]',
+                        'title': 'Lei Senos [a/sen(a") = b/sen(b") = c/sen("c")]',
                         'description': 'Relação entre lados e senos dos ângulos.',
-                        'variables': ['tipo', 'base', 'altura', 'raio']
+                    'variables': ['a', 'a"', 'b', 'b"', 'c', 'c"']
                     },
                     'lei_cossenos': {
-                        'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cosA]',
+                        'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cos(a")]',
                         'description': 'Generalização do teorema de Pitágoras.',
-                        'variables': ['tipo', 'lado', 'raio']
+                        'variables': ['a', 'a"', 'b', 'c']
                     },
                 }
             },
@@ -194,27 +194,27 @@ CALCULATORS = {
                     'area_triangulo': {
                         'title': 'Área do Triângulo [A = b.h/2]',
                         'description': 'Área usando base × altura ou trigonometria.',
-                        'variables': []
+                        'variables': ['a', 'b', 'h']
                     },
                     'area_circulo': {
                         'title': 'Área do Círculo [A = π.r²]',
                         'description': 'Cálculo usando π × raio².',
-                        'variables': []
+                        'variables': ['a', 'r']
                     },
                     'volume_cubo': {
                         'title': 'Volume do Cubo [V = a³]',
                         'description': 'Lado³.',
-                        'variables': []
+                        'variables': ['v', 'a']
                     },
                     'volume_esfera': {
                         'title': 'Volume da Esfera [V = 4/3πr³]',
                         'description': '4/3πr³',
-                        'variables': []
+                        'variables': ['r']
                     },                   
                     'volume_cilindro': {
                         'title': 'Volume do Cilindro [V = π.r².h]',
                         'description': 'π × raio² × altura.',
-                        'variables': []
+                        'variables': ['v', 'r', 'h']
                     },
                 }
             },
@@ -225,22 +225,22 @@ CALCULATORS = {
                     'fatorial': {
                         'title': 'Fatorial [n! = n.(n-1).(n-2)...1]',
                         'description': 'Produto de todos os inteiros positivos até n.',
-                        'variables': ['valores']
+                        'variables': ['n!', 'n']
                     },
                     'permutacao_simples': {
                         'title': 'Permutação Simples [P(n) = n!]',
                         'description': 'Contagem de ordens possíveis.',
-                        'variables': ['valores']
+                        'variables': ['pn', 'n!']
                     },
                     'combinacao_simples': {
                         'title': 'Combinação Simples [C(n,k) = n!/k!(n-k)!]',
                         'description': 'Contagem de agrupamentos sem ordem.',
-                        'variables': ['valores']
+                        'variables': ['cnk #', 'n!', 'n', 'k']
                     },
                     'probabilidade': {
-                        'title': 'Probabilidade #',
+                        'title': 'Probabilidade [P = favoráveis/possíveis]',
                         'description': 'Chance de um evento ocorrer.',
-                        'variables': ['valores']
+                        'variables': ['p', 'casos_favoraveis', 'casos_possiveis', '']
                     }
                 }
             },
@@ -249,14 +249,14 @@ CALCULATORS = {
                 'description': 'Cálculos estatísticos',
                 'calculations': {
                     'determinante_matriz': {
-                        'title': 'Determinante da Matriz #',
+                        'title': 'Determinante da Matriz',
                         'description': 'Valor escalar associado à matriz.',
-                        'variables': []
+                        'variables': ['#', '#', '#', '#']
                     },
                     'multiplicacao_matriz': {
                         'title': 'Multiplicação de Matriz [Cij = n∑k=1 Aik.Bkj]',
                         'description': 'Produto entre duas matrizes.',
-                        'variables': []
+                        'variables': ['#', '#', '#', '#']
                     },
                 }
             },
@@ -267,12 +267,12 @@ CALCULATORS = {
                     'limite': {
                         'title': 'Limite [lim f(x) = L]',
                         'description': '',
-                        'variables': []
+                        'variables': ['lim_fx', 'l']
                     },
                     'derivada_funcao_potencia': {
                         'title': 'Derivada de Função Potência [f"(x) = n.x^(n-1)]',
                         'description': '',
-                        'variables': []
+                        'variables': ['f"x', 'n', 'x']
                     },
                 }
             },
@@ -297,7 +297,7 @@ CALCULATORS = {
                         'description': 'Calcula posição final/inicial, velocidade ou tempo em movimento uniforme.',
                         'variables': ['posicao_final', 'posicao_inicial', 'velocidade', 'tempo']
                     },
-                    'movimento_uniformente_variado': {
+                    'movimento_uniformemente_variado': {
                         'title': 'Movimento Uniformemente Variado [s = s0 + v0.t + a.t²/2]',
                         'description': 'Calcula posição final/inicial, velocidade inicial, tempo ou aceleração em movimento uniformemente variado.',
                         'variables': ['posicao_final', 'posicao_inicial', 'velocidade_inicial', 'tempo', 'aceleracao']
@@ -357,12 +357,12 @@ CALCULATORS = {
                     'energia_potencial_elastica': {
                         'title': 'Energia Potencial Elástica [Epe = k.x²/2]',
                         'description': 'Calcula energia potencial elástica, constante elástica ou deformação.',
-                        'variables': ['energia', 'constante', 'deformacao']
+                        'variables': ['energia_potencial_elastica', 'constante_elastica', 'deformacao']
                     },
                     'energia_mecanica': {
                         'title': 'Energia Mecânica [Em = Ec + Ep]',
                         'description': 'Calcula energia mecânica, cinética ou potencial.',
-                        'variables': ['energia_mec', 'energia_cinetica', 'energia_potencial']
+                        'variables': ['energia_mecanica', 'energia_cinetica', 'energia_potencial']
                     },           
                 }
             },
@@ -378,7 +378,7 @@ CALCULATORS = {
                     'pressao_hidrostatica': {
                         'title': 'Pressão Hidrostática [P = ρ.g.h]',
                         'description': 'Calcula pressão hidrostática, densidade, altura ou gravidade.',
-                        'variables': ['pressao', 'densidade', 'altura', 'gravidade']
+                        'variables': ['pressao_hidrostatica', 'densidade', 'altura', 'gravidade']
                     },
                     'empuxo': {
                         'title': 'Empuxo [E = ρ.g.V]',
@@ -394,7 +394,7 @@ CALCULATORS = {
                     'dilatacao_linear': {
                         'title': 'Dilatação Linear [ΔL = L0.α.ΔT]',
                         'description': 'Calcula dilatação linear, comprimento final/inicial, coeficiente ou variação de temperatura.',
-                        'variables': ['dilatacao_linear', 'comprimento_final', 'comprimento_inicial', 'coeficiente', 'variacao_de_temperatura']
+                        'variables': ['dilatacao_linear', 'comprimento_final', 'comprimento_inicial', 'variacao_de_temperatura']
                     },
                     'primeira_lei_termodinamica': {
                         'title': 'Primeira Lei da Termodinâmica [ΔU = Q - W]',
@@ -473,17 +473,17 @@ CALCULATORS = {
                         'variables': ['concentracao_inicial', 'volume_inicial', 'volume_final']
                     },
                     'excesso': {
-                        'title': 'Excesso #',
+                        'title': 'Excesso [E = Qnt inicial de reagente - Qnt regeante que reagiu]',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     },
                     'quantidade_reagente_necessario': {
-                        'title': 'Quantidade de Reagente Necessário #',
+                        'title': 'Quantidade de Reagente Necessário',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     },
                     'balanceamento': {
-                        'title': 'Balanceamento #',
+                        'title': 'Balanceamento',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['concentracao_titulante', 'volume_titulante', 'volume_analito']
                     }
@@ -494,7 +494,7 @@ CALCULATORS = {
                 'description': 'Cálculos de pH e pOH',
                 'calculations': {
                     'gases': {
-                        'title': 'Gases P.V = n.R.T',
+                        'title': 'Gases [P.V = n.R.T]',
                         'description': 'Calcula pH de uma solução',
                         'variables': ['concentracao_hidrogenio']
                     },
@@ -502,11 +502,11 @@ CALCULATORS = {
             },
             'tabela_e_estrutura_atomica': {
                 'title': '🔬 Tabela e Estrutura Atômica',
-                'description': 'Leis dos gases',
+                'description': 'Tabela periódica',
                 'calculations': {
                     'tabela_periodica': {
                         'title': 'Tabela Periódica',
-                        'description': 'Calcula pressão final (P1V1 = P2V2)',
+                        'description': 'Mostra as informações de um determinado elemento químico.',
                         'variables': ['pressao_inicial', 'volume_inicial', 'volume_final']
                     },
                 }
@@ -527,7 +527,7 @@ CALCULATORS = {
                 'description': 'Cálculos estequiométricos',
                 'calculations': {
                     'termoquimica': {
-                        'title': 'Termoquímica',
+                        'title': 'Termoquímica ΔH = H produtos - H reagentes',
                         'description': 'Calcula massa molar',
                         'variables': ['massa', 'quantidade_mols']
                     },
