@@ -35,7 +35,7 @@ class CalculadoraFisica:
             "Equacao Fundamental da Calorimetria",
             "Primeira Lei da Termodinamica",
             "Equacao dos Espelhos e Lentes",
-            "Formula do Aumento da Imagem",
+            "Aumento da Imagem",
             "Velocidade de uma Onda",
             "Lei de Ohm",
             "Potencia Eletrica ou Energia Eletrica",
@@ -129,9 +129,9 @@ class CalculadoraFisica:
         elif operacao == "Equacao dos Espelhos e Lentes":
             self.criar_campos(['distancia_focal', 'distancia_objeto', 'distancia_imagem'])
             self.formula.config(text="Fórmula: 1/f = 1/p + 1/p'")
-        elif operacao == "Formula do Aumento da Imagem":
-            self.criar_campos(['altura_imagem', 'altura_objeto', 'distancia_objeto', 'distancia_imagem'])
-            self.formula.config(text="Fórmula: A = -p'/p = i/o")
+        elif operacao == "Aumento da Imagem":
+            self.criar_campos(['aumento_da_imagem', 'distancia_objeto', 'distancia_imagem'])
+            self.formula.config(text="Fórmula: A = -i/o")
         elif operacao == "Velocidade de uma Onda":
             self.criar_campos(['velocidade_onda', 'frequencia', 'comprimento_onda'])
             self.formula.config(text="Fórmula: v = λ·f")
@@ -143,7 +143,7 @@ class CalculadoraFisica:
             self.formula.config(text="Fórmula: P = U·i")
         elif operacao == "Forca entre Cargas Eletricas (Lei de Coulomb)":
             self.criar_campos(['forca_coulomb', 'constante', 'carga1', 'carga2', 'distancia'])
-            self.formula.config(text="Fórmula: F = k·|q₁·q₂|/d²")
+            self.formula.config(text="Fórmula: F = k·|q₁·q₂|/r²")
         elif operacao == "Energia Potencial Elastica":
             self.criar_campos(['energia_potencial_elastica', 'constante_elastica', 'deformacao'])
             self.formula.config(text="Fórmula: Eₚ = (k·x²)/2")
@@ -203,8 +203,8 @@ class CalculadoraFisica:
                 resultado, unidades = primeira_lei_termodinamica(valores.get('variacao_interna'), valores.get('trabalho'), valores.get('calor'))
             elif operacao == "Equacao dos Espelhos e Lentes":
                 resultado, unidades = equacao_dos_espelhos_e_lentes(valores.get('distancia_focal'), valores.get('distancia_objeto'), valores.get('distancia_imagem'))
-            elif operacao == "Formula do Aumento da Imagem":
-                resultado, unidades = formula_do_aumento_da_imagem(valores.get('altura_imagem'), valores.get('altura_objeto'), valores.get('distancia_objeto'), valores.get('distancia_imagem'))
+            elif operacao == "Aumento da Imagem":
+                resultado, unidades = aumento_da_imagem(valores.get('aumento_da_imagem'), valores.get('distancia_objeto_a'), valores.get('distancia_imagem_a'))
             elif operacao == "Velocidade de uma Onda":
                 resultado, unidades = velocidade_onda(valores.get('velocidade_onda'), valores.get('frequencia'), valores.get('comprimento_onda'))
             elif operacao == "Lei de Ohm":
@@ -212,7 +212,7 @@ class CalculadoraFisica:
             elif operacao == "Potencia Eletrica ou Energia Eletrica":
                 resultado, unidades = potencia_eletrica(valores.get('potencia_eletrica'), valores.get('tensao'), valores.get('corrente'))
             elif operacao == "Forca entre Cargas Eletricas (Lei de Coulomb)":
-                resultado, unidades = forca_entre_cargas_eletricas(valores.get('forca_coulomb'), valores.get('constante'), valores.get('carga1'), valores.get('carga2'), valores.get('distancia'))
+                resultado, unidades = forca_entre_cargas_eletricas(valores.get('forca_coulomb'), valores.get('carga1'), valores.get('carga2'), valores.get('distancia'))
             elif operacao == "Energia Potencial Elastica":
                 resultado, unidades = energia_potencial_elastica(valores.get('energia_potencial_elastica'), valores.get('constante_elastica'), valores.get('deformacao'))
             elif operacao == "Energia Mecanica":
@@ -222,7 +222,7 @@ class CalculadoraFisica:
             resultado_formatado = ""
             for variavel, valor in resultado.items():
                 unidade = unidades[variavel]
-                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.5f} {unidade}\n"
+                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.10f} {unidade}\n"
             
             self.resultado.config(text=resultado_formatado.strip())
             

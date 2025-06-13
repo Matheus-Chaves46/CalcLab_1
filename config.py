@@ -412,10 +412,10 @@ CALCULATORS = {
                         'description': 'Calcula distância focal, distância do objeto ou distância da imagem.',
                         'variables': ['distancia_focal', 'distancia_objeto', 'distancia_imagem']
                     },
-                    'formula_do_aumento_da_imagem': {
-                        'title': 'Fórmula do Aumento da Imagem [A = i/o = p"/p]',
-                        'description': 'Calcula altura da imagem/objeto ou distância da imagem/objeto.',
-                        'variables': ['altura_imagem', 'altura_objeto', 'distancia_objeto', 'distancia_imagem']
+                    'aumento_da_imagem': {
+                        'title': 'Aumento da Imagem [A = -i/o]',
+                        'description': 'Calcula o aumento por meio da distância da imagem do objeto.',
+                        'variables': ['aumento_da_imagem', 'distancia_objeto', 'distancia_imagem']
                     }
                 }
             },
@@ -445,9 +445,9 @@ CALCULATORS = {
                         'variables': ['potencia', 'tensao', 'corrente']
                     },
                     'forca_entre_cargas_eletricas': {
-                        'title': 'Força entre Cargas Elétricas (Lei de Coulomb) [F = k.q1.q2/r²]',
+                        'title': 'Força entre Cargas Elétricas (Lei de Coulomb) [F = k.q1.q2/r²] k = 9x10⁹',
                         'description': 'Calcula força, constante eletrostática, cargas ou distância.',
-                        'variables': ['forca', 'k', 'q1', 'q2', 'd']
+                        'variables': ['forca_de_coloumb', 'carga_1', 'carga_2', 'distancia']
                     },
                 }
             },
@@ -588,7 +588,7 @@ UNIDADES_VARIAVEIS = {
     'altura_objeto': 'm',
     'frequencia': 'Hz',
     'comprimento_onda': 'm',
-    'resistencia': 'cΩ',
+    'resistencia': 'Ω',
     'corrente': 'A',
     'tensao': 'V',
     'p': 'W',
@@ -597,7 +597,7 @@ UNIDADES_VARIAVEIS = {
     'k': 'N·m²/C²',
     'q1': 'C',
     'q2': 'C',
-    'd': 'm',
+    'r': 'm',
     'constante': 'N/m',
     'deformacao': 'm',
     'energia_cinetica': 'J',

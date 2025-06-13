@@ -187,7 +187,7 @@ def fisica():
             resultado_formatado = {}
             for variavel, valor in resultado.items():
                 unidade = unidades.get(variavel, '')
-                resultado_formatado[variavel] = f"{valor:.2f} {unidade}".strip()
+                resultado_formatado[variavel] = f"{valor:.5f} {unidade}".strip()
 
             return jsonify({'resultado': resultado_formatado})
 

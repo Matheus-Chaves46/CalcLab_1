@@ -33,7 +33,7 @@ def calculate_fisica(tipo_calculo: str, **kwargs) -> Tuple[Dict[str, float], Dic
         'equacao_fundamental_calorimetria': equacao_fundamental_calorimetria,
         'primeira_lei_termodinamica': primeira_lei_termodinamica,
         'equacao_dos_espelhos_e_lentes': equacao_dos_espelhos_e_lentes,
-        'formula_do_aumento_da_imagem': formula_do_aumento_da_imagem,
+        'aumento_da_imagem': aumento_da_imagem,
         'velocidade_onda': velocidade_onda,
         'lei_ohm': lei_ohm,
         'potencia_eletrica': potencia_eletrica,
@@ -495,17 +495,17 @@ def lei_ohm(
 
         if tensao is None:
             tensao = resistencia * corrente
-            return {'tensao': f"{tensao:.2f} V"}
+            return {'tensao': tensao}, {'tensao': 'V'}
         elif resistencia is None:
             if corrente == 0:
                 raise ValueError("Corrente não pode ser zero para calcular a resistência.")
             resistencia = tensao / corrente
-            return {'resistencia': f"{resistencia:.2f} Ω"}
+            return {'resistencia': resistencia}, {'resistencia': 'Ω'}
         else: # corrente is None
             if resistencia == 0:
                 raise ValueError("Resistência não pode ser zero para calcular a corrente.")
             corrente = tensao / resistencia
-            return {'corrente': f"{corrente:.2f} A"}
+            return {'corrente': corrente}, {'corrente': 'A'}
     except (TypeError, ZeroDivisionError, ValueError) as e:
         raise ValueError(f"Erro na Lei de Ohm: {str(e)}")
 
@@ -567,7 +567,7 @@ def equacao_dos_espelhos_e_lentes(
     distancia_focal: Optional[float] = None,
     distancia_objeto: Optional[float] = None,
     distancia_imagem: Optional[float] = None
-) -> Dict[str, str]:
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         valores = {'distancia_focal': distancia_focal, 'distancia_objeto': distancia_objeto, 'distancia_imagem': distancia_imagem}
         if sum(1 for v in valores.values() if v is None) != 1:
@@ -577,51 +577,45 @@ def equacao_dos_espelhos_e_lentes(
             if distancia_objeto == 0 or distancia_imagem == 0: 
                 raise ValueError("Distância do objeto ou da imagem não podem ser zero para calcular a distância focal.")
             distancia_focal = 1 / ((1 / distancia_objeto) + (1 / distancia_imagem))
-            return {'distancia_focal': f"{distancia_focal:.2f} m"}
+            return {'distancia_focal': distancia_focal}, {'distancia': 'm'}
         elif distancia_objeto is None:
             if distancia_focal == 0 or distancia_imagem == 0 or (distancia_imagem - distancia_focal) == 0:
                 raise ValueError("Distância focal ou da imagem não podem ser zero para calcular a distância do objeto, ou a diferença entre elas.")
             distancia_objeto = 1 / ((1 / distancia_focal) - (1 / distancia_imagem))
-            return {'distancia_objeto': f"{distancia_objeto:.2f} m"}
+            return {'distancia_objeto': distancia_objeto}, {'distancia_objeto': 'm'}
         else: # distancia_imagem is None
             if distancia_focal == 0 or distancia_objeto == 0 or (distancia_objeto - distancia_focal) == 0:
                 raise ValueError("Distância focal ou do objeto não podem ser zero para calcular a distância da imagem, ou a diferença entre elas.")
             distancia_imagem = 1 / ((1 / distancia_focal) - (1 / distancia_objeto))
-            return {'distancia_imagem': f"{distancia_imagem:.2f} m"}
+            return {'distancia_imagem': distancia_imagem}, {'distancia_imagem': 'm'}
     except (TypeError, ZeroDivisionError, ValueError) as e:
         raise ValueError(f"Erro no cálculo da Equação dos Espelhos e Lentes: {str(e)}")
 
-def formula_do_aumento_da_imagem(
-    altura_imagem: Optional[float] = None,
-    altura_objeto: Optional[float] = None,
+def aumento_da_imagem(
+    aumento_da_imagem: Optional[float] = None,
     distancia_objeto: Optional[float] = None,
     distancia_imagem: Optional[float] = None
-) -> Dict[str, str]:
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        valores = {'altura_imagem': altura_imagem, 'altura_objeto': altura_objeto, 'distancia_objeto': distancia_objeto, 'distancia_imagem': distancia_imagem}
+        valores = {'aumento_da_imagem': aumento_da_imagem, 'distancia_objeto': distancia_objeto, 'distancia_imagem': distancia_imagem}
         if sum(1 for v in valores.values() if v is None) != 1:
             raise ValueError("Exatamente três valores devem ser fornecidos para calcular o quarto.")
 
-        if altura_imagem is None:
-            if distancia_objeto == 0:
+        if aumento_da_imagem is None:
+            if aumento_da_imagem == 0:
                 raise ValueError("Distância do objeto não pode ser zero para calcular a altura da imagem.")
-            altura_imagem = (-distancia_imagem / distancia_objeto) * altura_objeto
-            return {'altura_imagem': f"{altura_imagem:.2f} m"}
-        elif altura_objeto is None:
+            aumento_da_imagem = - (distancia_imagem / distancia_objeto)
+            return {'aumento_da_imagem': aumento_da_imagem}, {'aumento_da_imagem': 'm'}
+        elif distancia_objeto is None:
             if distancia_objeto == 0:
                 raise ValueError("Distância do objeto não pode ser zero para calcular a altura do objeto.")
-            altura_objeto = altura_imagem / (-distancia_imagem / distancia_objeto)
-            return {'altura_objeto': f"{altura_objeto:.2f} m"}
-        elif distancia_objeto is None:
-            if altura_objeto == 0:
+            distancia_objeto = - (distancia_imagem / aumento_da_imagem)
+            return {'distancia_objeto':distancia_objeto}, {'distancia_objeto': 'm'}
+        else:
+            if distancia_imagem == 0:
                 raise ValueError("Altura do objeto não pode ser zero para calcular a distância do objeto.")
-            distancia_objeto = distancia_imagem / (altura_imagem / altura_objeto)
-            return {'distancia_objeto': f"{distancia_objeto:.2f} m"}
-        else: # distancia_imagem is None
-            if altura_objeto == 0:
-                raise ValueError("Altura do objeto não pode ser zero para calcular a distância da imagem.")
-            distancia_imagem = (-altura_imagem / altura_objeto) * distancia_objeto
-            return {'distancia_imagem': f"{distancia_imagem:.2f} m"}
+            distancia_imagem = - (aumento_da_imagem * distancia_objeto)
+            return {'distancia_imagem':distancia_imagem}, {'distancia_imagem': 'm'}
     except (TypeError, ZeroDivisionError, ValueError) as e:
         raise ValueError(f"Erro no cálculo do Aumento da Imagem: {str(e)}")
 
@@ -637,17 +631,17 @@ def velocidade_onda(
 
         if velocidade is None:
             velocidade = frequencia * comprimento_onda
-            return {'velocidade': f"{velocidade:.2f} m/s"}
+            return {'velocidade': velocidade}, {'velocidade': 'm/s'}
         elif frequencia is None:
             if comprimento_onda == 0:
                 raise ValueError("Comprimento de onda não pode ser zero para calcular a frequência.")
             frequencia = velocidade / comprimento_onda
-            return {'frequencia': f"{frequencia:.2f} Hz"}
+            return {'frequencia': frequencia}, {'frequencia': 'Hz'}
         else: # comprimento_onda is None
             if frequencia == 0:
                 raise ValueError("Frequência não pode ser zero para calcular o comprimento de onda.")
             comprimento_onda = velocidade / frequencia
-            return {'comprimento_onda': f"{comprimento_onda:.2f} m"}
+            return {'comprimento_onda': comprimento_onda}, {'comprimento_onda': 'm'}
     except (TypeError, ZeroDivisionError, ValueError) as e:
         raise ValueError(f"Erro no cálculo da Velocidade da Onda: {str(e)}")
 
@@ -693,7 +687,7 @@ def dilatacao_linear(
     dilatacao_linear: Optional[float] = None,
     variacao_de_temperatura: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
-    coeficiente_dilatacao = coeficiente_dilatacao * 10**-5
+    coeficiente_dilatacao = coeficiente_dilatacao * 1e-5
     try:
         valores = {'coeficiente_dilataco': coeficiente_dilatacao, 'comprimento_inicial': comprimento_inicial, 'variacao_de_temperatura': variacao_de_temperatura, 'dilatacao_linear': dilatacao_linear}
         if sum(1 for v in valores.values() if v is None) != 1:
@@ -711,6 +705,7 @@ def dilatacao_linear(
             if dilatacao_linear == 0:
                 raise ValueError("Comprimento inicial ou variação de temperatura não podem ser zero para calcular o coeficiente.")
             dilatacao_linear = (comprimento_inicial * coeficiente_dilatacao * variacao_de_temperatura)
+            print(dilatacao_linear)
             return {f'dilatacao_linear': dilatacao_linear}, {'dilatacao_linear': '°C⁻¹'}
         else: # variacao_de_temperatura is None
             if variacao_de_temperatura == 0:
@@ -788,39 +783,41 @@ def potencia_eletrica(
         raise ValueError(f"Erro na Potência Elétrica: {str(e)}")
 
 def forca_entre_cargas_eletricas(
-    forca: Optional[float] = None,
-    carga1: Optional[float] = None,
-    carga2: Optional[float] = None,
+    forca_coloumb: Optional[float] = None,
+    carga_1: Optional[float] = None,
+    carga_2: Optional[float] = None,
     distancia: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        valores = {'forca': forca, 'carga1': carga1, 'carga2': carga2, 'distancia': distancia}
+        valores = {'forca_coloumb': forca_coloumb, 'carga_1': carga_1, 'carga_2': carga_2, 'distancia': distancia}
         none_count = sum(1 for v in valores.values() if v is None)
         
         if none_count != 1:
             raise ValueError("Exatamente três valores devem ser fornecidos para calcular o quarto.")
         
-        k = 9e9  # Constante de Coulomb
-        
-        if forca is None:
+        k = 9
+        k = k * 10**9 # Constante de Coulomb
+        carga_1 = carga_1 * 1e-6
+        carga_2 = carga_2 * 1e-6
+        if forca_coloumb is None:
             if distancia == 0:
                 raise ValueError("Distância não pode ser zero para calcular a força.")
-            forca = k * abs(carga1 * carga2) / (distancia ** 2)
-            return {'forca': forca}, {'forca': 'N'}
-        elif carga1 is None:
-            if carga2 == 0 or distancia == 0:
+            forca_coloumb = k * abs(carga_1 * carga_2) / (distancia ** 2)
+            return {'forca': forca_coloumb}, {'forca': 'N'}
+        elif carga_1 is None:
+            if carga_2 == 0 or distancia == 0:
                 raise ValueError("Carga2 e distância não podem ser zero para calcular carga1.")
-            carga1 = (forca * distancia ** 2) / (k * abs(carga2))
-            return {'carga1': carga1}, {'carga1': 'C'}
-        elif carga2 is None:
-            if carga1 == 0 or distancia == 0:
+            carga_1 = (forca_coloumb * distancia ** 2) / (k * abs(carga_2))
+            return {'carga1': carga_1}, {'carga1': 'C'}
+        elif carga_2 is None:
+            if carga_1 == 0 or distancia == 0:
                 raise ValueError("Carga1 e distância não podem ser zero para calcular carga2.")
-            carga2 = (forca * distancia ** 2) / (k * abs(carga1))
-            return {'carga2': carga2}, {'carga2': 'C'}
+            carga_2 = (forca_coloumb * distancia ** 2) / (k * abs(carga_1))
+            return {'carga2': carga_2}, {'carga2': 'C'}
         else: # distancia is None
-            if carga1 == 0 or carga2 == 0:
+            if carga_1 == 0 or carga_2 == 0:
                 raise ValueError("Cargas não podem ser zero para calcular a distância.")
-            distancia = math.sqrt(k * abs(carga1 * carga2) / forca)
+            distancia = math.sqrt(k * abs(carga_1 * carga_2) / forca_coloumb)
             return {'distancia': distancia}, {'distancia': 'm'}
             
     except (TypeError, ZeroDivisionError) as e:
@@ -838,18 +835,18 @@ def energia_potencial_elastica(
         if none_count != 1:
             raise ValueError("Exatamente dois valores devem ser fornecidos para calcular o terceiro.")
         
-        if energia is None:
-            energia = (constante_elastica * deformacao ** 2) / 2
-            return {'energia': energia}, {'energia': 'J'}
+        if energia_potencial_elastica is None:
+            energia_potencial_elastica = (constante_elastica * deformacao ** 2) / 2
+            return {'energia': energia_potencial_elastica}, {'energia': 'J'}
         elif constante_elastica is None:
             if deformacao == 0:
                 raise ValueError("Deformação não pode ser zero para calcular a constante elástica.")
-            constante_elastica = (2 * energia) / (deformacao ** 2)
+            constante_elastica = (2 * energia_potencial_elastica) / (deformacao ** 2)
             return {'constante_elastica': constante_elastica}, {'constante_elastica': 'N/m'}
         else: # deformacao is None
             if constante_elastica == 0:
                 raise ValueError("Constante elástica não pode ser zero para calcular a deformação.")
-            deformacao = math.sqrt((2 * energia) / constante_elastica)
+            deformacao = math.sqrt((2 * energia_potencial_elastica) / constante_elastica)
             return {'deformacao': deformacao}, {'deformacao': 'm'}
             
     except (TypeError, ZeroDivisionError) as e:
