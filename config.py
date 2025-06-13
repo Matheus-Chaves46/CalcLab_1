@@ -465,27 +465,27 @@ CALCULATORS = {
                     'pureza': {
                         'title': 'Pureza [massa da subs pura/massa da subs amotra . 100]',
                         'description': 'Calcula concentração em g/L ou mol/L',
-                        'variables': ['pureza', 'massa_substancia_pura', 'massa_substancia_amostra']
+                        'variables': ['pureza', 'massa_da_substancia_pura', 'massa_da_substancia_amostra']
                     },
                     'rendimento': {
-                        'title': 'Rendimento [rend real / rend teorico . 100]',
+                        'title': 'Rendimento [rendimento real / rendimento teorico . 100]',
                         'description': 'Calcula concentração após diluição',
                         'variables': ['rendimento', 'rendimento_real', 'rendimento_teorico']
                     },
                     'excesso': {
-                        'title': 'Excesso [E = Qnt inicial de reagente - Qnt regeante que reagiu]',
+                        'title': 'Excesso ',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['excesso', 'quantidade_incial_reagentes', 'quantidade_reagentes_reagidos']
+                        'variables': ['equacao_reagentes', 'equacao_produtos', 'massa_disponivel']
                     },
                     'quantidade_reagente_necessario': {
                         'title': 'Quantidade de Reagente Necessário',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['equacao_reagentes', 'equacao_produtos', 'massa_dos_produtos_desejada']
                     },
                     'balanceamento': {
                         'title': 'Balanceamento',
                         'description': 'Calcula concentração por titulação',
-                        'variables': ['equação']
+                        'variables': ['equacao_reagentes', 'equacao_produtos']
                     }
                 }
             },
@@ -496,7 +496,7 @@ CALCULATORS = {
                     'gases': {
                         'title': 'Gases [P.V = n.R.T]',
                         'description': 'Calcula pH de uma solução',
-                        'variables': ['pressao', 'volume', 'numero_mols', 'constante', 'temperatura']
+                        'variables': ['pressao', 'volume', 'numero_de_mols', 'temperatura']
                     },
                 }
             },
@@ -518,7 +518,7 @@ CALCULATORS = {
                     'pilha_daniels': {
                         'title': 'Pilha de Daniels',
                         'description': 'Calcula massa molar',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['equacao_reagentes', 'equacao_produtos', 'concentracao_dos_produtos', 'concentracao_dos_reagentes']
                     },
                 }
             },
@@ -529,18 +529,18 @@ CALCULATORS = {
                     'termoquimica': {
                         'title': 'Termoquímica ΔH = H produtos - H reagentes',
                         'description': 'Calcula massa molar',
-                        'variables': ['delta_h', 'entalpia_produtos', 'entalpia_reagentes']
+                        'variables': ['delta_h', 'entalpia_dos_produtos', 'entalpia_dos_reagentes']
                     },
                 }
             },
-            'equilibrio_quimico': {
-                'title': '💧 Equilíbrio Químico',
+            'equilibrio_ionico': {
+                'title': '💧 Equilíbrio Iônico',
                 'description': 'Cálculos estequiométricos',
                 'calculations': {
                     'equilibrio_quimico': {
-                        'title': 'Equilíbrio Químico',
+                        'title': 'Equilíbrio Iônico',
                         'description': 'Calcula massa molar',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['acido_ou_base', 'constante_de_equilibrio', 'concentracao_incial']
                     },
                 }
             },
@@ -604,5 +604,19 @@ UNIDADES_VARIAVEIS = {
     'energia_potencial': 'J',
     'massa_soluto': 'g',
     'volume_solucao': 'L',
-    'massa_molar': 'g/mol'
+    'massa_molar': 'g/mol',
+    "pureza": "%", 
+    "massa_da_substancia_pura": "g", 
+    "massa_da_substancia_amostra": "g",  
+    "rendimento": "%", 
+    "rendimento_real": "g", 
+    "rendimento_teorico": "g", 
+    "pressao": "atm", 
+    "volume": "L",
+    "numero_de_mols": "mol", 
+    "constante_R": "atm·L/(mol·K)",  
+    "temperatura": "K",  
+    "delta_h": "kJ/mol",  
+    "entalpia_dos_produtos": "kJ/mol",  
+    "entalpia_dos_reagentes": "kJ/mol"
 }

@@ -75,7 +75,6 @@ def velocidade_media(
         
         if none_count != 1:
             raise ValueError("Exatamente dois valores devem ser fornecidos para calcular o terceiro.")
-        
         if velocidade_media is None:
             if tempo == 0:
                 raise ValueError("Tempo não pode ser zero para calcular a velocidade média.")

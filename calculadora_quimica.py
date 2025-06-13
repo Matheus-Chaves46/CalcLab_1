@@ -29,7 +29,7 @@ class CalculadoraQuimica:
             'Equilíbrio Quimico'
         ])
         self.operacao.grid(row=0, column=0, columnspan=2, pady=5)
-        self.operacao.set("Massa Molar")
+        self.operacao.set("Pureza")
         self.operacao.bind('<<ComboboxSelected>>', self.atualizar_campos)
         self.atualizar_campos()
         
@@ -57,39 +57,38 @@ class CalculadoraQuimica:
         for widget in self.campos_frame.winfo_children():
             widget.destroy()
         self.entradas.clear()
-        self.formula.config(text="")
         
         operacao = self.operacao.get()
         
         if operacao == "Pureza":
-            self.criar_campos(['pureza', 'massa_substancia_pura', 'massa_substancia_amostra'])
+            self.criar_campos(['pureza', 'massa_da_substancia_pura', 'massa_da_substancia_amostra'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Rendimento":
             self.criar_campos(['rendimento', 'rendimento_real', 'rendimento_teorico'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Excesso":
-            self.criar_campos(['excesso', 'quantidade_incial_reagentes', 'quantidade_reagentes_reagidos'])
+            self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'massa_disponivel'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Quantidade Reagente Necessario":
-            self.criar_campos([''])
+            self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'massa_dos_produtos_desejada'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Balanceamento":
-            self.criar_campos(['equação'])
+            self.criar_campos(['equacao_reagentes', 'equacao_produtos'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Gases":
-            self.criar_campos(['pressao', 'volume', 'numero_mols', 'constante', 'temperatura'])
+            self.criar_campos(['pressao', 'volume', 'numero_mols', 'temperatura'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Tabela Periodica":
             self.criar_campos(['elemento'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Pilha de Daniels":
-            self.criar_campos([''])
+            self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'concentracao_dos_produtos', 'concentracao_dos_reagentes'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Termoquimica":
-            self.criar_campos(['delta_h', 'entalpia_produtos', 'entalpia_reagentes'])
+            self.criar_campos(['delta_h', 'entalpia_dos_produtos', 'entalpia_dos_reagentes'])
             self.formula.config(text="Fórmula:")
         elif operacao == "Equilibrio Quimico":
-            self.criar_campos([''])
+            self.criar_campos(['acido_ou_base', 'constante_de_equilibrio', 'concentracao_incial'])
             self.formula.config(text="Fórmula:")
     
     def criar_campos(self, campos):
@@ -104,33 +103,37 @@ class CalculadoraQuimica:
             valores = {}
             
             for campo, entrada in self.entradas.items():
-                if campo in ['produtos', 'reagentes']:
-                    # Converter string de dicionário para dicionário
-                    valores[campo] = eval(entrada.get())
-                else:
-                    valores[campo] = float(entrada.get())
+                valor = entrada.get()
+                if valor:  # Só adiciona se o campo não estiver vazio
+                    valores[campo] = float(valor)
             
-            if operacao == "Massa Molar":
-                resultado = massa_molar(valores['formula'])
-            elif operacao == "Concentração Molar":
-                resultado = concentracao_molar(valores['mols'], valores['volume'])
-            elif operacao == "pH":
-                resultado = ph(valores['concentracao_h'])
-            elif operacao == "pOH":
-                resultado = poh(valores['concentracao_oh'])
-            elif operacao == "Constante de Equilíbrio":
-                resultado = constante_equilibrio(valores['produtos'], valores['reagentes'])
-            elif operacao == "Energia Livre de Gibbs":
-                resultado = energia_livre_gibbs(valores['entalpia'], valores['entropia'], valores['temperatura'])
-            elif operacao == "Lei de Henry":
-                resultado = lei_henry(valores['pressao'], valores['constante_henry'])
-            elif operacao == "Razão Molar":
-                resultado = razao_molar(valores['mols_reagente'], valores['mols_produto'])
-            elif operacao == "Rendimento Teórico":
-                resultado = rendimento_teorico(valores['mols_obtidos'], valores['mols_esperados'])
-            elif operacao == "Pressão Osmótica":
-                resultado = pressao_osmotica(valores['concentracao'], valores['temperatura'])
+            if operacao == "Pureza":
+                resultado, unidades = pureza(valores.get('pureza'), valores.get('massa_da_substancia_pura'), valores.get('massa_da_substancia_amostra'))
+            elif operacao == "Rendimento":
+                resultado, unidades = rendimento(valores.get('rendimento'), valores.get('rendimento_real'), valores.get('rendimento_teorico'))
+            elif operacao == "Excesso":
+                resultado, unidades = excesso(valores.get('excesso'), valores.get('quantidade_incial_reagentes'), valores.get('quantidade_reagentes_reagidos'))
+            elif operacao == "Quantidade de Reagentes Necessario":
+                resultado, unidades = quantidade_de_reagentes_necessario(valores.get('equacao_reagentes'), valores.get('equacao_produtos'), valores.get('massa_dos_produtos_desejada'))
+            elif operacao == "Balanceamento":
+                resultado, unidades = balanceamento(valores.get('equacao_reagentes'), valores.get('equacao_produtos'))
+            elif operacao == "Gases":
+                resultado, unidades = gases(valores.get('pressao'), valores.get('volume'), valores.get('numero_de_mols'), valores.get('temperatura'))
+            elif operacao == "Tabela Periodica":
+                resultado, unidades = tabela_periodica(valores.get('elemento'))
+            elif operacao == "Pilha de Daniels":
+                resultado, unidades = pilha_de_daniels(valores.get('equacao_reagentes'), valores.get('equacao_produtos'), valores.get('concentracao_dos_produtos'), valores.get('concentracao_dos_reagentes'))
+            elif operacao == "Termoquimica":
+                resultado, unidades = termoquimica(valores.get('delta_h'), valores.get('entalpia_dos_produtos'), valores.get('entalpia_dos_reagentes'))
+            elif operacao == "Equilibrio Quimico":
+                resultado, unidades = equilibrio_ionico(valores.get('acido_ou_base'), valores.get('constante_de_equilibrio'), valores.get('concentracao_inicial'))
             
+            # Formatar o resultado com a unidade
+            resultado_formatado = ""
+            for variavel, valor in resultado.items():
+                unidade = unidades[variavel]
+                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.10f} {unidade}\n"
+                
             self.resultado.config(text=f"Resultado: {resultado}")
             
         except ValueError as e:
