@@ -77,79 +77,54 @@ class CalculadoraFisica:
         
         if operacao == "Velocidade Media":
             self.criar_campos(['velocidade_media', 'deslocamento', 'tempo'])
-            self.formula.config(text="Fórmula: v = Δs/Δt")
         elif operacao == "Movimento Uniforme":
             self.criar_campos(['movimento_uniforme', 'posicao_final', 'posicao_inicial', 'tempo', 'velocidade'])
-            self.formula.config(text="Fórmula: S = S₀ + v·t")
         elif operacao == "Movimento Uniformemente Variado":
             self.criar_campos(['movimento_uniformemente_variado', 'posicao_final', 'posicao_inicial', 'tempo', 'velocidade_inicial', 'aceleracao'])
-            self.formula.config(text="Fórmula: S = S₀ + v₀·t + (a·t²)/2")
         elif operacao == "Equacao de Torricelli":
             self.criar_campos(['equacao_torricelli', 'velocidade_final', 'velocidade_inicial', 'aceleracao', 'deslocamento'])
-            self.formula.config(text="Fórmula: v² = v₀² + 2·a·ΔS")
         elif operacao == "Principio Fundamental da Dinamica":
             self.criar_campos(['principio_fundamental_da_dinamica', 'forca', 'massa', 'aceleracao'])
-            self.formula.config(text="Fórmula: F = m·a")
         elif operacao == "Forca Peso":
             self.criar_campos(['forca_peso', 'massa', 'gravidade'])
-            self.formula.config(text="Fórmula: P = m·g")
         elif operacao == "Forca de Atrito":
             self.criar_campos(['forca_atrito', 'coeficiente', 'normal'])
-            self.formula.config(text="Fórmula: Fₐ = μ·N")
         elif operacao == "Trabalho da Forca Constante":
             self.criar_campos(['forca', 'deslocamento', 'angulo', 'trabalho'])
-            self.formula.config(text="Fórmula: τ = F·d·cos(θ)")
         elif operacao == "Energia Cinetica":
             self.criar_campos(['energia_cinetica', 'massa', 'velocidade'])
-            self.formula.config(text="Fórmula: Eₖ = (m·v²)/2")
         elif operacao == "Energia Potencial":
             self.criar_campos(['energia_potencial', 'massa', 'altura', 'gravidade'])
-            self.formula.config(text="Fórmula: Eₚ = m·g·h")
         elif operacao == "Potencia Media":
             self.criar_campos(['potencia_media', 'trabalho', 'tempo'])
-            self.formula.config(text="Fórmula: P = τ/Δt")
         elif operacao == "Pressao":
             self.criar_campos(['pressao', 'forca', 'area'])
-            self.formula.config(text="Fórmula: p = F/A")
         elif operacao == "Pressao Hidrostatica":
             self.criar_campos(['pressao_hidrostatica', 'densidade', 'altura', 'gravidade'])
-            self.formula.config(text="Fórmula: p = ρ·g·h")
         elif operacao == "Empuxo":
             self.criar_campos(['empuxo', 'densidade', 'volume', 'gravidade'])
-            self.formula.config(text="Fórmula: E = ρ·V·g")
         elif operacao == "Dilatacao Linear":
             self.criar_campos(['dilatacao_linear', 'coeficiente_dilatacao', 'comprimento_inicial', 'variacao_de_temperatura'])
-            self.formula.config(text="Fórmula: L = L₀·(1 + α·ΔT)")
         elif operacao == "Equacao Fundamental da Calorimetria":
             self.criar_campos(['calor', 'massa', 'calor_especifico', 'variacao_temperatura'])
-            self.formula.config(text="Fórmula: Q = m·c·ΔT")
         elif operacao == "Primeira Lei da Termodinamica":
             self.criar_campos(['variacao_interna', 'trabalho', 'calor'])
-            self.formula.config(text="Fórmula: ΔU = Q - τ")
         elif operacao == "Equacao dos Espelhos e Lentes":
             self.criar_campos(['distancia_focal', 'distancia_objeto', 'distancia_imagem'])
-            self.formula.config(text="Fórmula: 1/f = 1/p + 1/p'")
         elif operacao == "Aumento da Imagem":
             self.criar_campos(['aumento_da_imagem', 'distancia_objeto', 'distancia_imagem'])
-            self.formula.config(text="Fórmula: A = -i/o")
         elif operacao == "Velocidade de uma Onda":
             self.criar_campos(['velocidade_onda', 'frequencia', 'comprimento_onda'])
-            self.formula.config(text="Fórmula: v = λ·f")
         elif operacao == "Lei de Ohm":
             self.criar_campos(['resistencia', 'corrente', 'tensao'])
-            self.formula.config(text="Fórmula: R = U/i")
         elif operacao == "Potencia Eletrica ou Energia Eletrica":
             self.criar_campos(['potencia_eletrica', 'tensao', 'corrente'])
-            self.formula.config(text="Fórmula: P = U·i")
         elif operacao == "Forca entre Cargas Eletricas (Lei de Coulomb)":
             self.criar_campos(['forca_coulomb', 'constante', 'carga1', 'carga2', 'distancia'])
-            self.formula.config(text="Fórmula: F = k·|q₁·q₂|/r²")
         elif operacao == "Energia Potencial Elastica":
             self.criar_campos(['energia_potencial_elastica', 'constante_elastica', 'deformacao'])
-            self.formula.config(text="Fórmula: Eₚ = (k·x²)/2")
         elif operacao == "Energia Mecanica":
             self.criar_campos(['energia_mecanica', 'energia_cinetica', 'energia_potencial'])
-            self.formula.config(text="Fórmula: Eₘ = Eₖ + Eₚ")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):

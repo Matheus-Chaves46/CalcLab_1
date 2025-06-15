@@ -62,34 +62,26 @@ class CalculadoraQuimica:
         
         if operacao == "Pureza":
             self.criar_campos(['pureza', 'massa_da_substancia_pura', 'massa_da_substancia_amostra'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Rendimento":
             self.criar_campos(['rendimento', 'rendimento_real', 'rendimento_teorico'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Excesso":
             self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'massa_disponivel'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Quantidade Reagente Necessario":
             self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'massa_dos_produtos_desejada'])
-            self.formula.config(text="Fórmula:")
+        elif operacao == "Massa dos Reagentes ou dos Produtos":
+            self.criar_campos(['composto_quimico'])
         elif operacao == "Balanceamento":
             self.criar_campos(['equacao_reagentes', 'equacao_produtos'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Gases":
             self.criar_campos(['pressao', 'volume', 'numero_mols', 'temperatura'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Tabela Periodica":
             self.criar_campos(['elemento'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Pilha de Daniels":
             self.criar_campos(['equacao_reagentes', 'equacao_produtos', 'concentracao_dos_produtos', 'concentracao_dos_reagentes'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Termoquimica":
             self.criar_campos(['delta_h', 'entalpia_dos_produtos', 'entalpia_dos_reagentes'])
-            self.formula.config(text="Fórmula:")
         elif operacao == "Equilibrio Quimico":
             self.criar_campos(['acido_ou_base', 'constante_de_equilibrio', 'concentracao_incial'])
-            self.formula.config(text="Fórmula:")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):
@@ -112,9 +104,11 @@ class CalculadoraQuimica:
             elif operacao == "Rendimento":
                 resultado, unidades = rendimento(valores.get('rendimento'), valores.get('rendimento_real'), valores.get('rendimento_teorico'))
             elif operacao == "Excesso":
-                resultado, unidades = excesso(valores.get('excesso'), valores.get('quantidade_incial_reagentes'), valores.get('quantidade_reagentes_reagidos'))
+                resultado, unidades = excesso(valores.get('equacao_reagentes'), valores.get('equacao_produtos'), valores.get('massa_disponivel'))
             elif operacao == "Quantidade de Reagentes Necessario":
                 resultado, unidades = quantidade_de_reagentes_necessario(valores.get('equacao_reagentes'), valores.get('equacao_produtos'), valores.get('massa_dos_produtos_desejada'))
+            elif operacao == "Massa dos reagentes ou dos produtos":
+                resultado, unidades = massa_dos_reagentes_ou_dos_produtos(valores.get('composto_quimico'))
             elif operacao == "Balanceamento":
                 resultado, unidades = balanceamento(valores.get('equacao_reagentes'), valores.get('equacao_produtos'))
             elif operacao == "Gases":
@@ -131,10 +125,13 @@ class CalculadoraQuimica:
             # Formatar o resultado com a unidade
             resultado_formatado = ""
             for variavel, valor in resultado.items():
-                unidade = unidades[variavel]
-                resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.10f} {unidade}\n"
-                
-            self.resultado.config(text=f"Resultado: {resultado}")
+                unidade = unidades.get(variavel, '')
+                if isinstance(valor, float):
+                    resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor:.2f} {unidade}\n"
+                else:
+                    resultado_formatado += f"{variavel.replace('_', ' ').title()}: {valor} {unidade}\n"
+
+            self.resultado.config(text=f"Resultado: {resultado_formatado}")
             
         except ValueError as e:
             self.resultado.config(text=f"Erro: {str(e)}")

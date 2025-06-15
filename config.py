@@ -477,10 +477,15 @@ CALCULATORS = {
                         'description': 'Calcula concentração por titulação',
                         'variables': ['equacao_reagentes', 'equacao_produtos', 'massa_disponivel']
                     },
-                    'quantidade_reagente_necessario': {
+                    'quantidade_de_reagentes_necessario': {
                         'title': 'Quantidade de Reagente Necessário',
                         'description': 'Calcula concentração por titulação',
                         'variables': ['equacao_reagentes', 'equacao_produtos', 'massa_dos_produtos_desejada']
+                    },
+                    'massa_dos_reagentes_ou_dos_produtos': {
+                        'title': 'Massa dos Reagentes ',
+                        'description': 'Calcula a massa dos reagentes ou dos produtos da reação',
+                        'variables': ['composto_quimico']
                     },
                     'balanceamento': {
                         'title': 'Balanceamento',

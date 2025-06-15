@@ -211,10 +211,26 @@ def quimica():
         
         try:
             resultado, unidades = calc_qui.calculate_quimica(tipo_calculo, **valores)
-            resultado_formatado = {
-                k: f"{v} {unidades.get(k, '')}" for k, v in resultado.items()
-            }
-            return jsonify({'resultado': resultado_formatado})
+            
+            # Formatação simplificada dos resultados
+            resultado_formatado = ""
+            for variavel, valor in resultado.items():
+                unidade = unidades.get(variavel, '')
+                # Simplifica o nome da variável
+                nome_variavel = variavel.split(' da ')[-1].split(' do ')[-1].split(' de ')[-1]
+                # Formata números com 1 casa decimal se for float
+                if isinstance(valor, float):
+                    valor_formatado = f"{valor:.1f}"
+                else:
+                    valor_formatado = str(valor)
+                # Adiciona a unidade apenas se ela existir
+                if unidade:
+                    resultado_formatado += f"{nome_variavel}: {valor_formatado}{unidade}\n"
+                else:
+                    resultado_formatado += f"{nome_variavel}: {valor_formatado}\n"
+            
+            # Retorna o texto formatado dentro de um JSON válido
+            return jsonify({'resultado': resultado_formatado.strip()})
         except ValueError as e:
             return jsonify({'error': str(e)}), 400
         except Exception as e:

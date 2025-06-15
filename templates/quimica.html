@@ -195,42 +195,96 @@
       document.getElementById('titulo-calculadora').textContent = calcInfo.title;
       document.getElementById('tipo-calculo').value = tipo;
 
-      // Cria a seção de seleção de variáveis com checkboxes
-      const variablesContainer = document.createElement('div');
-      variablesContainer.className = 'card mt-3 mb-3';
-      variablesContainer.innerHTML = `
-          <div class="card-header bg-secondary text-white">
-              <h6 class="mb-0">Selecione as Variáveis que você tem:</h6>
-          </div>
-          <div class="card-body">
-              <div class="row" id="checkboxes-container"></div>
-              <div id="inputs-container"></div>
-          </div>
-      `;
-      camposDiv.appendChild(variablesContainer);
+      // Lista de cálculos que não usam checkboxes
+      const calculosSemCheckbox = ['excesso', 'quantidade_reagente_necessario', 'massa_dos_reagentes_ou_dos_produtos', 'balanceamento'];
 
-      const checkboxesContainer = document.getElementById('checkboxes-container');
-      const inputsContainer = document.getElementById('inputs-container');
-
-      calcInfo.variables.forEach(function (v) {
-          const colDiv = document.createElement('div');
-          colDiv.className = 'col-md-6 mb-2';
-          colDiv.innerHTML = `
-              <div class="form-check">
-                  <input class="form-check-input" type="checkbox" value="${v}" id="check_${v}">
-                  <label class="form-check-label" for="check_${v}">
-                      ${formatarVariavel(v)}
-                  </label>
+      if (calculosSemCheckbox.includes(tipo)) {
+          // Para cálculos específicos, mostra todos os inputs diretamente
+          const inputsContainer = document.createElement('div');
+          inputsContainer.className = 'card mt-3 mb-3';
+          inputsContainer.innerHTML = `
+              <div class="card-header bg-secondary text-white">
+                  <h6 class="mb-0">Insira os valores:</h6>
+              </div>
+              <div class="card-body">
+                  <div id="inputs-container"></div>
               </div>
           `;
-          checkboxesContainer.appendChild(colDiv);
+          camposDiv.appendChild(inputsContainer);
 
-          // Adiciona listener para o checkbox
-          const checkbox = document.getElementById(`check_${v}`);
-          checkbox.addEventListener('change', function() {
-              toggleVariableInput(v, calcInfo.variables.length);
+          const inputsDiv = document.getElementById('inputs-container');
+          calcInfo.variables.forEach(function (v) {
+              const inputDiv = document.createElement('div');
+              inputDiv.className = 'mb-3 input-field';
+              inputDiv.id = `input_${v}`;
+
+              // Define placeholders for each variable
+              const placeholders = {
+                  'equacao_reagentes': 'Digite a equação dos reagentes (ex: H2 + O2)',
+                  'equacao_produtos': 'Digite a equação dos produtos (ex: H2O)',
+                  'massa_disponivel': 'Digite a massa disponível (g)',
+                  'massa_dos_produtos_desejada': 'Digite a massa dos produtos desejada (g)',
+                  'composto_quimico': 'Digite o composto químico'
+              };
+
+              // Define quais campos devem ser texto
+              const camposTexto = ['equacao_reagentes', 'equacao_produtos', 'composto_quimico'];
+
+              inputDiv.innerHTML = `
+                  <label for="${v}">${formatarVariavel(v)}</label>
+                  <input
+                      type="${camposTexto.includes(v) ? 'text' : 'number'}"
+                      class="form-control"
+                      id="${v}"
+                      name="${v}"
+                      placeholder="${placeholders[v] || 'Digite o valor'}"
+                      required
+                  />
+              `;
+              inputsDiv.appendChild(inputDiv);
           });
-      });
+
+          // Esconde a info de calcular e erro
+          document.getElementById('variavel-a-calcular-info').classList.add('d-none');
+          document.getElementById('erro').style.display = 'none';
+      } else {
+          // Para outros cálculos, mantém o comportamento com checkboxes
+          const variablesContainer = document.createElement('div');
+          variablesContainer.className = 'card mt-3 mb-3';
+          variablesContainer.innerHTML = `
+              <div class="card-header bg-secondary text-white">
+                  <h6 class="mb-0">Selecione as Variáveis que você tem:</h6>
+              </div>
+              <div class="card-body">
+                  <div class="row" id="checkboxes-container"></div>
+                  <div id="inputs-container"></div>
+              </div>
+          `;
+          camposDiv.appendChild(variablesContainer);
+
+          const checkboxesContainer = document.getElementById('checkboxes-container');
+          const inputsContainer = document.getElementById('inputs-container');
+
+          calcInfo.variables.forEach(function (v) {
+              const colDiv = document.createElement('div');
+              colDiv.className = 'col-md-6 mb-2';
+              colDiv.innerHTML = `
+                  <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="${v}" id="check_${v}">
+                      <label class="form-check-label" for="check_${v}">
+                          ${formatarVariavel(v)}
+                      </label>
+                  </div>
+              `;
+              checkboxesContainer.appendChild(colDiv);
+
+              // Adiciona listener para o checkbox
+              const checkbox = document.getElementById(`check_${v}`);
+              checkbox.addEventListener('change', function() {
+                  toggleVariableInput(v, calcInfo.variables.length);
+              });
+          });
+      }
 
       // Esconde a info de calcular ao mudar o cálculo
       document.getElementById('variavel-a-calcular-info').classList.add('d-none');
@@ -353,7 +407,12 @@
       if (field.value === '') {
         allInputsFilled = false;
       }
-      data[field.name] = parseFloat(field.value);
+      // Para campos de texto (como equações químicas), não converte para float
+      if (field.type === 'text') {
+        data[field.name] = field.value;
+      } else {
+        data[field.name] = parseFloat(field.value);
+      }
     });
 
     if (!allInputsFilled) {
@@ -374,8 +433,26 @@
       const result = await response.json();
 
       if (response.ok) {
-        document.getElementById('resultado').textContent =
-          'Resultado: ' + JSON.stringify(result);
+        // Encontra o título do cálculo atual
+        let tituloCalculo = '';
+        for (const categoryKey in CALCULATORS_CONFIG.quimica.categories) {
+          const category = CALCULATORS_CONFIG.quimica.categories[categoryKey];
+          if (category.calculations[tipoCalculo]) {
+            tituloCalculo = category.calculations[tipoCalculo].title.split(' [')[0]; // Pega só a primeira parte do título
+            break;
+          }
+        }
+
+        // Formata o resultado com o título do cálculo e estilos
+        const valorFormatado = result.resultado.split(': ')[1]; // Pega só o valor após os dois pontos
+        document.getElementById('resultado').innerHTML = `
+          <h5 style="font-size: 20px; margin-bottom: 10px;">Resultado:</h5>
+          <ul style="list-style: none; padding-left: 0;">
+            <li style="font-size: 16px;">
+              <strong style="font-size: 16px;">${tituloCalculo}:</strong>
+              <span style="font-size: 16px;">${valorFormatado}</span>
+            </li>
+          </ul>`;
         document.getElementById('resultado').style.display = 'block';
         document.getElementById('erro').style.display = 'none';
       } else {
