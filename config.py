@@ -98,22 +98,22 @@ CALCULATORS = {
                         'description': 'Aplica identidades algébricas clássicas.',
                         'variables': ['a', 'b', 'c']
                     },
-                    'formula_delta': {
+                    'formula_do_delta': {
                         'title': 'Fórmula do Delta [Δ = b² - 4ac]',
                         'description': 'Determina o valor de Δ em equações quadráticas.',
                         'variables': ['delta', 'b' , 'a', 'c']
                     },
-                    'formula_bhaskara': {
+                    'formula_de_bhaskara': {
                         'title': 'Fórmula de Bhaskara [x = -b±√Δ/2a]',
                         'description': 'Resolve equações do 2º grau.',
                         'variables': ['x', 'b', 'delta', 'a']
                     },
-                    'funcao_1_grau': {
+                    'funcao_do_1_grau': {
                         'title': 'Função do 1º Grau [f(x) = ax + b]',
                         'description': 'Análise de função linear',
                         'variables': ['fx', 'ax', 'b']
                     },
-                    'funcao_2_grau': {
+                    'funcao_do_2_grau': {
                         'title': 'Função do 2º Grau [f(x) = ax² + bx + c]',
                         'description': 'Análise de parábolas.',
                         'variables': ['fx', 'ax2', 'bx', 'c']
@@ -175,12 +175,12 @@ CALCULATORS = {
                         'description': 'Seno, Cosseno Tangente.',
                         'variables': ['#', '#', '#', '#']
                     },
-                    'lei_senos': {
+                    'lei_dos_senos': {
                         'title': 'Lei Senos [a/sen(a") = b/sen(b") = c/sen("c")]',
                         'description': 'Relação entre lados e senos dos ângulos.',
                     'variables': ['a', 'a"', 'b', 'b"', 'c', 'c"']
                     },
-                    'lei_cossenos': {
+                    'lei_dos_cossenos': {
                         'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cos(a")]',
                         'description': 'Generalização do teorema de Pitágoras.',
                         'variables': ['a', 'a"', 'b', 'c']
@@ -191,27 +191,27 @@ CALCULATORS = {
                 'title': '🧮 Geometria',
                 'description': 'Cálculos Trigonométricos',
                 'calculations': {
-                    'area_triangulo': {
+                    'area_do_triangulo': {
                         'title': 'Área do Triângulo [A = b.h/2]',
                         'description': 'Área usando base × altura ou trigonometria.',
                         'variables': ['a', 'b', 'h']
                     },
-                    'area_circulo': {
+                    'area_do_circulo': {
                         'title': 'Área do Círculo [A = π.r²]',
                         'description': 'Cálculo usando π × raio².',
                         'variables': ['a', 'r']
                     },
-                    'volume_cubo': {
+                    'volume_do_cubo': {
                         'title': 'Volume do Cubo [V = a³]',
                         'description': 'Lado³.',
                         'variables': ['v', 'a']
                     },
-                    'volume_esfera': {
+                    'volume_da_esfera': {
                         'title': 'Volume da Esfera [V = 4/3πr³]',
                         'description': '4/3πr³',
                         'variables': ['r']
                     },                   
-                    'volume_cilindro': {
+                    'volume_do_cilindro': {
                         'title': 'Volume do Cilindro [V = π.r².h]',
                         'description': 'π × raio² × altura.',
                         'variables': ['v', 'r', 'h']
@@ -248,12 +248,12 @@ CALCULATORS = {
                 'title': '🧊 Matrizes',
                 'description': 'Cálculos estatísticos',
                 'calculations': {
-                    'determinante_matriz': {
+                    'determinante_da_matriz': {
                         'title': 'Determinante da Matriz',
                         'description': 'Valor escalar associado à matriz.',
                         'variables': ['#', '#', '#', '#']
                     },
-                    'multiplicacao_matriz': {
+                    'multiplicacao_de_matriz': {
                         'title': 'Multiplicação de Matriz [Cij = n∑k=1 Aik.Bkj]',
                         'description': 'Produto entre duas matrizes.',
                         'variables': ['#', '#', '#', '#']
@@ -269,7 +269,7 @@ CALCULATORS = {
                         'description': '',
                         'variables': ['lim_fx', 'l']
                     },
-                    'derivada_funcao_potencia': {
+                    'derivada_de_funcao_potencia': {
                         'title': 'Derivada de Função Potência [f"(x) = n.x^(n-1)]',
                         'description': '',
                         'variables': ['f"x', 'n', 'x']

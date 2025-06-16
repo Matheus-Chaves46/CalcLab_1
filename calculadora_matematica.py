@@ -126,46 +126,32 @@ class CalculadoraMatematica:
             # Demais operações
             if operacao == "Função Quadrática":
                 self.criar_campos(['a', 'b', 'c', 'x'])
-                self.formula.config(text="Fórmula: f(x) = ax² + bx + c")
             elif operacao == "Equação Linear":
                 self.criar_campos(['a', 'b', 'x'])
-                self.formula.config(text="Fórmula: ax + b = 0")
             elif operacao == "Sistema Linear":
                 self.criar_campos(['a1', 'b1', 'c1', 'a2', 'b2', 'c2'])
-                self.formula.config(text="Fórmula: a₁x + b₁y = c₁\na₂x + b₂y = c₂")
             elif operacao == "Progressão Aritmética":
                 self.criar_campos(['a1', 'r', 'n'])
-                self.formula.config(text="Fórmula: aₙ = a₁ + (n-1)r")
             elif operacao == "Progressão Geométrica":
                 self.criar_campos(['a1', 'q', 'n'])
-                self.formula.config(text="Fórmula: aₙ = a₁ · qⁿ⁻¹")
             elif operacao == "Área":
                 self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio'])
-                self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
             elif operacao == "Volume":
                 self.criar_campos(['tipo', 'lado', 'base', 'altura', 'profundidade', 'raio'])
-                self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
             elif operacao == "Perímetro":
                 self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio', 'lado1', 'lado2', 'lado3'])
-                self.formula.config(text="Fórmula: Varia de acordo com a forma geométrica")
             elif operacao == "Teorema de Pitágoras":
                 self.criar_campos(['a', 'b', 'c'])
-                self.formula.config(text="Fórmula: a² + b² = c²")
             elif operacao == "Trigonometria":
                 self.criar_campos(['angulo', 'hipotenusa', 'cateto_oposto', 'cateto_adjacente'])
-                self.formula.config(text="Fórmula: Sen(θ) = CO/H, Cos(θ) = CA/H, Tan(θ) = CO/CA")
             elif operacao == "Média":
                 self.criar_campos(['valores'])
-                self.formula.config(text="Fórmula: Σx / n")
             elif operacao == "Mediana":
                 self.criar_campos(['valores'])
-                self.formula.config(text="Fórmula: Valor do meio em um conjunto ordenado")
             elif operacao == "Moda":
                 self.criar_campos(['valores'])
-                self.formula.config(text="Fórmula: Valor mais frequente em um conjunto")
             elif operacao == "Desvio Padrão":
                 self.criar_campos(['valores'])
-                self.formula.config(text="Fórmula: σ = √[Σ(xᵢ - μ)² / N]")
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):
@@ -219,50 +205,49 @@ class CalculadoraMatematica:
                 for campo, entrada in self.entradas.items():
                     valores[campo] = float(entrada.get())
                 
-                if tipo == "quadrado_soma":
-                    resultado = quadrado_soma(valores['a'], valores['b'])
-                    self.formula.config(text="Fórmula: (a+b)² = a² + 2ab + b²")
-                elif tipo == "quadrado_diferenca":
-                    resultado = quadrado_diferenca(valores['a'], valores['b'])
-                    self.formula.config(text="Fórmula: (a-b)² = a² - 2ab + b²")
-                elif tipo == "diferenca_quadrados":
-                    resultado = diferenca_quadrados(valores['a'], valores['b'])
-                    self.formula.config(text="Fórmula: a²-b² = (a+b)(a-b)")
+            #     if tipo == "quadrado_soma":
+            #         resultado = quadrado_soma(valores['a'], valores['b'])
+            #         self.formula.config(text="Fórmula: (a+b)² = a² + 2ab + b²")
+            #     elif tipo == "quadrado_diferenca":
+            #         resultado = quadrado_diferenca(valores['a'], valores['b'])
+            #         self.formula.config(text="Fórmula: (a-b)² = a² - 2ab + b²")
+            #     elif tipo == "diferenca_quadrados":
+            #         resultado = diferenca_quadrados(valores['a'], valores['b'])
+            #         self.formula.config(text="Fórmula: a²-b² = (a+b)(a-b)")
                 
-            elif operacao == "Função Quadrática":
-                for campo, entrada in self.entradas.items():
-                    valores[campo] = float(entrada.get())
-                resultado = funcao_quadratica(valores['a'], valores['b'], valores['c'], valores['x'])
-            elif operacao == "Equação Linear":
-                resultado = equacao_linear(valores['a'], valores['b'], valores['x'])
-            elif operacao == "Sistema Linear":
-                resultado = sistema_linear(valores['a1'], valores['b1'], valores['c1'],
-                                         valores['a2'], valores['b2'], valores['c2'])
-            elif operacao == "Progressão Aritmética":
-                resultado = progressao_aritmetica(valores['a1'], valores['r'], valores['n'])
-            elif operacao == "Progressão Geométrica":
-                resultado = progressao_geometrica(valores['a1'], valores['q'], valores['n'])
-            elif operacao == "Área":
-                resultado = area(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            elif operacao == "Volume":
-                resultado = volume(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            elif operacao == "Perímetro":
-                resultado = perimetro(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            elif operacao == "Teorema de Pitágoras":
-                resultado = teorema_pitagoras(valores['a'], valores['b'], valores['c'])
-            elif operacao == "Trigonometria":
-                resultado = trigonometria(valores['angulo'], valores['hipotenusa'],
-                                        valores['cateto_oposto'], valores['cateto_adjacente'])
-            elif operacao == "Média":
-                resultado = media(valores['valores'])
-            elif operacao == "Mediana":
-                resultado = mediana(valores['valores'])
-            elif operacao == "Moda":
-                resultado = moda(valores['valores'])
-            elif operacao == "Desvio Padrão":
-                resultado = desvio_padrao(valores['valores'])
+            # elif operacao == "Função Quadrática":
+            #     for campo, entrada in self.entradas.items():
+            #         valores[campo] = float(entrada.get())
+            #     resultado = funcao_quadratica(valores['a'], valores['b'], valores['c'], valores['x'])
+            # elif operacao == "Equação Linear":
+            #     resultado = equacao_linear(valores['a'], valores['b'], valores['x'])
+            # elif operacao == "Sistema Linear":
+            #     resultado = sistema_linear(valores['a1'], valores['b1'], valores['c1'],valores['a2'], valores['b2'], valores['c2'])
+            # elif operacao == "Progressão Aritmética":
+            #     resultado = progressao_aritmetica(valores['a1'], valores['r'], valores['n'])
+            # elif operacao == "Progressão Geométrica":
+            #     resultado = progressao_geometrica(valores['a1'], valores['q'], valores['n'])
+            # elif operacao == "Área":
+            #     resultado = area(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
+            # elif operacao == "Volume":
+            #     resultado = volume(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
+            # elif operacao == "Perímetro":
+            #     resultado = perimetro(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
+            # elif operacao == "Teorema de Pitágoras":
+            #     resultado = teorema_pitagoras(valores['a'], valores['b'], valores['c'])
+            # elif operacao == "Trigonometria":
+            #     resultado = trigonometria(valores['angulo'], valores['hipotenusa'],
+            #                             valores['cateto_oposto'], valores['cateto_adjacente'])
+            # elif operacao == "Média":
+            #     resultado = media(valores['valores'])
+            # elif operacao == "Mediana":
+            #     resultado = mediana(valores['valores'])
+            # elif operacao == "Moda":
+            #     resultado = moda(valores['valores'])
+            # elif operacao == "Desvio Padrão":
+            #     resultado = desvio_padrao(valores['valores'])
             
-            self.resultado.config(text=f"Resultado: {resultado}")
+            # self.resultado.config(text=f"Resultado: {resultado}")
             
         except ValueError as e:
             self.resultado.config(text=f"Erro: {str(e)}")

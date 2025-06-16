@@ -6,211 +6,324 @@ import math
 import numpy as np
 from typing import List, Dict, Union, Tuple, Optional
 
-def funcao_quadratica(a: float, b: float, c: float, x: float) -> float:
-    try:
-        return float(a * x**2 + b * x + c)
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular função quadrática: {str(e)}")
-
-def equacao_linear(a: float, b: float, x: float) -> float:
-    if a == 0:
-        raise ValueError("Coeficiente 'a' não pode ser zero")
-    try:
-        return float(-b / a)
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao resolver equação linear: {str(e)}")
-
-def sistema_linear(a1: float, b1: float, c1: float, a2: float, b2: float, c2: float) -> Dict[str, float]:
-    try:
-        det = float(a1 * b2 - a2 * b1)
-        if det == 0:
-            raise ValueError("Sistema indeterminado ou impossível")
-        x = float((c1 * b2 - c2 * b1) / det)
-        y = float((a1 * c2 - a2 * c1) / det)
-        return {'x': x, 'y': y}
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao resolver sistema linear: {str(e)}")
-
-def progressao_aritmetica(a1: float, r: float, n: int) -> float:
-    if n < 1:
-        raise ValueError("A posição do termo deve ser maior ou igual a 1")
-    try:
-        return float(a1 + (n - 1) * r)
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular termo da PA: {str(e)}")
-
-def progressao_geometrica(a1: float, q: float, n: int) -> float:
-    if n < 1:
-        raise ValueError("A posição do termo deve ser maior ou igual a 1")
-    try:
-        return float(a1 * q**(n - 1))
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular termo da PG: {str(e)}")
-
-def area(tipo: str, **kwargs) -> float:
-    try:
-        if tipo == 'quadrado':
-            if 'lado' not in kwargs:
-                raise ValueError("Parâmetro 'lado' é obrigatório para quadrado")
-            return float(kwargs['lado'] ** 2)
-        elif tipo == 'retangulo':
-            if 'base' not in kwargs or 'altura' not in kwargs:
-                raise ValueError("Parâmetros 'base' e 'altura' são obrigatórios para retângulo")
-            return float(kwargs['base'] * kwargs['altura'])
-        elif tipo == 'triangulo':
-            if 'base' not in kwargs or 'altura' not in kwargs:
-                raise ValueError("Parâmetros 'base' e 'altura' são obrigatórios para triângulo")
-            return float((kwargs['base'] * kwargs['altura']) / 2)
-        elif tipo == 'circulo':
-            if 'raio' not in kwargs:
-                raise ValueError("Parâmetro 'raio' é obrigatório para círculo")
-            return float(math.pi * kwargs['raio'] ** 2)
-        else:
-            raise ValueError(f"Tipo de figura '{tipo}' não suportado")
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular área: {str(e)}")
-
-def volume(tipo: str, **kwargs) -> float:
-    try:
-        if tipo == 'cubo':
-            if 'lado' not in kwargs:
-                raise ValueError("Parâmetro 'lado' é obrigatório para cubo")
-            return float(kwargs['lado'] ** 3)
-        elif tipo == 'paralelepipedo':
-            if not all(k in kwargs for k in ['base', 'altura', 'profundidade']):
-                raise ValueError("Parâmetros 'base', 'altura' e 'profundidade' são obrigatórios para paralelepípedo")
-            return float(kwargs['base'] * kwargs['altura'] * kwargs['profundidade'])
-        elif tipo == 'esfera':
-            if 'raio' not in kwargs:
-                raise ValueError("Parâmetro 'raio' é obrigatório para esfera")
-            return float((4/3) * math.pi * kwargs['raio'] ** 3)
-        elif tipo == 'cilindro':
-            if 'raio' not in kwargs or 'altura' not in kwargs:
-                raise ValueError("Parâmetros 'raio' e 'altura' são obrigatórios para cilindro")
-            return float(math.pi * kwargs['raio'] ** 2 * kwargs['altura'])
-        else:
-            raise ValueError(f"Tipo de sólido '{tipo}' não suportado")
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular volume: {str(e)}")
-
-def perimetro(tipo: str, **kwargs) -> float:
-    try:
-        if tipo == 'quadrado':
-            if 'lado' not in kwargs:
-                raise ValueError("Parâmetro 'lado' é obrigatório para quadrado")
-            return float(4 * kwargs['lado'])
-        elif tipo == 'retangulo':
-            if 'base' not in kwargs or 'altura' not in kwargs:
-                raise ValueError("Parâmetros 'base' e 'altura' são obrigatórios para retângulo")
-            return float(2 * (kwargs['base'] + kwargs['altura']))
-        elif tipo == 'triangulo':
-            if not all(k in kwargs for k in ['lado1', 'lado2', 'lado3']):
-                raise ValueError("Parâmetros 'lado1', 'lado2' e 'lado3' são obrigatórios para triângulo")
-            return float(kwargs['lado1'] + kwargs['lado2'] + kwargs['lado3'])
-        elif tipo == 'circulo':
-            if 'raio' not in kwargs:
-                raise ValueError("Parâmetro 'raio' é obrigatório para círculo")
-            return float(2 * math.pi * kwargs['raio'])
-        else:
-            raise ValueError(f"Tipo de figura '{tipo}' não suportado")
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular perímetro: {str(e)}")
-
-def teorema_pitagoras(a: Optional[float], b: Optional[float], c: Optional[float]) -> float:
-    try:
-        none_count = sum(1 for x in [a, b, c] if x is None)
-        if none_count != 1:
-            raise ValueError("Exatamente um lado deve ser None para ser calculado")
-            
-        if c is None and a is not None and b is not None:
-            return float(math.sqrt(a**2 + b**2))
-        elif a is None and b is not None and c is not None:
-            if c <= b:
-                raise ValueError("Hipotenusa deve ser maior que o cateto")
-            return float(math.sqrt(c**2 - b**2))
-        elif b is None and a is not None and c is not None:
-            if c <= a:
-                raise ValueError("Hipotenusa deve ser maior que o cateto")
-            return float(math.sqrt(c**2 - a**2))
-        else:
-            raise ValueError("Combinação inválida de lados")
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao aplicar teorema de Pitágoras: {str(e)}")
-
-def trigonometria(angulo: float, hipotenusa: Optional[float] = None, 
-                cateto_oposto: Optional[float] = None, 
-                cateto_adjacente: Optional[float] = None) -> float:
-    try:
-        angulo_rad = float(math.radians(angulo))
+def calculate_matematica(tipo_calculo: str, **kwargs) -> Tuple[Dict[str, float], Dict[str, str]]:
+    """
+    Função principal para calcular resultados de matemática.
+    
+    Args:
+        tipo_calculo (str): Tipo de cálculo a ser realizado
+        **kwargs: Valores necessários para o cálculo
         
-        if hipotenusa is not None and cateto_oposto is not None:
-            if hipotenusa <= cateto_oposto:
-                raise ValueError("Hipotenusa deve ser maior que o cateto oposto")
-            return float(math.sin(angulo_rad))
-        elif hipotenusa is not None and cateto_adjacente is not None:
-            if hipotenusa <= cateto_adjacente:
-                raise ValueError("Hipotenusa deve ser maior que o cateto adjacente")
-            return float(math.cos(angulo_rad))
-        elif cateto_oposto is not None and cateto_adjacente is not None:
-            return float(math.tan(angulo_rad))
-        else:
-            raise ValueError("Combinação de lados não válida")
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular função trigonométrica: {str(e)}")
-
-def media(valores: List[float]) -> float:
+    Returns:
+        Tuple[Dict[str, float], Dict[str, str]]: Resultado do cálculo e suas unidades
+    """
+    # Mapeamento de tipos de cálculo para suas respectivas funções
+    calculos = {
+        'produtos_notaveis': produtos_notaveis,
+        'formula_do_delta': formula_do_delta,
+        'funcao_do_1_grau': funcao_do_1_grau,
+        'funcao_do_2_grau': funcao_do_2_grau,
+        'vertice_parabola': vertice_parabola,
+        'funcao_exponencial': funcao_exponencial,
+        'funcao_logaritmica': funcao_logaritmica,
+        'pa_termo_geral': pa_termo_geral,
+        'pa_soma_termos': pa_soma_termos,
+        'pg_termo_geral': pg_termo_geral,  
+        'pg_soma_termos_finitos': pg_soma_termos_finitos,
+        'pg_soma_infinita': pg_soma_infinita,
+        'relacoes_fundamentais': relacoes_fundamentais,
+        'lei_dos_senos': lei_dos_senos,
+        'lei_dos_cossenos': lei_dos_cossenos,
+        'area_do_triangulo': area_do_triangulo,
+        'area_do_circulo': area_do_circulo,
+        'volume_do_cubo': volume_do_cubo,
+        'volume_da_esfera': volume_da_esfera,
+        'volume_do_cilindro': volume_do_cilindro, 
+        'fatorial': fatorial,
+        'permutacao_simples': permutacao_simples,
+        'combinacao_simples': combinacao_simples,
+        'probabilidade': probabilidade,
+        'determinante_da_matriz': determinante_da_matriz, 
+        'multiplicacao_de_matriz': multiplicacao_de_matriz,
+        'limite': limite,
+        'derivada_de_funcao_potencia': derivada_de_funcao_potencia
+    }
+    # Verifica se o tipo de cálculo existe
+    if tipo_calculo not in calculos:
+        raise ValueError(f"Tipo de cálculo '{tipo_calculo}' não encontrado.")
+    
+    # Lista de campos que devem permanecer como texto
+    campos_texto = ['equacao_reagentes', 'equacao_produtos', 'composto_quimico', 'elemento']
+    
+    # Converte os valores de string para float apenas se não forem campos de texto
+    valores = {}
+    for chave, valor in kwargs.items():
+        if valor is not None and valor != '':
+            if chave in campos_texto:
+                valores[chave] = valor
+            else:
+                try:
+                    valores[chave] = float(valor)
+                except ValueError:
+                    raise ValueError(f"Valor inválido para {chave}: {valor}")
+    
+    # Executa o cálculo
     try:
-        if not valores:
-            raise ValueError("Lista de valores não pode estar vazia")
-        return float(sum(valores) / len(valores))
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular média: {str(e)}")
-
-def mediana(valores: List[float]) -> float:
+        resultado, unidades = calculos[tipo_calculo](**valores)
+        if not isinstance(resultado, dict) or not isinstance(unidades, dict):
+            raise ValueError('Função de cálculo deve retornar dois dicionários.')
+        return resultado, unidades
+    except Exception as e:
+        raise ValueError(f"Erro ao executar cálculo: {str(e)}")
+    
+def produtos_notaveis(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        if not valores:
-            raise ValueError("Lista de valores não pode estar vazia")
-        valores_ordenados = sorted(valores)
-        n = len(valores_ordenados)
-        if n % 2 == 0:
-            return float((valores_ordenados[n//2 - 1] + valores_ordenados[n//2]) / 2)
-        else:
-            return float(valores_ordenados[n//2])
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular mediana: {str(e)}")
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro nos Produtos Notáveis : {str(e)}")
+from typing import Optional, Tuple, Dict
 
-def moda(valores: List[float]) -> float:
+def formula_do_delta(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        if not valores:
-            raise ValueError("Lista de valores não pode estar vazia")
-        from collections import Counter
-        contador = Counter(valores)
-        return float(max(contador.items(), key=lambda x: x[1])[0])
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular moda: {str(e)}")
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na formula_do_delta: {str(e)}")
 
-def desvio_padrao(valores: List[float]) -> float:
-    try:
-        if not valores:
-            raise ValueError("Lista de valores não pode estar vazia")
-        return float(np.std(valores))
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular desvio padrão: {str(e)}")
 
-def quadrado_soma(a: float, b: float) -> float:
+def funcao_do_1_grau(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        return float(a**2 + 2*a*b + b**2)
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular quadrado da soma: {str(e)}")
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na funcao_do_1_grau: {str(e)}")
 
-def quadrado_diferenca(a: float, b: float) -> float:
-    try:
-        return float(a**2 - 2*a*b + b**2)
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular quadrado da diferença: {str(e)}")
 
-def diferenca_quadrados(a: float, b: float) -> float:
+def funcao_do_2_grau(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
-        return float((a + b) * (a - b))
-    except (TypeError, ValueError) as e:
-        raise ValueError(f"Erro ao calcular diferença dos quadrados: {str(e)}")
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na funcao_do_2_grau: {str(e)}")
+
+
+def vertice_parabola(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na vertice_parabola: {str(e)}")
+
+
+def funcao_exponencial(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na funcao_exponencial: {str(e)}")
+
+
+def funcao_logaritmica(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na funcao_logaritmica: {str(e)}")
+
+
+def pa_termo_geral(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na pa_termo_geral: {str(e)}")
+
+
+def pa_soma_termos(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na pa_soma_termos: {str(e)}")
+
+
+def pg_termo_geral(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na pg_termo_geral: {str(e)}")
+
+
+def pg_soma_termos_finitos(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na pg_soma_termos_finitos: {str(e)}")
+
+
+def pg_soma_infinita(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na pg_soma_infinita: {str(e)}")
+
+
+def relacoes_fundamentais(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na relacoes_fundamentais: {str(e)}")
+
+
+def lei_dos_senos(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na lei_dos_senos: {str(e)}")
+
+
+def lei_dos_cossenos(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na lei_dos_cossenos: {str(e)}")
+
+
+def area_do_triangulo(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na area_do_triangulo: {str(e)}")
+
+
+def area_do_circulo(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na area_do_circulo: {str(e)}")
+
+
+def volume_do_cubo(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na volume_do_cubo: {str(e)}")
+
+
+def volume_da_esfera(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na volume_da_esfera: {str(e)}")
+
+
+def volume_do_cilindro(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na volume_do_cilindro: {str(e)}")
+
+
+def fatorial(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na fatorial: {str(e)}")
+
+
+def permutacao_simples(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na permutacao_simples: {str(e)}")
+
+
+def combinacao_simples(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na combinacao_simples: {str(e)}")
+
+
+def probabilidade(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na probabilidade: {str(e)}")
+
+
+def determinante_da_matriz(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na determinante_da_matriz: {str(e)}")
+
+
+def multiplicacao_de_matriz(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na multiplicacao_de_matriz: {str(e)}")
+
+
+def limite(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na limite: {str(e)}")
+
+
+def derivada_de_funcao_potencia(
+    a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na derivada_de_funcao_potencia: {str(e)}")
+
