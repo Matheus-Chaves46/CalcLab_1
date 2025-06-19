@@ -23,13 +23,13 @@ def calculate_matematica(tipo_calculo: str, **kwargs) -> Tuple[Dict[str, float],
         'formula_do_delta': formula_do_delta,
         'funcao_do_1_grau': funcao_do_1_grau,
         'funcao_do_2_grau': funcao_do_2_grau,
-        'vertice_parabola': vertice_parabola,
+        'vertice_de_parabola': vertice_de_parabola,
         'funcao_exponencial': funcao_exponencial,
         'funcao_logaritmica': funcao_logaritmica,
         'pa_termo_geral': pa_termo_geral,
-        'pa_soma_termos': pa_soma_termos,
+        'pa_soma_dos_termos': pa_soma_dos_termos,
         'pg_termo_geral': pg_termo_geral,  
-        'pg_soma_termos_finitos': pg_soma_termos_finitos,
+        'pg_soma_dos_termos_finitos': pg_soma_dos_termos_finitos,
         'pg_soma_infinita': pg_soma_infinita,
         'relacoes_fundamentais': relacoes_fundamentais,
         'lei_dos_senos': lei_dos_senos,
@@ -76,8 +76,10 @@ def calculate_matematica(tipo_calculo: str, **kwargs) -> Tuple[Dict[str, float],
     except Exception as e:
         raise ValueError(f"Erro ao executar cálculo: {str(e)}")
     
-def produtos_notaveis(
+def produtos_notaveis( #! REVISAR COMO FAZER OS TIPOS DE PRODUTOS NOTÁVEIS
     a: Optional[float] = None,
+    b: Optional[float] = None,
+    c: Optional[float] = None
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -86,16 +88,31 @@ def produtos_notaveis(
 from typing import Optional, Tuple, Dict
 
 def formula_do_delta(
+    delta: Optional[float] = None,
+    b: Optional[float] = None,
     a: Optional[float] = None,
+    c: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
     except (TypeError, ValueError, KeyError) as e:
         raise ValueError(f"Erro na formula_do_delta: {str(e)}")
 
-
-def funcao_do_1_grau(
+def formula_de_bhaskara(
+    x: Optional[float] = None,
+    b: Optional[float] = None,
+    delta: Optional[float] = None,
     a: Optional[float] = None,
+) -> Tuple[Dict[str, float], Dict[str, str]]:
+    try:
+        ...
+    except (TypeError, ValueError, KeyError) as e:
+        raise ValueError(f"Erro na funcao_do_1_grau: {str(e)}")
+    
+def funcao_do_1_grau(
+    fx: Optional[float] = None,
+    ax: Optional[float] = None,
+    b: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -104,7 +121,10 @@ def funcao_do_1_grau(
 
 
 def funcao_do_2_grau(
-    a: Optional[float] = None,
+    fx: Optional[float] = None,
+    ax2: Optional[float] = None,
+    bx: Optional[float] = None,
+    c: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -112,7 +132,9 @@ def funcao_do_2_grau(
         raise ValueError(f"Erro na funcao_do_2_grau: {str(e)}")
 
 
-def vertice_parabola(
+def vertice_de_parabola(
+    vertice_da_parabola: Optional[float] = None,
+    b: Optional[float] = None,
     a: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
@@ -122,7 +144,10 @@ def vertice_parabola(
 
 
 def funcao_exponencial(
+    fx: Optional[float] = None,
     a: Optional[float] = None,
+    b: Optional[float] = None,
+    x: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -131,7 +156,9 @@ def funcao_exponencial(
 
 
 def funcao_logaritmica(
-    a: Optional[float] = None,
+    fx: Optional[float] = None,
+    b: Optional[float] = None,
+    x: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -140,7 +167,10 @@ def funcao_logaritmica(
 
 
 def pa_termo_geral(
-    a: Optional[float] = None,
+    termo_geral: Optional[float] = None,
+    primeiro_termo: Optional[float] = None,
+    termo_em_sequencia: Optional[float] = None,
+    razao_da_pa: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -148,8 +178,11 @@ def pa_termo_geral(
         raise ValueError(f"Erro na pa_termo_geral: {str(e)}")
 
 
-def pa_soma_termos(
-    a: Optional[float] = None,
+def pa_soma_dos_termos(
+    soma_dos_termos: Optional[float] = None,
+    termos_somados: Optional[float] = None,
+    primeiro_termo: Optional[float] = None,
+    ultimo_termo: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -158,7 +191,10 @@ def pa_soma_termos(
 
 
 def pg_termo_geral(
-    a: Optional[float] = None,
+    termo_geral: Optional[float] = None,
+    primeiro_termo: Optional[float] = None,
+    razao_da_pg: Optional[float] = None,
+    termo_em_sequencia: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -166,8 +202,11 @@ def pg_termo_geral(
         raise ValueError(f"Erro na pg_termo_geral: {str(e)}")
 
 
-def pg_soma_termos_finitos(
-    a: Optional[float] = None,
+def pg_soma_dos_termos_finitos(
+    soma_dos_termos: Optional[float] = None,
+    primeiro_termo: Optional[float] = None,
+    razao_da_pg: Optional[float] = None,
+    termos_somados: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -176,7 +215,9 @@ def pg_soma_termos_finitos(
 
 
 def pg_soma_infinita(
-    a: Optional[float] = None,
+    soma_infinita: Optional[float] = None,
+    primeiro_termo: Optional[float] = None,
+    razao_da_pg: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -184,7 +225,7 @@ def pg_soma_infinita(
         raise ValueError(f"Erro na pg_soma_infinita: {str(e)}")
 
 
-def relacoes_fundamentais(
+def relacoes_fundamentais( #! REVISAR VARIÁVEIS 
     a: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
@@ -195,6 +236,11 @@ def relacoes_fundamentais(
 
 def lei_dos_senos(
     a: Optional[float] = None,
+    a_: Optional[float] = None,
+    b: Optional[float] = None,
+    b_: Optional[float] = None,
+    c: Optional[float] = None,
+    c_: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -204,6 +250,9 @@ def lei_dos_senos(
 
 def lei_dos_cossenos(
     a: Optional[float] = None,
+    a_: Optional[float] = None,
+    b: Optional[float] = None,
+    c: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -212,7 +261,9 @@ def lei_dos_cossenos(
 
 
 def area_do_triangulo(
-    a: Optional[float] = None,
+    area_do_triangulo: Optional[float] = None,
+    base: Optional[float] = None,
+    altura: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -221,7 +272,8 @@ def area_do_triangulo(
 
 
 def area_do_circulo(
-    a: Optional[float] = None,
+    area_do_circulo: Optional[float] = None,
+    raio: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -230,7 +282,8 @@ def area_do_circulo(
 
 
 def volume_do_cubo(
-    a: Optional[float] = None,
+    volume_do_cubo: Optional[float] = None,
+    aresta: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -239,7 +292,8 @@ def volume_do_cubo(
 
 
 def volume_da_esfera(
-    a: Optional[float] = None,
+    volume_da_esfera: Optional[float] = None,
+    raio: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -248,7 +302,9 @@ def volume_da_esfera(
 
 
 def volume_do_cilindro(
-    a: Optional[float] = None,
+    volume_do_cilindro: Optional[float] = None,
+    raio: Optional[float] = None,
+    altura: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -256,8 +312,9 @@ def volume_do_cilindro(
         raise ValueError(f"Erro na volume_do_cilindro: {str(e)}")
 
 
-def fatorial(
-    a: Optional[float] = None,
+def fatorial( #! REVISAR VARIÁVEIS
+    n_fatorial: Optional[float] = None,
+    n: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -266,7 +323,8 @@ def fatorial(
 
 
 def permutacao_simples(
-    a: Optional[float] = None,
+    pn: Optional[float] = None,
+    n_fatorial: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -274,7 +332,7 @@ def permutacao_simples(
         raise ValueError(f"Erro na permutacao_simples: {str(e)}")
 
 
-def combinacao_simples(
+def combinacao_simples( #! REVISAR VARIÁVEIS
     a: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
@@ -284,7 +342,9 @@ def combinacao_simples(
 
 
 def probabilidade(
-    a: Optional[float] = None,
+    probabilidade: Optional[float] = None,
+    casos_favoraveis: Optional[float] = None,
+    casos_possiveis: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -292,7 +352,7 @@ def probabilidade(
         raise ValueError(f"Erro na probabilidade: {str(e)}")
 
 
-def determinante_da_matriz(
+def determinante_da_matriz( # ! VERIFICAR VARIÁVEIS
     a: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
@@ -301,7 +361,7 @@ def determinante_da_matriz(
         raise ValueError(f"Erro na determinante_da_matriz: {str(e)}")
 
 
-def multiplicacao_de_matriz(
+def multiplicacao_de_matriz( # ! VERIFICAR VARIÁVEIS
     a: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
@@ -311,7 +371,8 @@ def multiplicacao_de_matriz(
 
 
 def limite(
-    a: Optional[float] = None,
+    limite_fx: Optional[float] = None,
+    l: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...
@@ -320,7 +381,9 @@ def limite(
 
 
 def derivada_de_funcao_potencia(
-    a: Optional[float] = None,
+    f_x: Optional[float] = None,
+    n: Optional[float] = None,
+    x: Optional[float] = None,
 ) -> Tuple[Dict[str, float], Dict[str, str]]:
     try:
         ...

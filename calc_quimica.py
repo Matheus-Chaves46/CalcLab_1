@@ -10,7 +10,6 @@ import re
 from collections import Counter
 from sympy import Matrix, lcm
 from collections import defaultdict
-from collections import defaultdict
 from typing import Dict, List, Union, Optional, Tuple
 from dicionario_quimica import tabela_periodica, tabela_massa, tabela_potenciais, entalpias_formacao
 

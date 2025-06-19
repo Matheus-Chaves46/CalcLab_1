@@ -69,7 +69,7 @@ THEME = {
 CONTACT = {
     'email': os.getenv('CONTACT_EMAIL', 'suporte.calclab@gmail.com'),
     'phone': os.getenv('CONTACT_PHONE', '+55 38 98824-8721'),
-    'whatsapp': os.getenv('CONTACT_WHATSAPP', '+55 3 98824-8721'),
+    'whatsapp': os.getenv('CONTACT_WHATSAPP', '+55 38 98824-8721'),
     'telegram': os.getenv('CONTACT_TELEGRAM', '@calclab')
 }
 
@@ -119,9 +119,9 @@ CALCULATORS = {
                         'variables': ['fx', 'ax2', 'bx', 'c']
                     },
                     'vertice_parabola': {
-                        'title': 'Vértice da Parábola [Vp = -b/2a]',
+                        'title': 'Vértice de Parábola [Vp = -b/2a]',
                         'description': 'Encontra o ponto de máximo ou mínimo.',
-                        'variables': ['vp', 'b', 'a']
+                        'variables': ['vertice_da_parabola', 'b', 'a']
                     },
                     'funcao_exponencial': {
                         'title': 'Função Exponencial [f(x) a.b^x]',
@@ -142,27 +142,27 @@ CALCULATORS = {
                     'pa_termo_geral': {
                         'title': 'PA: Termo Geral [an = a1 + (n-1)r]',
                         'description': 'Encontra um termo específico na PA.',
-                        'variables': ['an', 'n', 'r']
+                        'variables': ['termo_geral', 'primeiro_termo', 'termo_em_sequencia', 'razao_da_pa']
                     },
                     'pa_soma_termos': {
                         'title': 'PA: Soma dos Termos [Sn = n(a1 + an)/2]',
                         'description': 'Soma de uma sequência aritmética.',
-                        'variables': ['Sn', 'n', 'a', 'an']
+                        'variables': ['soma_dos_termos', 'termos_somados', 'primeiro_termo', 'ultimo_termo']
                     },
                     'pg_termo_geral': {
                         'title': 'PG: Termo Geral [an = a1.q^(n-1)]',
                         'description': 'Termo específico em uma PG.',
-                        'variables': ['an', 'a1', 'a', 'n']
+                        'variables': ['termo_geral', 'primeiro_termo', 'razao_da_pg', 'termo_em_sequencia']
                     },
                     'pg_soma_termos_finitos': {
                         'title': 'PG: Soma dos Termos Finitos [Sn = a1 . (q^n - 1)/(q - 1)]',
                         'description': 'Soma parcial de uma PG.',
-                        'variables': ['sn', 'a1', 'q', 'n']
+                        'variables': ['soma_dos_termos', 'primeiro_termo', 'razao_da_pg', 'termos_somados']
                     },
                     'pg_soma_infinita': {
                         'title': 'PG: Soma Infinita [S = a1/(1-q)]',
                         'description': 'Soma de uma PG infinita (convergente).',
-                        'variables': ['s', 'a1', 'q']
+                        'variables': ['soma_infinita', 'primeiro_termo', 'razao_da_pg']
                     },
                 }
             },
@@ -173,17 +173,17 @@ CALCULATORS = {
                     'relacoes_fundamentais': {
                         'title': 'Relações Fundamentais',
                         'description': 'Seno, Cosseno Tangente.',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['#', '#', '#', '#'] #! REVISAR VARIÁVEIS
                     },
                     'lei_dos_senos': {
-                        'title': 'Lei Senos [a/sen(a") = b/sen(b") = c/sen("c")]',
+                        'title': 'Lei Senos [a/sen(a_) = b/sen(b_) = c/sen(c_)]',
                         'description': 'Relação entre lados e senos dos ângulos.',
-                    'variables': ['a', 'a"', 'b', 'b"', 'c', 'c"']
+                    'variables': ['a', 'a_', 'b', 'b_', 'c', 'c_']
                     },
                     'lei_dos_cossenos': {
-                        'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cos(a")]',
+                        'title': 'Lei dos Cossenos [a² = b² + c² - 2bc.cos(a_)]',
                         'description': 'Generalização do teorema de Pitágoras.',
-                        'variables': ['a', 'a"', 'b', 'c']
+                        'variables': ['a', 'a_', 'b', 'c']
                     },
                 }
             },
@@ -194,27 +194,27 @@ CALCULATORS = {
                     'area_do_triangulo': {
                         'title': 'Área do Triângulo [A = b.h/2]',
                         'description': 'Área usando base × altura ou trigonometria.',
-                        'variables': ['a', 'b', 'h']
+                        'variables': ['area_do_triangulo', 'base', 'altura']
                     },
                     'area_do_circulo': {
                         'title': 'Área do Círculo [A = π.r²]',
                         'description': 'Cálculo usando π × raio².',
-                        'variables': ['a', 'r']
+                        'variables': ['area_do_circulo', 'raio']
                     },
                     'volume_do_cubo': {
                         'title': 'Volume do Cubo [V = a³]',
                         'description': 'Lado³.',
-                        'variables': ['v', 'a']
+                        'variables': ['volume_do_cubo', 'aresta']
                     },
                     'volume_da_esfera': {
                         'title': 'Volume da Esfera [V = 4/3πr³]',
                         'description': '4/3πr³',
-                        'variables': ['r']
+                        'variables': ['volume_da_esfera', 'raio']
                     },                   
                     'volume_do_cilindro': {
                         'title': 'Volume do Cilindro [V = π.r².h]',
                         'description': 'π × raio² × altura.',
-                        'variables': ['v', 'r', 'h']
+                        'variables': ['volume_do_cilindro', 'raio', 'altura']
                     },
                 }
             },
@@ -235,12 +235,12 @@ CALCULATORS = {
                     'combinacao_simples': {
                         'title': 'Combinação Simples [C(n,k) = n!/k!(n-k)!]',
                         'description': 'Contagem de agrupamentos sem ordem.',
-                        'variables': ['cnk #', 'n!', 'n', 'k']
+                        'variables': ['cnk #', 'n!', 'n', 'k'] # ! VERIFICAR VARIÁVEIS
                     },
                     'probabilidade': {
                         'title': 'Probabilidade [P = favoráveis/possíveis]',
                         'description': 'Chance de um evento ocorrer.',
-                        'variables': ['p', 'casos_favoraveis', 'casos_possiveis', '']
+                        'variables': ['probabilidade', 'casos_favoraveis', 'casos_possiveis']
                     }
                 }
             },
@@ -251,12 +251,12 @@ CALCULATORS = {
                     'determinante_da_matriz': {
                         'title': 'Determinante da Matriz',
                         'description': 'Valor escalar associado à matriz.',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['#', '#', '#', '#'] # ! VERIFICAR VARIÁVEIS
                     },
                     'multiplicacao_de_matriz': {
                         'title': 'Multiplicação de Matriz [Cij = n∑k=1 Aik.Bkj]',
                         'description': 'Produto entre duas matrizes.',
-                        'variables': ['#', '#', '#', '#']
+                        'variables': ['#', '#', '#', '#'] # ! VERIFICAR VARIÁVEIS
                     },
                 }
             },
@@ -267,7 +267,7 @@ CALCULATORS = {
                     'limite': {
                         'title': 'Limite [lim f(x) = L]',
                         'description': '',
-                        'variables': ['lim_fx', 'l']
+                        'variables': ['limite_fx', 'l']
                     },
                     'derivada_de_funcao_potencia': {
                         'title': 'Derivada de Função Potência [f"(x) = n.x^(n-1)]',

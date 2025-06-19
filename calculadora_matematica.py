@@ -17,19 +17,19 @@ class CalculadoraMatematica:
         
         # Combobox para seleção de operação
         self.operacao = ttk.Combobox(self.frame, values=[
-            'Produtos Notáveis',
+            'Produtos Notaveis',
             'Formula do Delta',
             'Formula de Bhaskara',
-            'Função do 1° Grau',
-            'Função do 2° Grau',
+            'Função do 1 Grau',
+            'Função do 2 Grau',
             'Vertice da Parabola',
             'Função Exponencial',
             'Função Logaritmica',
-            'PA: Termo Geral',
-            'PA: Soma dos Termos',
-            'PG: Termo Geral',
-            'PG: Soma dos Termos Finitos',
-            'PG: Soma Infinita',
+            'Pa Termo Geral',
+            'Pa Soma dos Termos',
+            'Pg Termo Geral',
+            'Pg Soma dos Termos Finitos',
+            'Pg Soma Infinita',
             'Relacoes Fundamentais',
             'Lei dos Senos',
             'Lei dos Cossenos',
@@ -39,7 +39,7 @@ class CalculadoraMatematica:
             'Volume da Esfera',
             'Volume do Cilindro',
             'Fatorial',
-            'Permutação Simples',
+            'Permutacao Simples',
             'Combinacao Simples',
             'Probabilidade',
             'Determinante da Matriz',
@@ -124,34 +124,62 @@ class CalculadoraMatematica:
             self.atualizar_campo_entrada()
         else:
             # Demais operações
-            if operacao == "Função Quadrática":
-                self.criar_campos(['a', 'b', 'c', 'x'])
-            elif operacao == "Equação Linear":
-                self.criar_campos(['a', 'b', 'x'])
-            elif operacao == "Sistema Linear":
-                self.criar_campos(['a1', 'b1', 'c1', 'a2', 'b2', 'c2'])
-            elif operacao == "Progressão Aritmética":
-                self.criar_campos(['a1', 'r', 'n'])
-            elif operacao == "Progressão Geométrica":
-                self.criar_campos(['a1', 'q', 'n'])
-            elif operacao == "Área":
-                self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio'])
-            elif operacao == "Volume":
-                self.criar_campos(['tipo', 'lado', 'base', 'altura', 'profundidade', 'raio'])
-            elif operacao == "Perímetro":
-                self.criar_campos(['tipo', 'lado', 'base', 'altura', 'raio', 'lado1', 'lado2', 'lado3'])
-            elif operacao == "Teorema de Pitágoras":
-                self.criar_campos(['a', 'b', 'c'])
-            elif operacao == "Trigonometria":
-                self.criar_campos(['angulo', 'hipotenusa', 'cateto_oposto', 'cateto_adjacente'])
-            elif operacao == "Média":
-                self.criar_campos(['valores'])
-            elif operacao == "Mediana":
-                self.criar_campos(['valores'])
-            elif operacao == "Moda":
-                self.criar_campos(['valores'])
-            elif operacao == "Desvio Padrão":
-                self.criar_campos(['valores'])
+            if operacao == "Formula do Delta":
+                self.criar_campos(['delta', 'b' , 'a', 'c'])
+            elif operacao == "Formula de Bhaskara":
+                self.criar_campos(['x', 'b', 'delta', 'a'])
+            elif operacao == "Funcao do 1 Grau":
+                self.criar_campos(['fx', 'ax', 'b'])
+            elif operacao == "Funcao do 2 Grau":
+                self.criar_campos(['fx', 'ax2', 'bx', 'c'])
+            elif operacao == "Vertice da Parabola":
+                self.criar_campos(['vertice_da_parabola', 'b', 'a'])
+            elif operacao == "Funcao Exponencial":
+                self.criar_campos(['fx', 'a', 'b', 'x'])
+            elif operacao == "Funcao Logaritmica":
+                self.criar_campos(['fx', 'b', 'x'])
+            elif operacao == "Pa Termo Geral":
+               self.criar_campos(['termo_geral', 'primeiro_termo','termo_em_sequencia', 'razao_da_pa'])
+            elif operacao == "Pa Soma dos Termos":
+                self.criar_campos(['soma_dos_termos', 'termos_somados', 'primeiro_termo', 'ultimo_termo'])
+            elif operacao == "Pg Termo Geral":
+                self.criar_campos(['termo_geral', 'primeiro_termo', 'razao_da_pg', 'termo_em_sequencia'])
+            elif operacao == "Pg Soma dos Termos Finitos":
+                self.criar_campos(['soma_dos_termos', 'primeiro_termo', 'razao_da_pg', 'termos_somados'])
+            elif operacao == "Pg Soma Infinita":
+                self.criar_campos(['soma_infinita', 'primeiro_termo', 'razao_da_pg'])
+            elif operacao == "Relacoes Fundamentais":
+                self.criar_campos(['#', '#', '#', '#']) #! REVISAR VARIÁVEIS 
+            elif operacao == "Lei dos Senos": 
+                self.criar_campos(['a', 'a_', 'b', 'b_', 'c', 'c_'])
+            elif operacao == "Lei dos Cossenos":
+                self.criar_campos(['a', 'a_', 'b', 'c'])
+            elif operacao == "Area do Triangulo":
+                self.criar_campos(['area_do_triangulo', 'base', 'altura'])
+            elif operacao == "Area do Circulo":
+                self.criar_campos(['area_do_circulo', 'raio'])
+            elif operacao == "Volume do Cubo":
+                self.criar_campos(['volume_do_cubo', 'aresta'])
+            elif operacao == "Volume da Esfera":
+                self.criar_campos(['volume_da_esfera', 'raio'])
+            elif operacao == "Volume do Cilindro":
+                self.criar_campos(['volume_do_cilindro', 'raio', 'altura'])
+            elif operacao == "Fatorial":
+                self.criar_campos(['n_fatorial', 'n'])
+            elif operacao == "Permutacao Simples":
+               self.criar_campos(['pn', 'n!'])
+            elif operacao == "Combinacao Simples":
+                self.criar_campos(['cnk #', 'n!', 'n', 'k']) # ! VERIFICAR VARIÁVEI)
+            elif operacao == "Probabilidade":
+                self.criar_campos(['probabilidade', 'casos_favoraveis', 'casos_possiveis'])
+            elif operacao == "Determinante da Matriz":
+                self.criar_campos(['#', '#', '#', '#']) # ! VERIFICAR VARIÁVEIS
+            elif operacao == "Multiplicacao de Matriz":
+                self.criar_campos(['#', '#', '#', '#']) # ! VERIFICAR VARIÁVEIS
+            elif operacao == "Limite":
+                self.criar_campos(['limite_fx', 'l'])
+            elif operacao == "Derivada de Funcao Potencia":
+                self.criar_campos(['f_x', 'n', 'x'])
     
     def criar_campos(self, campos):
         for i, campo in enumerate(campos):
@@ -205,49 +233,64 @@ class CalculadoraMatematica:
                 for campo, entrada in self.entradas.items():
                     valores[campo] = float(entrada.get())
                 
-            #     if tipo == "quadrado_soma":
-            #         resultado = quadrado_soma(valores['a'], valores['b'])
-            #         self.formula.config(text="Fórmula: (a+b)² = a² + 2ab + b²")
-            #     elif tipo == "quadrado_diferenca":
-            #         resultado = quadrado_diferenca(valores['a'], valores['b'])
-            #         self.formula.config(text="Fórmula: (a-b)² = a² - 2ab + b²")
-            #     elif tipo == "diferenca_quadrados":
-            #         resultado = diferenca_quadrados(valores['a'], valores['b'])
-            #         self.formula.config(text="Fórmula: a²-b² = (a+b)(a-b)")
-                
-            # elif operacao == "Função Quadrática":
-            #     for campo, entrada in self.entradas.items():
-            #         valores[campo] = float(entrada.get())
-            #     resultado = funcao_quadratica(valores['a'], valores['b'], valores['c'], valores['x'])
-            # elif operacao == "Equação Linear":
-            #     resultado = equacao_linear(valores['a'], valores['b'], valores['x'])
-            # elif operacao == "Sistema Linear":
-            #     resultado = sistema_linear(valores['a1'], valores['b1'], valores['c1'],valores['a2'], valores['b2'], valores['c2'])
-            # elif operacao == "Progressão Aritmética":
-            #     resultado = progressao_aritmetica(valores['a1'], valores['r'], valores['n'])
-            # elif operacao == "Progressão Geométrica":
-            #     resultado = progressao_geometrica(valores['a1'], valores['q'], valores['n'])
-            # elif operacao == "Área":
-            #     resultado = area(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            # elif operacao == "Volume":
-            #     resultado = volume(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            # elif operacao == "Perímetro":
-            #     resultado = perimetro(valores['tipo'], **{k: v for k, v in valores.items() if k != 'tipo'})
-            # elif operacao == "Teorema de Pitágoras":
-            #     resultado = teorema_pitagoras(valores['a'], valores['b'], valores['c'])
-            # elif operacao == "Trigonometria":
-            #     resultado = trigonometria(valores['angulo'], valores['hipotenusa'],
-            #                             valores['cateto_oposto'], valores['cateto_adjacente'])
-            # elif operacao == "Média":
-            #     resultado = media(valores['valores'])
-            # elif operacao == "Mediana":
-            #     resultado = mediana(valores['valores'])
-            # elif operacao == "Moda":
-            #     resultado = moda(valores['valores'])
-            # elif operacao == "Desvio Padrão":
-            #     resultado = desvio_padrao(valores['valores'])
+                if tipo == "Produtos Notaveis":
+                    resultado, unidades = (valores.get('a'), valores.get('b'), valores.get('c')) # !
+                elif tipo == "Formula do Delta":
+                    resultado, unidades = (valores.get('delta'), valores.get('b'), valores.get('a'), valores.get('c'))
+                elif tipo == "Formula de Bashkara":
+                    resultado, unidades = (valores.get('x'), valores.get('b'), valores.get('delta'), valores.get('a'))
+                elif tipo == "Funcao do 1 Grau":
+                    resultado, unidades = (valores.get('fx'), valores.get('ax'), valores.get('b'))
+                elif operacao == "Funcao do 2 Grau":
+                        resultado, unidades = (valores.get('fx'), valores.get('ax2'), valores.get('bx'), valores.get('c'))
+                elif operacao == "Vertice de Parabola":
+                    resultado, unidades = (valores.get('vertice_da_parabola'), valores.get('b'), valores.get('a'))
+                elif operacao == "Funcao Exponencial":
+                    resultado, unidades = (valores.get('fx'), valores.get('a'), valores.get('b'), valores.get('x'))
+                elif operacao == "Funcao Logaritmica":
+                    resultado, unidades = (valores.get('fx'), valores.get('b'), valores.get('x'))
+                elif operacao == "Pa Termo Geral":
+                    resultado, unidades = (valores.get('termo_geral'), valores.get('primeiro_termo'), valores.get('termo_em_sequencia'), valores.get('razao_da_pa'))
+                elif operacao == "Pa Soma dos Termos":
+                    resultado, unidades = (valores.get('soma_dos_termos'), valores.get('termos_somados'), valores.get('primeiro_termo'), valores.get('ultimo_termo'))
+                elif operacao == "Pg Soma dos Termos Finitos":
+                    resultado, unidades = (valores.get('soma_dos_termos'), valores.get('primeiro_termo'), valores.get('razao_da_pg'), valores.get('termos_somados'))
+                elif operacao == "Pg Soma Infinita":
+                    resultado, unidades = (valores.get('soma_infinita'), valores.get('primeiro_termo'), valores.get('razao_da_pg'))
+                elif operacao == "Relacoes Fundamentais": #! REVISAR VARIÁVEIS
+                    resultado, unidades = (valores.get('#'), valores.get('#'), valores.get('#'), valores.get('#'))
+                elif operacao == "Lei dos Senos":
+                    resultado, unidades = (valores.get('a'), valores.get('a_'), valores.get('b'), valores.get('b_'), valores.get('c'), valores.get('c_'))
+                elif operacao == "Lei dos Cossenos":
+                    resultado, unidades = (valores.get('a'), valores.get('a_'), valores.get('b'), valores.get('c'))
+                elif operacao == "Area do Triangulo":
+                    resultado, unidades = (valores.get('area_do_triangulo'), valores.get('base'), valores.get('altura'))
+                elif operacao == "Area do Circulo":
+                    resultado, unidades = (valores.get('area_do_circulo'), valores.get('raio'))
+                elif operacao == "Volume do Cubo":
+                    resultado, unidades = (valores.get('volume_do_cubo'), valores.get('aresta'))
+                elif operacao == "Volume da Esfera":
+                    resultado, unidades = (valores.get('volume_da_esfera'), valores.get('raio'))
+                elif operacao == "Volume do Cilindro":
+                    resultado, unidades = (valores.get('volume_do_cilindro'), valores.get('raio'), valores.get('altura'))
+                elif operacao == "Fatorial":
+                    resultado, unidades = (valores.get('n!'), valores.get('n'))
+                elif operacao == "Permutacao Simples":
+                    resultado, unidades = (valores.get('pn'), valores.get('n!'))
+                elif operacao == "Combinacao Simples":
+                    resultado, unidades = (valores.get('#'), valores.get('#'), valores.get('#'), valores.get('#')) # ! VERIFICAR VARIÁVEIS
+                elif operacao == "Probabilidade":
+                    resultado, unidades = (valores.get('probabilidade'), valores.get('casos_favoraveis'), valores.get('casos_possiveis'))
+                elif operacao == "Determinante da Matriz":
+                    resultado, unidades = (valores.get('#'), valores.get('#'), valores.get('#'), valores.get('#')) # ! VERIFICAR VARIÁVEIS
+                elif operacao == "Multiplicacao de Matriz":
+                   resultado, unidades = (valores.get('#'), valores.get('#'), valores.get('#'), valores.get('#')) # ! VERIFICAR VARIÁVEIS
+                elif operacao == "Limite":
+                    resultado, unidades = (valores.get('limite_fx'), valores.get('l'))
+                elif operacao == "Derivada de Funcao Potencia":
+                    resultado, unidades = (valores.get('f_x'), valores.get('n'), valores.get('x'))
             
-            # self.resultado.config(text=f"Resultado: {resultado}")
+            self.resultado.config(text=f"Resultado: {resultado}")
             
         except ValueError as e:
             self.resultado.config(text=f"Erro: {str(e)}")
